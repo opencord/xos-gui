@@ -11,6 +11,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "!typings/**",
+    "!conf/app/**",
     "!node_modules/**"
   ]
 }
