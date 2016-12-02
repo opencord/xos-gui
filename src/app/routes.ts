@@ -5,7 +5,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {HelloComponent} from './hello';
 
 @Component({
-  selector: 'fountain-root',
+  selector: 'xos-root',
   template: '<router-outlet></router-outlet>'
 })
 export class RootComponent {}
