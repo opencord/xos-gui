@@ -2,6 +2,7 @@
 
 import {HelloComponent} from './hello';
 import {TestBed, async} from '@angular/core/testing';
+import {StyleConfig} from './config/style.config';
 
 describe('hello component', () => {
   beforeEach(async(() => {
@@ -17,6 +18,6 @@ describe('hello component', () => {
     const fixture = TestBed.createComponent(HelloComponent);
     fixture.detectChanges();
     const hello = fixture.nativeElement;
-    expect(hello.querySelector('h1').textContent).toBe('Hello World!');
+    expect(hello.querySelector('h1').textContent).toBe(`Hello ${StyleConfig.projectName}!`);
   });
 });
