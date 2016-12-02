@@ -3,14 +3,18 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "moduleResolution": "node",
     "removeComments": false,
     "noImplicitAny": false
   },
   "compileOnSave": false,
-  "filesGlob": [
+  "include": [
     "src/**/*.ts",
-    "src/**/*.tsx",
-    "!typings/**",
-    "!node_modules/**"
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "typings/**",
+    "conf/app/**",
+    "node_modules/**"
   ]
 }
