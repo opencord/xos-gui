@@ -1,16 +1,20 @@
 /// <reference path="../../typings/index.d.ts"/>
 
 import {HelloComponent} from './hello';
+import {LogoutComponent} from './components/logout/logout.component';
 import {TestBed, async} from '@angular/core/testing';
 import {StyleConfig} from './config/style.config';
 import { Http, BaseRequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
+import {CookieService} from 'angular2-cookie/services/cookies.service';
+import {Router} from '@angular/router';
 
 describe('hello component', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        HelloComponent
+        HelloComponent,
+        LogoutComponent
       ],
       providers: [
         {
@@ -21,7 +25,12 @@ describe('hello component', () => {
           deps: [MockBackend, BaseRequestOptions]
         },
         MockBackend,
-        BaseRequestOptions
+        BaseRequestOptions,
+        CookieService,
+        {
+          provide: Router,
+          useClass: class { navigate = jasmine.createSpy('navigate'); }
+        }
       ]
     });
     TestBed.compileComponents();

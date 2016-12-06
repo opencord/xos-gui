@@ -9,6 +9,7 @@ import {routing, RootComponent} from './routes';
 import {HelloComponent} from './hello';
 import {LoginComponent} from './components/login/login.component';
 import {ProtectedDirective} from './directives/protected.directive';
+import {LogoutComponent} from './components/logout/logout.component.ts';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import {ProtectedDirective} from './directives/protected.directive';
     RootComponent,
     HelloComponent,
     LoginComponent,
+    LogoutComponent,
     ProtectedDirective
   ],
   providers: [CookieService],
