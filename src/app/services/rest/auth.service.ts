@@ -14,35 +14,51 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class AuthService {
-  private xosToken:string;
-  private xosSessionId:string;
-  // Resolve HTTP using the constructor
-  constructor (private http: Http, private cookieService:CookieService) {
+  private xosToken: string;
+  private xosSessionId: string;
+  // resolve HTTP using the constructor
+  constructor (private http: Http, private cookieService: CookieService) {
   }
 
   // check if the user is authenticated
-  isAuthenticated(){
+  isAuthenticated(): string {
     this.xosToken = this.cookieService.get('xoscsrftoken');
     this.xosSessionId = this.cookieService.get('xossessionid');
     return this.xosToken;
   }
 
   // save cookies
-  storeAuth(auth:IAuthResponse){
+  storeAuth(auth: IAuthResponse): void {
     this.cookieService.put('xoscsrftoken', auth.xoscsrftoken);
     this.cookieService.put('xossessionid', auth.xossessionid);
   }
 
-  // Log the user in
-  login(auth: IAuthRequest) : Observable<IAuthResponse> {
+  // remove cookies
+  removeAuth(): void {
+    this.cookieService.remove('xoscsrftoken');
+    this.cookieService.remove('xossessionid');
+  }
+
+  // log the user in
+  login(auth: IAuthRequest): Observable<IAuthResponse> {
     return this.http.post(`${AppConfig.apiEndpoint}/utility/login/`, auth)
-      .map((res:Response) => res.json())
-      .map((auth:IAuthResponse) => {
+      .map((res: Response) => res.json())
+      .map((auth: IAuthResponse) => {
         this.storeAuth(auth);
         auth.user = JSON.parse(auth.user);
         return auth;
       })
       .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+  }
+
+  // logout the user
+  logout(): Observable<any> {
+    return this.http.post(`${AppConfig.apiEndpoint}/utility/logout/`, {xossessionid: this.xosSessionId})
+      .map((res: Response) => {
+        this.removeAuth();
+        return res.text();
+      })
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
   }
 }
 
