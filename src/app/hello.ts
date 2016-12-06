@@ -1,6 +1,5 @@
 /// <reference path="../../typings/index.d.ts"/>
 import {Component, OnInit} from '@angular/core';
-import {NgFor} from '@angular/common';
 import {StyleConfig} from './config/style.config';
 import {CoreService} from './services/rest/core.service';
 
@@ -9,7 +8,7 @@ import {CoreService} from './services/rest/core.service';
   template: require('./hello.html'),
   providers: [CoreService],
 })
-export class HelloComponent {
+export class HelloComponent implements OnInit {
 
   // declare class properties
   public hello: string;
@@ -25,9 +24,9 @@ export class HelloComponent {
     this.coreService.getCoreEndpoints()
       .subscribe(
         endpoints => {
-          this.endpoints = endpoints
+          this.endpoints = endpoints;
         },
         err => console.log
-      )
+      );
   }
 }
