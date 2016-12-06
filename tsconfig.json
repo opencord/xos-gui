@@ -5,7 +5,8 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "removeComments": false,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "noEmitOnError": false
   },
   "compileOnSave": false,
   "include": [
