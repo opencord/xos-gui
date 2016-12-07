@@ -1,36 +1,34 @@
 /// <reference path="../../typings/index.d.ts"/>
 import {Component, OnInit} from '@angular/core';
 import {StyleConfig} from './config/style.config';
-import {CoreService} from './services/rest/core.service';
-import {InstanceStore} from './services/stores/instance.store';
-import {IInstance} from './interfaces/instance.interface';
+import {ISlice} from './interfaces/models.interface';
+import {SliceStore} from './services/stores/slice.store';
 
 @Component({
   selector: 'xos-app',
   template: require('./hello.html'),
-  providers: [CoreService, InstanceStore],
+  providers: [SliceStore],
 })
 export class HelloComponent implements OnInit {
 
   // declare class properties
   public hello: string;
-  public instances: IInstance[];
+  public slices: ISlice[];
 
   constructor(
-    private coreService: CoreService,
-    private instanceStore: InstanceStore
+    private sliceStore: SliceStore
   ) {
     this.hello = `Hello ${StyleConfig.projectName}!`;
-    this.instances = [];
+    this.slices = [];
   }
 
   ngOnInit() {
     console.log('on init');
-    this.instanceStore.query()
+    this.sliceStore.query()
       .subscribe(
-        instances => {
-          console.log(instances);
-          this.instances = instances;
+        (slices: ISlice[]) => {
+          console.log(slices);
+          this.slices = slices;
         },
         err => {
           console.warn(err);

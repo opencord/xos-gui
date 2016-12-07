@@ -4,9 +4,7 @@
 
 <xos-logout></xos-logout>
 
-<div *ngFor="let instance of instances">
-  <b>{{instance.name}}</b>
-  <i>{{instance.isolation}}</i>
-  {{instance.slice}}
-  {{instance.node}}
+<div *ngFor="let slice of slices">
+  <b>{{slice.name}}</b>
+  <i>{{slice.backend_status}}</i>
 </div>

@@ -8,7 +8,7 @@ import {routing, RootComponent} from './routes';
 
 // registering components
 import {HelloComponent} from './hello';
-import {LoginComponent} from './components/login/login.component';
+import {LoginComponent} from './views/login/login.component';
 import {LogoutComponent} from './components/logout/logout.component';
 
 // registering directives
@@ -19,6 +19,7 @@ import {AuthService} from './services/rest/auth.service';
 import {XosHttp} from './services/rest/xoshttp.service';
 import {InstanceService} from './services/rest/instance.service';
 import {GlobalEvent} from './services/websockets/websocket.global';
+import {SliceService} from './services/rest/slices.service';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {GlobalEvent} from './services/websockets/websocket.global';
     AuthService,
     XosHttp,
     InstanceService,
+    SliceService,
     GlobalEvent
   ],
   bootstrap: [RootComponent]

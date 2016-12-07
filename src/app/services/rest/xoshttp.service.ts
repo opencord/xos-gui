@@ -13,6 +13,8 @@ export class XosHttp {
   ) {
   }
 
+  // TODO intercept non authenticated calls and send to login (remove cookies)
+
   private checkOptions(options?: RequestOptionsArgs): RequestOptionsArgs {
     // if options are not there, create them
     if(!options){
