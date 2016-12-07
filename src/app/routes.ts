@@ -3,7 +3,7 @@
 import {Component} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HelloComponent} from './hello';
-import {LoginComponent} from './components/login/login.component';
+import {LoginComponent} from './views/login/login.component';
 
 @Component({
   selector: 'xos-root',
