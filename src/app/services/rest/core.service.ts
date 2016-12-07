@@ -20,7 +20,7 @@ export class CoreService {
   constructor (private http: XosHttp) {}
 
   // Fetch all existing comments
-  getCoreEndpoints() : Observable<any[]> {
+  getCoreEndpoints(): Observable<any[]> {
 
     const search = 'some=param';
 
@@ -29,7 +29,7 @@ export class CoreService {
     // ...and calling .json() on the response to return data
       .map((res: Response) => res.json())
       // ...errors if any
-      .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+      .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 
   }
 }

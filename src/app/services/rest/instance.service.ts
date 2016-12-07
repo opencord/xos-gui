@@ -3,8 +3,8 @@
 // Imports
 import {AppConfig} from '../../config/app.config';
 import {AuthService} from './auth.service';
-import { Injectable }     from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import {Injectable}     from '@angular/core';
+import {Response} from '@angular/http';
 import {XosHttp} from './xoshttp.service';
 import {Observable} from 'rxjs/Rx';
 
