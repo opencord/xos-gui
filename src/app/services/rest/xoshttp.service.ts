@@ -13,9 +13,20 @@ export class XosHttp {
   ) {
   }
 
+  // TODO intercept non authenticated calls and send to login (remove cookies)
+  // TODO add POST, PUT, DELETE declaration
+  get(url: string, options?: RequestOptionsArgs): Observable<Response> {
+
+    options = this.checkOptions(options);
+    options = this.getHeaders(options);
+    options = this.getParams(options);
+
+    return this.http.get(url, options);
+  }
+
   private checkOptions(options?: RequestOptionsArgs): RequestOptionsArgs {
     // if options are not there, create them
-    if(!options){
+    if (!options) {
       options = {};
     }
     return options;
@@ -41,15 +52,4 @@ export class XosHttp {
     }
     return options;
   }
-
-  get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-
-    options = this.checkOptions(options);
-    options = this.getHeaders(options);
-    options = this.getParams(options);
-
-    return this.http.get(url, options)
-  }
-
-  // TODO add POST, PUT, DELETE declaration
 }

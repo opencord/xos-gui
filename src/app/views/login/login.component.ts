@@ -5,13 +5,11 @@ import {IAuthRequest, IAuthResponse} from '../../interfaces/auth.interface';
 import {StyleConfig} from '../../config/style.config';
 import {AuthService} from '../../services/rest/auth.service';
 
-import {AppConfig} from '../../config/app.config';
-
 export class Auth {
   constructor(
-    public username,
-    public password
-  ){
+    public username: string,
+    public password: string
+  ) {
   }
 }
 
@@ -21,20 +19,20 @@ export class Auth {
   providers: [AuthService],
 })
 export class LoginComponent {
-  public auth:IAuthRequest;
+  public auth: IAuthRequest;
   public brandName;
-  constructor(private AuthService: AuthService, private router:Router) {
+  constructor(private AuthService: AuthService, private router: Router) {
     this.auth = new Auth('', '');
     this.brandName = StyleConfig.projectName;
   }
 
-  onSubmit(auth:IAuthRequest){
+  onSubmit(auth: IAuthRequest) {
     this.AuthService.login(auth)
       .subscribe(
-        (user:IAuthResponse) => {
+        (user: IAuthResponse) => {
           this.router.navigate(['/']);
         }
-      )
+      );
   }
 }
 

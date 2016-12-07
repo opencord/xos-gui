@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "removeComments": false,
     "noImplicitAny": false,
-    "noEmitOnError": false
+    "noEmitOnError": false,
+    "target": "es5"
   },
   "compileOnSave": false,
   "include": [

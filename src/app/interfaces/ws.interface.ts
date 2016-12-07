@@ -4,5 +4,5 @@ export interface IWSEvent {
    changed_fields: string[],
    object?: any,
    pk?: number
- }
+ };
 }

@@ -1,29 +1,23 @@
 /// <reference path="../../../../typings/index.d.ts"/>
 
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/Rx';
+import {Subject} from 'rxjs/Rx';
 import * as io from 'socket.io-client';
 import {AppConfig} from '../../config/app.config';
 import {IWSEvent} from '../../interfaces/ws.interface';
 
 @Injectable()
 export class GlobalEvent {
-  private _events: BehaviorSubject<IWSEvent> = new BehaviorSubject<IWSEvent>({
-    model: 'XOS',
-    msg: {
-      changed_fields: []
-    }
-  });
+  private _events: Subject<IWSEvent> = new Subject<IWSEvent>();
   private socket;
   constructor() {
     this.socket = io(AppConfig.websocketClient);
-    this.socket.on('event', (data: IWSEvent) => {
+    this.socket.on('event', (data: IWSEvent): void => {
+      console.log('event', data);
       this._events.next(data);
     });
   }
-
   list() {
     return this._events.asObservable();
   }
-
 }

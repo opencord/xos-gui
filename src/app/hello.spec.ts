@@ -1,18 +1,19 @@
 /// <reference path="../../typings/index.d.ts"/>
 
+import { MockBackend } from '@angular/http/testing';
+import {TestBed, async} from '@angular/core/testing';
+import {Router} from '@angular/router';
 import {HelloComponent} from './hello';
 import {LogoutComponent} from './components/logout/logout.component';
-import {TestBed, async} from '@angular/core/testing';
 import {StyleConfig} from './config/style.config';
 import { Http, BaseRequestOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
 import {CookieService} from 'angular2-cookie/services/cookies.service';
-import {Router} from '@angular/router';
 import {XosHttp} from './services/rest/xoshttp.service';
 import {InstanceStore} from './services/stores/instance.store';
 import {GlobalEvent} from './services/websockets/websocket.global';
 import {AuthService} from './services/rest/auth.service';
 import {InstanceService} from './services/rest/instance.service';
+import {SliceService} from './services/rest/slices.service';
 
 describe('hello component', () => {
   beforeEach(async(() => {
@@ -40,7 +41,8 @@ describe('hello component', () => {
         InstanceStore,
         GlobalEvent,
         AuthService,
-        InstanceService
+        InstanceService,
+        SliceService
       ]
     });
     TestBed.compileComponents();
