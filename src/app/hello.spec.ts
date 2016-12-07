@@ -8,6 +8,11 @@ import { Http, BaseRequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import {CookieService} from 'angular2-cookie/services/cookies.service';
 import {Router} from '@angular/router';
+import {XosHttp} from './services/rest/xoshttp.service';
+import {InstanceStore} from './services/stores/instance.store';
+import {GlobalEvent} from './services/websockets/websocket.global';
+import {AuthService} from './services/rest/auth.service';
+import {InstanceService} from './services/rest/instance.service';
 
 describe('hello component', () => {
   beforeEach(async(() => {
@@ -30,7 +35,12 @@ describe('hello component', () => {
         {
           provide: Router,
           useClass: class { navigate = jasmine.createSpy('navigate'); }
-        }
+        },
+        XosHttp,
+        InstanceStore,
+        GlobalEvent,
+        AuthService,
+        InstanceService
       ]
     });
     TestBed.compileComponents();

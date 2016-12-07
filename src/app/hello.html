@@ -4,4 +4,9 @@
 
 <xos-logout></xos-logout>
 
-<pre>{{ endpoints | json }}</pre>
+<div *ngFor="let instance of instances">
+  <b>{{instance.name}}</b>
+  <i>{{instance.isolation}}</i>
+  {{instance.slice}}
+  {{instance.node}}
+</div>

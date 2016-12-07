@@ -3,7 +3,7 @@
 // Imports
 import {AppConfig} from '../../config/app.config';
 import {Injectable}     from '@angular/core';
-import {Http, Response} from '@angular/http';
+import {Http, Response, Headers} from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import {IAuthRequest, IAuthResponse} from '../../interfaces/auth.interface';
 import {CookieService} from 'angular2-cookie/core';
@@ -24,17 +24,25 @@ export class AuthService {
   isAuthenticated(): string {
     this.xosToken = this.cookieService.get('xoscsrftoken');
     this.xosSessionId = this.cookieService.get('xossessionid');
-    return this.xosToken;
+    return this.xosToken && this.xosSessionId;
+  }
+
+  // get auth info to authenticate API
+  getUserHeaders(): Headers{
+    const headers = new Headers();
+    headers.append('x-csrftoken', this.cookieService.get('xoscsrftoken'));
+    headers.append('x-sessionid', this.cookieService.get('xossessionid'));
+    return headers;
   }
 
   // save cookies
-  storeAuth(auth: IAuthResponse): void {
+  private storeAuth(auth: IAuthResponse): void {
     this.cookieService.put('xoscsrftoken', auth.xoscsrftoken);
     this.cookieService.put('xossessionid', auth.xossessionid);
   }
 
   // remove cookies
-  removeAuth(): void {
+  private removeAuth(): void {
     this.cookieService.remove('xoscsrftoken');
     this.cookieService.remove('xossessionid');
   }
