@@ -2,7 +2,7 @@
 
 // Imports
 import {AppConfig} from '../../config/app.config';
-import {Injectable}     from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Http, Response, Headers} from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import {IAuthRequest, IAuthResponse} from '../../interfaces/auth.interface';
@@ -35,18 +35,6 @@ export class AuthService {
     return headers;
   }
 
-  // save cookies
-  private storeAuth(auth: IAuthResponse): void {
-    this.cookieService.put('xoscsrftoken', auth.xoscsrftoken);
-    this.cookieService.put('xossessionid', auth.xossessionid);
-  }
-
-  // remove cookies
-  private removeAuth(): void {
-    this.cookieService.remove('xoscsrftoken');
-    this.cookieService.remove('xossessionid');
-  }
-
   // log the user in
   login(auth: IAuthRequest): Observable<IAuthResponse> {
     return this.http.post(`${AppConfig.apiEndpoint}/utility/login/`, auth)
@@ -67,6 +55,18 @@ export class AuthService {
         return res.text();
       })
       .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  }
+
+  // save cookies
+  private storeAuth(auth: IAuthResponse): void {
+    this.cookieService.put('xoscsrftoken', auth.xoscsrftoken);
+    this.cookieService.put('xossessionid', auth.xossessionid);
+  }
+
+  // remove cookies
+  private removeAuth(): void {
+    this.cookieService.remove('xoscsrftoken');
+    this.cookieService.remove('xossessionid');
   }
 }
 

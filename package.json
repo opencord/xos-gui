@@ -55,6 +55,7 @@
     "ts-loader": "^0.8.2",
     "tslint": "^3.2.1",
     "tslint-loader": "^2.1.0",
+    "typedoc": "^0.5.1",
     "typescript": "^2.0.2",
     "typings": "^1.0.4",
     "webpack": "2.1.0-beta.20"
@@ -67,7 +68,8 @@
     "test": "gulp test",
     "test:auto": "gulp test:auto",
     "config": "gulp config",
-    "lint": "tslint -c ./tslint.json ./src/**/*.ts"
+    "lint": "tslint -c ./tslint.json ./src/**/*.ts",
+    "doc": "typedoc --out ./docs --module system --theme minimal ./src"
   },
   "eslintConfig": {
     "root": true,

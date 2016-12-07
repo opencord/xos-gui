@@ -2,7 +2,7 @@
 
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/Rx';
-import {IInstance} from '../../interfaces/instance.interface';
+import {IInstance} from '../../interfaces/models.interface';
 import {InstanceService} from '../rest/instance.service';
 import * as _ from 'lodash';
 import {IWSEvent} from '../../interfaces/ws.interface';
@@ -14,10 +14,7 @@ export class InstanceStore {
   constructor(private instanceService: InstanceService, private globalEvent: GlobalEvent) {
     this.loadInitialData();
     this.globalEvent.list()
-      .filter((e: IWSEvent) => {
-        console.log('filter', e);
-        return e.model === 'Instance';
-      })
+      .filter((e: IWSEvent) => e.model === 'Instance')
       .subscribe(
         (event: IWSEvent) => {
 

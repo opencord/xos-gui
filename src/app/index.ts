@@ -19,6 +19,7 @@ import {AuthService} from './services/rest/auth.service';
 import {XosHttp} from './services/rest/xoshttp.service';
 import {InstanceService} from './services/rest/instance.service';
 import {GlobalEvent} from './services/websockets/websocket.global';
+import {SliceService} from './services/rest/slices.service';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {GlobalEvent} from './services/websockets/websocket.global';
     AuthService,
     XosHttp,
     InstanceService,
+    SliceService,
     GlobalEvent
   ],
   bootstrap: [RootComponent]
