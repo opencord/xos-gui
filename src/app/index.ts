@@ -6,10 +6,19 @@ import {CookieService} from 'angular2-cookie/services/cookies.service';
 
 import {routing, RootComponent} from './routes';
 
+// registering components
 import {HelloComponent} from './hello';
 import {LoginComponent} from './components/login/login.component';
+import {LogoutComponent} from './components/logout/logout.component';
+
+// registering directives
 import {ProtectedDirective} from './directives/protected.directive';
-import {LogoutComponent} from './components/logout/logout.component.ts';
+
+// registering services
+import {AuthService} from './services/rest/auth.service';
+import {XosHttp} from './services/rest/xoshttp.service';
+import {InstanceService} from './services/rest/instance.service';
+import {GlobalEvent} from './services/websockets/websocket.global';
 
 @NgModule({
   imports: [
@@ -25,7 +34,13 @@ import {LogoutComponent} from './components/logout/logout.component.ts';
     LogoutComponent,
     ProtectedDirective
   ],
-  providers: [CookieService],
+  providers: [
+    CookieService,
+    AuthService,
+    XosHttp,
+    InstanceService,
+    GlobalEvent
+  ],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

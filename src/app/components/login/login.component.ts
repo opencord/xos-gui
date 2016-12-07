@@ -5,6 +5,8 @@ import {IAuthRequest, IAuthResponse} from '../../interfaces/auth.interface';
 import {StyleConfig} from '../../config/style.config';
 import {AuthService} from '../../services/rest/auth.service';
 
+import {AppConfig} from '../../config/app.config';
+
 export class Auth {
   constructor(
     public username,
