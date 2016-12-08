@@ -1,19 +1,19 @@
 /// <reference path="../../typings/index.d.ts"/>
 
-import { MockBackend } from '@angular/http/testing';
-import {TestBed, async} from '@angular/core/testing';
 import {Router} from '@angular/router';
-import {HelloComponent} from './hello';
-import {LogoutComponent} from './components/logout/logout.component';
-import {StyleConfig} from './config/style.config';
+import {HelloComponent} from '../../src/app/hello';
+import {LogoutComponent} from '../../src/app/components/logout/logout.component';
+import {StyleConfig} from '../../src/app/config/style.config';
 import { Http, BaseRequestOptions } from '@angular/http';
 import {CookieService} from 'angular2-cookie/services/cookies.service';
-import {XosHttp} from './services/rest/xoshttp.service';
-import {InstanceStore} from './services/stores/instance.store';
-import {GlobalEvent} from './services/websockets/websocket.global';
-import {AuthService} from './services/rest/auth.service';
-import {InstanceService} from './services/rest/instance.service';
-import {SliceService} from './services/rest/slices.service';
+import {XosHttp} from '../../src/app/services/rest/xoshttp.service';
+import {InstanceStore} from '../../src/app/services/stores/instance.store';
+import {GlobalEvent} from '../../src/app/services/websockets/websocket.global';
+import {AuthService} from '../../src/app/services/rest/auth.service';
+import {InstanceService} from '../../src/app/services/rest/instance.service';
+import {SliceService} from '../../src/app/services/rest/slices.service';
+import {TestBed, async} from '@angular/core/testing';
+import {MockBackend} from '@angular/http/testing';
 
 describe('hello component', () => {
   beforeEach(async(() => {

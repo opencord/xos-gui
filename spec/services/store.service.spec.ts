@@ -1,6 +1,7 @@
+///<reference path="../../typings/globals/jasmine/index.d.ts"/>
 
-import {ObservableCollectionHandler} from './store.service';
-import {IWSEvent} from '../../interfaces/ws.interface';
+import {ObservableCollectionHandler} from '../../src/app/services/helpers/store.service';
+import {IWSEvent} from '../../src/app/interfaces/ws.interface';
 import {BehaviorSubject} from 'rxjs';
 
 describe('Service: Observable Collection Handler', () => {
