@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs/Rx';
+import { IXosTableConfig } from './interfaces/xos-components/table.interface';
 /// <reference path="../../typings/index.d.ts"/>
 import {Component, OnInit} from '@angular/core';
 import {StyleConfig} from './config/style.config';
@@ -14,6 +16,20 @@ export class HelloComponent implements OnInit {
   // declare class properties
   public hello: string;
   public slices: ISlice[];
+  public data: Observable<any>;
+
+  public cfg: IXosTableConfig = {
+    columns: [
+      {
+        label: 'Name',
+        prop: 'name'
+      },
+      {
+        label: 'Default Isolation',
+        prop: 'default_isolation'
+      }
+    ]
+  };
 
   constructor(
     private sliceStore: SliceStore
@@ -24,15 +40,6 @@ export class HelloComponent implements OnInit {
 
   ngOnInit() {
     console.log('on init');
-    this.sliceStore.query()
-      .subscribe(
-        (slices: ISlice[]) => {
-          console.log(slices);
-          this.slices = slices;
-        },
-        err => {
-          console.warn(err);
-        }
-      );
+    this.data = this.sliceStore.query();
   }
 }

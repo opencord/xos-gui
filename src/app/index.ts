@@ -1,3 +1,4 @@
+import { XosTableComponent } from './components/tables/table.component';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpModule}    from '@angular/http';
@@ -33,6 +34,7 @@ import {SliceService} from './services/rest/slices.service';
     HelloComponent,
     LoginComponent,
     LogoutComponent,
+    XosTableComponent,
     ProtectedDirective
   ],
   providers: [

@@ -1,7 +1,9 @@
 {
   "globalDependencies": {
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
     "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
+    "jquery": "registry:dt/jquery#1.10.0+20160929162922",
     "require": "registry:dt/require#2.1.20+20160316155526",
-    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504"
+    "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654"
   }
 }

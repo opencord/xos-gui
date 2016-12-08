@@ -4,6 +4,8 @@
 
 <xos-logout></xos-logout>
 
+<xos-table [config]="cfg" [data]="data"></xos-table>
+
 <div *ngFor="let slice of slices">
   <b>{{slice.name}}</b>
   <i>{{slice.backend_status}}</i>
