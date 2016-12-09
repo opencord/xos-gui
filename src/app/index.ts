@@ -1,4 +1,4 @@
-import { XosTableComponent } from './components/tables/table.component';
+import { SliceResolver, SliceStore } from './services/stores/slice.store';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpModule}    from '@angular/http';
@@ -8,9 +8,12 @@ import {CookieService} from 'angular2-cookie/services/cookies.service';
 import {routing, RootComponent} from './routes';
 
 // registering components
-import {HelloComponent} from './hello';
+import {XosAppComponent} from './xos-app';
 import {LoginComponent} from './views/login/login.component';
 import {LogoutComponent} from './components/logout/logout.component';
+import { XosCrudComponent } from './views/crud/crud.component';
+import { XosTableComponent } from './components/tables/table.component';
+import {XosNavComponent} from './components/nav/nav.component';
 
 // registering directives
 import {ProtectedDirective} from './directives/protected.directive';
@@ -31,11 +34,18 @@ import {SliceService} from './services/rest/slices.service';
   ],
   declarations: [
     RootComponent,
-    HelloComponent,
+    XosAppComponent,
     LoginComponent,
     LogoutComponent,
     XosTableComponent,
-    ProtectedDirective
+    ProtectedDirective,
+    XosCrudComponent,
+    XosNavComponent
+  ],
+  // component used in dynamic routes have to be added here
+  entryComponents: [
+    XosCrudComponent,
+    LoginComponent
   ],
   providers: [
     CookieService,
@@ -43,7 +53,9 @@ import {SliceService} from './services/rest/slices.service';
     XosHttp,
     InstanceService,
     SliceService,
-    GlobalEvent
+    GlobalEvent,
+    SliceResolver,
+    SliceStore
   ],
   bootstrap: [RootComponent]
 })

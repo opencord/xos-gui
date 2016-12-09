@@ -7,6 +7,8 @@ import {IWSEvent} from '../../interfaces/ws.interface';
 import {GlobalEvent} from '../websockets/websocket.global';
 import {SliceService} from '../rest/slices.service';
 import {ObservableCollectionHandler} from '../helpers/store.service';
+import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class SliceStore {
@@ -36,4 +38,16 @@ export class SliceStore {
     return this._slices.asObservable();
   }
 
+}
+
+@Injectable()
+export class SliceResolver implements Resolve<any> {
+  constructor(
+    private sliceStore: SliceStore
+  ) {}
+
+  resolve(route: ActivatedRouteSnapshot): Observable<any> {
+    console.log('resolving SliceStore', this.sliceStore.query());
+    return this.sliceStore.query().first();
+  }
 }

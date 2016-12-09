@@ -1,3 +1,5 @@
+import { RouterModule } from '@angular/router';
+import { CoreService } from './services/rest/core.service';
 import { Observable } from 'rxjs/Rx';
 import { IXosTableConfig } from './interfaces/xos-components/table.interface';
 /// <reference path="../../typings/index.d.ts"/>
@@ -8,10 +10,10 @@ import {SliceStore} from './services/stores/slice.store';
 
 @Component({
   selector: 'xos-app',
-  template: require('./hello.html'),
-  providers: [SliceStore],
+  template: require('./xos-app.html'),
+  providers: [CoreService, SliceStore, RouterModule],
 })
-export class HelloComponent implements OnInit {
+export class XosAppComponent implements OnInit {
 
   // declare class properties
   public hello: string;
@@ -39,7 +41,6 @@ export class HelloComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('on init');
     this.data = this.sliceStore.query();
   }
 }
