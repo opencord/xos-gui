@@ -1,0 +1,7 @@
+<div class="nav">
+  <ul>
+    <li ng-repeat="route in vm.routes" ui-sref-active="active">
+      <a ui-sref="{{route.state}}">{{route.label}}</a>
+    </li>
+  </ul>
+</div>

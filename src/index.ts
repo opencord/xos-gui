@@ -1,24 +1,25 @@
-/// <reference path="../typings/index.d.ts"/>
+/// <reference path="../typings/index.d.ts" />
 
-import 'core-js/client/shim';
-import 'zone.js/dist/zone';
+import * as angular from 'angular';
 
-import '@angular/common';
-import 'rxjs';
+import 'angular-ui-router';
+import 'angular-resource';
+import 'angular-cookies';
+import routesConfig from './routes';
+
+import {main} from './app/main';
 
 import './index.scss';
+import {xosCore} from './app/core/index';
+import {xosRest} from './app/rest/index';
+import {xosViews} from './app/views/index';
+import {interceptorConfig, userStatusInterceptor, CredentialsInterceptor} from './interceptors';
 
-import {enableProdMode} from '@angular/core';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './app';
+angular
+  .module('app', [xosCore, xosRest, xosViews, 'ui.router', 'ngResource'])
+  .config(routesConfig)
+  .config(interceptorConfig)
+  .factory('UserStatusInterceptor', userStatusInterceptor)
+  .factory('CredentialsInterceptor', CredentialsInterceptor)
+  .component('xos', main);
 
-declare var process: any;
-
-if (process.env.NODE_ENV === 'production') {
-  enableProdMode();
-} else {
-  Error['stackTraceLimit'] = Infinity; // tslint:disable-line:no-string-literal
-  require('zone.js/dist/long-stack-trace-zone'); // tslint:disable-line:no-var-requires
-}
-
-platformBrowserDynamic().bootstrapModule(AppModule);
