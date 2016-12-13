@@ -1,5 +1,7 @@
 # XOS GUI
 
+This is the new XOS UI
+
 # Development
 
 This application can be executed on your system as long as you have `NodeJs` version 4 or higher.
