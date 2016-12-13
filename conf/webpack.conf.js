@@ -35,6 +35,7 @@ module.exports = {
         test: /\.ts$/,
         exclude: /node_modules/,
         loaders: [
+          'ng-annotate',
           'ts'
         ]
       },
@@ -51,11 +52,7 @@ module.exports = {
     new webpack.NoErrorsPlugin(),
     new HtmlWebpackPlugin({
       template: conf.path.src('index.html')
-    }),
-    new webpack.ContextReplacementPlugin(
-      /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-      conf.paths.src
-    )
+    })
   ],
   postcss: () => [autoprefixer],
   debug: true,

@@ -1,5 +1,3 @@
-const webpack = require('webpack');
-const conf = require('./gulp.conf');
 module.exports = {
   module: {
     preLoaders: [
@@ -9,7 +7,6 @@ module.exports = {
         loader: 'tslint'
       }
     ],
-
     loaders: [
       {
         test: /.json$/,
@@ -21,6 +18,7 @@ module.exports = {
         test: /\.ts$/,
         exclude: /node_modules/,
         loaders: [
+          'ng-annotate',
           'ts'
         ]
       },
@@ -29,15 +27,19 @@ module.exports = {
         loaders: [
           'html'
         ]
+      },
+      {
+        test: /\.(css|scss)$/,
+        loaders: [
+          'style',
+          'css',
+          'sass',
+          'postcss'
+        ]
       }
     ]
   },
-  plugins: [
-    new webpack.ContextReplacementPlugin(
-      /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-      conf.paths.src
-    )
-  ],
+  plugins: [],
   debug: true,
   devtool: 'source-map',
   resolve: {

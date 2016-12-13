@@ -1,0 +1,37 @@
+xos-nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  flex-basis: 10%;
+  background: darken(grey, 10);
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: grey;
+
+    > li {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 20px;
+      border-bottom: 1px solid darken(grey, 20);
+
+      &.active {
+        background: darken(grey, 10);
+
+        > a {
+          color: #5aadbb;
+        }
+      }
+
+      &:hover {
+        background: darken(grey, 10);
+      }
+
+      > a {
+        cursor: pointer;
+      }
+    }
+  }
+}
