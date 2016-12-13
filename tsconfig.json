@@ -3,11 +3,8 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
     "removeComments": false,
-    "noImplicitAny": false,
-    "noEmitOnError": false,
-    "target": "es5"
+    "noImplicitAny": false
   },
   "compileOnSave": false,
   "include": [
