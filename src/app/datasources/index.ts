@@ -4,6 +4,7 @@ import {AuthService} from './rest/auth.rest';
 import {WebSocketEvent} from './websocket/global';
 import {SliceStore} from './stores/slices.store';
 import {StoreHelpers} from './helpers/store.helpers';
+import {SynchronizerStore} from './stores/synchronizer.store';
 
 export const xosRest = 'xosDataSources';
 
@@ -17,4 +18,5 @@ angular
 angular
   .module('xosDataSources')
   .service('StoreHelpers', StoreHelpers)
+  .service('SynchronizerStore', SynchronizerStore)
   .service('SlicesStore', SliceStore);

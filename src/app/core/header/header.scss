@@ -1,0 +1,37 @@
+xos-header {
+  .badge {
+    display: block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    border: 4px solid red;
+    background: transparent;
+    position: absolute;
+    right: 15px;
+    top: 18px;
+  }
+
+  .fa {
+    cursor: pointer;
+  }
+
+  .notification-panel {
+    position: absolute;
+    background: darken(grey, 20);
+    right: 0;
+    top: 60px;
+    border: 1px solid darken(grey, 35);
+
+    ul {
+      margin: 0;
+      margin-right: 10px;
+      list-style: none;
+      padding: 10px 5px 0;
+
+      li {
+        border-bottom: 1px solid darken(grey, 35);
+        color: #fff;
+      }
+    }
+  }
+}
