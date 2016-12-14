@@ -17,20 +17,26 @@ xos-header {
 
   .notification-panel {
     position: absolute;
-    background: darken(grey, 20);
-    right: 0;
+    background: darken(grey, 5);
+    right: 10px;
     top: 60px;
     border: 1px solid darken(grey, 35);
+    max-height: 200px;
+    overflow-y: scroll;
 
     ul {
       margin: 0;
-      margin-right: 10px;
+      padding: 0;
       list-style: none;
-      padding: 10px 5px 0;
 
       li {
+        padding: 10px;
         border-bottom: 1px solid darken(grey, 35);
         color: #fff;
+
+        &.viewed {
+          background: darken(grey, 20);
+        }
       }
     }
   }
