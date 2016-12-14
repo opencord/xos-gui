@@ -1,5 +1,3 @@
-
-
 html, body, #root {
   margin: 0;
   height: 100%;
@@ -49,6 +47,13 @@ a {
   flex: 1;
   font-size: 1.5rem;
   margin: 1rem;
+}
+
+.header-date {
+  flex: 1;
+  text-align: right;
+  margin: 1rem;
+  color: white;
 }
 
 .footer {
