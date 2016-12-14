@@ -1,5 +1,7 @@
 /// <reference path="../typings/index.d.ts" />
 
+// TODO handle backend failure
+
 export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourceProvider: angular.resource.IResourceServiceProvider) {
   $httpProvider.interceptors.push('UserStatusInterceptor');
   $httpProvider.interceptors.push('CredentialsInterceptor');
