@@ -4,6 +4,7 @@
     "angular-cookies": "^1.6.0",
     "angular-resource": "^1.6.0",
     "angular-ui-router": "1.0.0-beta.1",
+    "lodash": "^4.17.2",
     "socket.io-client": "^1.7.2"
   },
   "devDependencies": {

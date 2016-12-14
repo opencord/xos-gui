@@ -31,7 +31,16 @@ function routesConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
         title: 'Slices',
         resource: 'SlicesRest',
         xosTableCfg: {
-          columns: ['name', 'default_isolation']
+          columns: [
+            {
+              label: 'Name',
+              prop: 'name'
+            },
+            {
+              label: 'Default Isolation',
+              prop: 'default_isolation'
+            }
+          ]
         }
       }
     })

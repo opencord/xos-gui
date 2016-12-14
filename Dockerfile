@@ -10,7 +10,7 @@ ENV VHOST /usr/share/nginx/html
 
 # Install nodeJs
 RUN apt-get update
-RUN apt-get install curl git -y
+RUN apt-get install curl git bzip2 -y
 RUN curl -sL https://deb.nodesource.com/setup_4.x > install_node.sh
 RUN chmod a+x install_node.sh
 RUN ./install_node.sh
