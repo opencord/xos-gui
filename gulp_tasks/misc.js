@@ -14,8 +14,6 @@ gulp.task('brand', styleConfig);
 gulp.task('appConfig', appConfig);
 gulp.task('config', gulp.series('brand', 'appConfig'));
 
-console.log(process.env.NODE_ENV);
-
 function clean() {
   return del([conf.paths.dist, conf.paths.tmp]);
 }

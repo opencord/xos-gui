@@ -16,8 +16,7 @@ class LoginCtrl {
       password: password
     })
       .then(res => {
-        console.log(res);
-        this.$state.go('app');
+        this.$state.go('xos.dashboard');
       })
       .catch(e => console.error);
   }

@@ -1,6 +1,6 @@
 import './nav.scss';
 
-interface INavItem {
+export interface INavItem {
   label: string;
   state: string;
 }
