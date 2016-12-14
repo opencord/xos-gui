@@ -29,7 +29,7 @@ function routesConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
       component: `xosCrud`,
       data: {
         title: 'Slices',
-        resource: 'SlicesRest',
+        store: 'SlicesStore',
         xosTableCfg: {
           columns: [
             {

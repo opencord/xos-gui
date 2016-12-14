@@ -11,7 +11,7 @@ import {main} from './app/main';
 
 import './index.scss';
 import {xosCore} from './app/core/index';
-import {xosRest} from './app/rest/index';
+import {xosRest} from './app/datasources/index';
 import {xosViews} from './app/views/index';
 import {interceptorConfig, userStatusInterceptor, CredentialsInterceptor} from './interceptors';
 

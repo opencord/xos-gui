@@ -5,6 +5,7 @@
     "angular-resource": "^1.6.0",
     "angular-ui-router": "1.0.0-beta.1",
     "lodash": "^4.17.2",
+    "rxjs": "^5.0.1",
     "socket.io-client": "^1.7.2"
   },
   "devDependencies": {
@@ -68,6 +69,7 @@
     "build": "gulp",
     "start": "gulp serve",
     "serve:dist": "gulp serve:dist",
+    "pretest": "npm run lint",
     "test": "gulp test",
     "test:auto": "gulp test:auto",
     "config": "gulp config",

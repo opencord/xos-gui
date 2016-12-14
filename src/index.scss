@@ -36,6 +36,7 @@ a {
     flex-basis: 90%;
     background: darken(grey, 25);
     padding: 20px;
+    color: #eee;
   }
 }
 
@@ -49,12 +50,6 @@ a {
   font-size: 1.5rem;
   margin: 1rem;
 }
-.header-date {
-  flex: 1;
-  text-align: right;
-  margin: 1rem;
-  white: white;
-}
 
 .footer {
   padding: 0.5rem;
@@ -62,4 +57,8 @@ a {
   background-color: #1f1f1f;
   text-align: center;
   color: white;
+}
+
+h1 {
+  color: #fff;
 }

@@ -1,6 +1,7 @@
 // TODO fininsh to import all methods from https://github.com/opencord/ng-xos-lib/blob/master/src/ui_components/dumbComponents/table/table.component.js
 // TODO import tests
 
+import './table.scss';
 import * as _ from 'lodash';
 
 interface IXosTableCgfOrder {
@@ -19,8 +20,6 @@ class TableCtrl {
   public columns: any[];
   public orderBy: string;
   public reverse: boolean;
-
-  private data: any[];
   private config: IXosTableCfg;
 
 
@@ -34,13 +33,13 @@ class TableCtrl {
     }
 
     // handle default ordering
-    if (this.config.order && angular.isObject(this.config.order)){
+    if (this.config.order && angular.isObject(this.config.order)) {
       this.reverse = this.config.order.reverse || false;
       this.orderBy = this.config.order.field || 'id';
     }
 
     // if columns with type 'custom' are provided
-    // check that a custom formatte3 is provided too
+    // check that a custom formatter is provided too
     let customCols = _.filter(this.config.columns, {type: 'custom'});
     if (angular.isArray(customCols) && customCols.length > 0) {
       _.forEach(customCols, (col) => {
@@ -51,7 +50,7 @@ class TableCtrl {
     }
 
     // if columns with type 'icon' are provided
-    // check that a custom formatte3 is provided too
+    // check that a custom formatter is provided too
     let iconCols = _.filter(this.config.columns, {type: 'icon'});
     if (angular.isArray(iconCols) && iconCols.length > 0) {
       _.forEach(iconCols, (col) => {

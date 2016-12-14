@@ -1,37 +1,42 @@
-import {IXosResourceService} from '../../rest/slices.rest';
 import {IXosTableCfg} from '../../core/table/table';
+import {IStoreService} from '../../datasources/stores/slices.store';
 export interface IXosCrudData {
   title: string;
-  resource: string;
+  store: string;
   xosTableCfg: IXosTableCfg;
 }
 
 class CrudController {
-  static $inject = ['$state', '$injector'];
+  // TODO dynamically inject store
+  static $inject = ['$state', '$injector', '$scope'];
 
   public data: IXosCrudData;
   public tableCfg: IXosTableCfg;
   public title: string;
-  public resourceName: string;
-  public resource: ng.resource.IResourceClass<ng.resource.IResource<any>>;
+  public storeName: string;
+  public store: IStoreService;
   public tableData: any[];
 
   constructor(
     private $state: angular.ui.IStateService,
-    private $injector: angular.Injectable<any>
+    private $injector: angular.Injectable<any>,
+    private $scope: angular.IScope
   ) {
     this.data = this.$state.current.data;
-    console.log('xosCrud', this.data);
     this.tableCfg = this.data.xosTableCfg;
     this.title = this.data.title;
-    this.resourceName = this.data.resource;
-    this.resource = this.$injector.get(this.resourceName).getResource();
+    this.storeName = this.data.store;
+    this.store = this.$injector.get(this.storeName);
 
-    this.resource
-      .query().$promise
-      .then(res => {
-        this.tableData = res;
-      });
+    this.store.query()
+      .subscribe(
+        (event) => {
+          // NOTE Observable mess with $digest cycles, we need to schedule the expression later
+          $scope.$evalAsync(() => {
+            this.tableData = event;
+          });
+        }
+      );
   }
 }
 

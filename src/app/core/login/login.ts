@@ -1,4 +1,4 @@
-import {AuthService} from '../../rest/auth.rest';
+import {AuthService} from '../../datasources/rest/auth.rest';
 
 class LoginCtrl {
   static $inject = ['AuthService', '$state'];
