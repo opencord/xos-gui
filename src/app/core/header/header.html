@@ -5,11 +5,11 @@
     </a>
   </p>
   <p class="header-date notification">
-    <i ng-show="vm.notifications.length > 0" class="badge"></i>
+    <i ng-show="vm.newNotifications.length > 0" class="badge"></i>
     <i class="fa fa-bell" ng-click="showNotification = !showNotification"></i>
     <div class="notification-panel" ng-show="showNotification">
       <ul>
-        <li ng-repeat="n in vm.notifications">
+        <li ng-repeat="n in vm.notifications" ng-click="vm.viewNotification(n)" ng-class="{viewed: n.viewed}">
           <b>{{n.model}}</b><br>
           <i>{{n.msg.object.name}} status is {{n.msg.object.backend_status}}</i>
         </li>
