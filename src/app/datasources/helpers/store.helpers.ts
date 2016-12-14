@@ -10,6 +10,7 @@ export class StoreHelpers {
   public updateCollection(event: IWSEvent, subject: BehaviorSubject<any>): BehaviorSubject<any> {
     const collection: any[] = subject.value;
     const index: number = _.findIndex(collection, (i) => {
+      // NOTE evaluate to use event.msg.pk
       return i.id === event.msg.object.id;
     });
     const exist: boolean = index > -1;
