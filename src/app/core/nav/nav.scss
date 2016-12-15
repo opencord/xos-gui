@@ -2,8 +2,9 @@ xos-nav {
   display: flex;
   flex: 1;
   flex-direction: column;
-  flex-basis: 10%;
+  flex-basis: 15%;
   background: darken(grey, 10);
+  overflow-y: scroll;
 
   ul {
     list-style: none;

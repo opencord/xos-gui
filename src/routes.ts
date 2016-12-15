@@ -18,32 +18,6 @@ function routesConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
       parent: 'xos',
       template: '<h1>Dashboard</h1>'
     })
-    .state('xos.instances', {
-      url: 'instances',
-      parent: 'xos',
-      template: '<h1>Instances</h1>'
-    })
-    .state('xos.slices', {
-      url: 'slices',
-      parent: 'xos',
-      component: `xosCrud`,
-      data: {
-        title: 'Slices',
-        store: 'SlicesStore',
-        xosTableCfg: {
-          columns: [
-            {
-              label: 'Name',
-              prop: 'name'
-            },
-            {
-              label: 'Default Isolation',
-              prop: 'default_isolation'
-            }
-          ]
-        }
-      }
-    })
     .state('xos.nodes', {
       url: 'nodes',
       parent: 'xos',

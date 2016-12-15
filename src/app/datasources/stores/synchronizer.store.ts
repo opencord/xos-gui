@@ -1,7 +1,11 @@
 /// <reference path="../../../../typings/index.d.ts"/>
 
-import {Subject} from 'rxjs/Rx';
+import {Subject, Observable} from 'rxjs/Rx';
 import {IWSEvent, IWSEventService} from '../websocket/global';
+
+export interface  IStoreService {
+  query(): Observable<any>;
+}
 
 export class SynchronizerStore {
   static $inject = ['WebSocket'];
