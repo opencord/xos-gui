@@ -11,7 +11,7 @@ interface IXosTableCgfOrder {
 
 export interface IXosTableCfg {
   columns: any[];
-  order: IXosTableCgfOrder; // | boolean;
+  order?: IXosTableCgfOrder; // | boolean;
 }
 
 class TableCtrl {
