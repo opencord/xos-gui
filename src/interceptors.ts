@@ -5,6 +5,7 @@
 export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourceProvider: angular.resource.IResourceServiceProvider) {
   $httpProvider.interceptors.push('UserStatusInterceptor');
   $httpProvider.interceptors.push('CredentialsInterceptor');
+  $httpProvider.interceptors.push('NoHyperlinksInterceptor');
   $resourceProvider.defaults.stripTrailingSlashes = false;
 }
 
@@ -35,6 +36,17 @@ export function CredentialsInterceptor($cookies: angular.cookies.ICookiesService
       req.headers['X-CSRFToken'] = $cookies.get('xoscsrftoken');
       req.headers['x-csrftoken'] = $cookies.get('xoscsrftoken');
       req.headers['x-sessionid'] = $cookies.get('xossessionid');
+      return req;
+    }
+  };
+}
+
+export function NoHyperlinksInterceptor() {
+  return {
+    request: (req) => {
+      if (req.url.indexOf('.html') === -1) {
+        req.url += '?no_hyperlinks=1';
+      }
       return req;
     }
   };

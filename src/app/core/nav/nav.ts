@@ -1,32 +1,19 @@
 import './nav.scss';
-
-export interface INavItem {
-  label: string;
-  state: string;
-}
+import {IXosNavigationService, IXosNavigationRoute} from '../services/navigation';
 
 class NavCtrl {
-  public routes: INavItem[];
+  static $inject = ['$state', 'NavigationService'];
+  public routes: IXosNavigationRoute[];
 
-  constructor() {
-    this.routes = [
-      {
-        label: 'Home',
-        state: 'xos.dashboard'
-      },
-      {
-        label: 'Instances',
-        state: 'xos.instances'
-      },
-      {
-        label: 'Slices',
-        state: 'xos.slices'
-      },
-      {
-        label: 'Nodes',
-        state: 'xos.nodes'
-      }
-    ];
+  constructor(
+    private $state: angular.ui.IStateService,
+    private navigationService: IXosNavigationService
+  ) {
+    this.routes = this.navigationService.query();
+  }
+
+  isRouteActive(route: IXosNavigationRoute) {
+    return this.$state.current.url === route.url ? 'active' : '';
   }
 }
 

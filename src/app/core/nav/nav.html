@@ -1,7 +1,8 @@
 <div class="nav">
   <ul>
-    <li ng-repeat="route in vm.routes" ui-sref-active="active">
-      <a ui-sref="{{route.state}}">{{route.label}}</a>
+    <li ng-repeat="route in vm.routes" ui-sref-active="active" ng-class="vm.isRouteActive(route)">
+      <a ng-if="route.state" ui-sref="{{route.state}}">{{route.label}}</a>
+      <a ng-if="route.url" href="#/{{route.url}}">{{route.label}}</a>
     </li>
   </ul>
 </div>

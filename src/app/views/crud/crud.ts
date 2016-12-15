@@ -1,34 +1,28 @@
 import {IXosTableCfg} from '../../core/table/table';
-import {IStoreService} from '../../datasources/stores/slices.store';
+import {IModelStoreService} from '../../datasources/stores/model.store';
 export interface IXosCrudData {
-  title: string;
-  store: string;
+  model: string;
   xosTableCfg: IXosTableCfg;
 }
 
 class CrudController {
-  // TODO dynamically inject store
-  static $inject = ['$state', '$injector', '$scope'];
+  static $inject = ['$state', '$scope', 'ModelStore'];
 
   public data: IXosCrudData;
   public tableCfg: IXosTableCfg;
   public title: string;
-  public storeName: string;
-  public store: IStoreService;
   public tableData: any[];
 
   constructor(
     private $state: angular.ui.IStateService,
-    private $injector: angular.Injectable<any>,
-    private $scope: angular.IScope
+    private $scope: angular.IScope,
+    private store: IModelStoreService
   ) {
     this.data = this.$state.current.data;
     this.tableCfg = this.data.xosTableCfg;
-    this.title = this.data.title;
-    this.storeName = this.data.store;
-    this.store = this.$injector.get(this.storeName);
+    this.title = this.data.model;
 
-    this.store.query()
+    this.store.query(this.data.model)
       .subscribe(
         (event) => {
           // NOTE Observable mess with $digest cycles, we need to schedule the expression later

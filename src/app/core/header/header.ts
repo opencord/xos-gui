@@ -1,19 +1,20 @@
 import './header.scss';
 import {StyleConfig} from '../../config/style.config';
-import {IStoreService} from '../../datasources/stores/slices.store';
 import {IWSEvent} from '../../datasources/websocket/global';
+import {IStoreService} from '../../datasources/stores/synchronizer.store';
 
 interface INotification extends IWSEvent {
   viewed?: boolean;
 }
 
 class HeaderController {
-  static $inject = ['SynchronizerStore'];
+  static $inject = ['$scope', 'SynchronizerStore'];
   public title: string;
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
 
   constructor(
+    private $scope: angular.IScope,
     private syncStore: IStoreService
   ) {
     this.title = StyleConfig.projectName;
@@ -21,8 +22,10 @@ class HeaderController {
     this.syncStore.query()
       .subscribe(
         (event: IWSEvent) => {
-          this.notifications.unshift(event);
-          this.newNotifications = this.getNewNotifications(this.notifications);
+          $scope.$evalAsync(() => {
+            this.notifications.unshift(event);
+            this.newNotifications = this.getNewNotifications(this.notifications);
+          });
         }
       );
   }
