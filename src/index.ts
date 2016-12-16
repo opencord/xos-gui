@@ -22,6 +22,7 @@ import {IModeldefsService, IModeldef} from './app/datasources/rest/modeldefs.res
 import {IXosCrudData} from './app/views/crud/crud';
 import * as _ from 'lodash';
 import {IXosNavigationService} from './app/core/services/navigation';
+import {IXosPageTitleService} from './app/core/services/page-title';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -64,14 +65,13 @@ angular
   .factory('CredentialsInterceptor', CredentialsInterceptor)
   .factory('NoHyperlinksInterceptor', NoHyperlinksInterceptor)
   .component('xos', main)
-  .run((ModelDefs: IModeldefsService, RuntimeStates: IRuntimeStatesService, NavigationService: IXosNavigationService) => {
-    // Dinamically add a state
-    RuntimeStates.addState('test', {
-      parent: 'xos',
-      url: 'test',
-      template: 'Test State'
-    });
-
+  .run((
+    ModelDefs: IModeldefsService,
+    RuntimeStates: IRuntimeStatesService,
+    NavigationService: IXosNavigationService,
+    PageTitle: IXosPageTitleService
+  ) => {
+    // Dinamically add a  core states
     ModelDefs.get()
       .then((models: IModeldef[]) => {
         _.forEach(models, (m: IModeldef) => {
