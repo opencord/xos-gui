@@ -47,7 +47,7 @@ const modeldefToTableCfg = (fields: {name: string, type: string}[]): any[] => {
       return;
     }
     return {
-      label: `${f.name}`,
+      label: `${f.name}`, // TODO confert name to label
       prop: f.name
     };
   })
@@ -77,7 +77,7 @@ angular
         _.forEach(models, (m: IModeldef) => {
           const state: IXosState = {
             parent: 'xos',
-            url: `${m.name.toLowerCase()}s`,
+            url: `${m.name.toLowerCase()}s`, // TODO use https://github.com/blakeembrey/pluralize
             component: 'xosCrud',
             data: {
               model: m.name,

@@ -6,7 +6,7 @@ FROM nginx
 # Set environment vars
 ENV CODE_SOURCE .
 ENV CODE_DEST /var/www
-ENV VHOST /usr/share/nginx/html
+ENV VHOST /var/www/dist
 
 # Install nodeJs
 RUN apt-get update
@@ -24,5 +24,5 @@ WORKDIR ${CODE_DEST}
 RUN npm install 
 RUN npm run build
 
-# Move the builded code to nginx vhost
-RUN mv ${CODE_DEST}/dist/* ${VHOST}
+# Override nginx configutaion
+RUN mv ${CODE_SOURCE}/nginx.conf /etc/nginx/conf.d/default.conf
