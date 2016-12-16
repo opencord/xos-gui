@@ -19,7 +19,6 @@ export class WebSocketEvent {
   private _events: Subject<IWSEvent> = new Subject<IWSEvent>();
     private socket;
     constructor() {
-      console.log('socket.io');
       this.socket = io(AppConfig.websocketClient);
       this.socket.on('event', (data: IWSEvent): void => {
           this._events.next(data);

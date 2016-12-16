@@ -1,4 +1,5 @@
 const conf = require('./gulp.conf');
+const pkg = require('../package.json');
 
 module.exports = function (config) {
   const configuration = {
@@ -10,7 +11,8 @@ module.exports = function (config) {
       outputDir: 'test-reports'
     },
     browsers: [
-      'PhantomJS'
+      'PhantomJS',
+      'Chrome'
     ],
     frameworks: [
       'jasmine',
@@ -46,6 +48,7 @@ module.exports = function (config) {
       require('karma-junit-reporter'),
       require('karma-coverage'),
       require('karma-phantomjs-launcher'),
+      require('karma-chrome-launcher'),
       require('karma-phantomjs-shim'),
       require('karma-ng-html2js-preprocessor'),
       require('karma-webpack'),

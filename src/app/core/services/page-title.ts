@@ -11,7 +11,6 @@ export class PageTitle {
     private $window: angular.IWindowService,
     private $transitions: any // missing definition
   ) {
-    console.log('page title');
     this.$transitions.onSuccess({ to: '**' }, (transtion) => {
       this.set(this.formatStateName(transtion.$to().name));
     });

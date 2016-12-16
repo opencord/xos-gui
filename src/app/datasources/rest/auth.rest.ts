@@ -12,6 +12,11 @@ export interface IAuthResponseData extends IHttpPromiseCallbackArg<any> {
     xossessionid: string;
   };
 }
+
+export interface IXosAuthService {
+  login(data: IAuthRequestData): Promise<any>;
+  logout(): Promise<any>;
+}
 export class AuthService {
 
 
@@ -32,6 +37,24 @@ export class AuthService {
         this.$cookies.put('xosuser', res.data.user);
         res.data.user = JSON.parse(res.data.user);
         d.resolve(res.data);
+      })
+      .catch(e => {
+        d.reject(e);
+      });
+    return d.promise;
+  }
+
+  public logout(): Promise<any> {
+    const d = this.$q.defer();
+    this.$http.post(`${AppConfig.apiEndpoint}/utility/login/`, {
+      xoscsrftoken: this.$cookies.get('xoscsrftoken'),
+      xossessionid: this.$cookies.get('xossessionid')
+    })
+      .then(() => {
+        this.$cookies.remove('xoscsrftoken');
+        this.$cookies.remove('xossessionid');
+        this.$cookies.remove('xosuser');
+        d.resolve();
       })
       .catch(e => {
         d.reject(e);
