@@ -1,4 +1,3 @@
-import {CoreRest} from './rest/core.rest';
 import {ModelRest} from './rest/model.rest';
 import {AuthService} from './rest/auth.rest';
 import {WebSocketEvent} from './websocket/global';
@@ -10,8 +9,7 @@ import {ModeldefsService} from './rest/modeldefs.rest';
 export const xosDataSources = 'xosDataSources';
 
 angular
-  .module('xosDataSources', ['ngCookies'])
-  .service('CoreRest', CoreRest)
+  .module('xosDataSources', ['ngCookies', 'ngResource'])
   .service('ModelRest', ModelRest)
   .service('AuthService', AuthService)
   .service('WebSocket', WebSocketEvent);

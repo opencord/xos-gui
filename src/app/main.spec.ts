@@ -12,7 +12,7 @@ describe('main component', () => {
     angular.mock.module('app');
   });
 
-  it('should render the header, title, techs and footer', angular.mock.inject(($rootScope: ng.IRootScopeService, $compile: ng.ICompileService) => {
+  it('should render the header and footer', angular.mock.inject(($rootScope: ng.IRootScopeService, $compile: ng.ICompileService) => {
     const element = $compile('<app></app>')($rootScope);
     $rootScope.$digest();
     expect(element.find('xos-header').length).toEqual(1);

@@ -26,6 +26,9 @@ export class NavigationService {
   }
 
   add(route: IXosNavigationRoute) {
+    if (angular.isDefined(route.state) && angular.isDefined(route.url)) {
+      throw new Error('[XosNavigation] You can\'t provide both state and url');
+    }
     this.routes.push(route);
   }
 }
