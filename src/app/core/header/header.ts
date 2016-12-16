@@ -3,7 +3,7 @@ import {StyleConfig} from '../../config/style.config';
 import {IWSEvent} from '../../datasources/websocket/global';
 import {IStoreService} from '../../datasources/stores/synchronizer.store';
 
-interface INotification extends IWSEvent {
+export interface INotification extends IWSEvent {
   viewed?: boolean;
 }
 
