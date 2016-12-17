@@ -4,6 +4,23 @@
 import './table.scss';
 import * as _ from 'lodash';
 
+enum EXosTableColType {
+  'boolean',
+  'array',
+  'object',
+  'custom',
+  'date' ,
+  'icon'
+}
+
+export interface IXosTableColumn {
+  label: string;
+  prop: string;
+  type?: string; // understand why enum does not work
+  formatter?(item: any): string;
+  link?(item: any): string;
+}
+
 interface IXosTableCgfOrder {
   reverse: boolean;
   field: string;

@@ -33,7 +33,7 @@ export class ModelStore {
   }
 
   private loadInitialData(model: string) {
-    const endpoint = `/core/${model.toLowerCase()}s/`;
+    const endpoint = `/core/${model.toLowerCase()}s`; // NOTE check is pluralize is better
     this.ModelRest.getResource(endpoint).query().$promise
       .then(
         res => {

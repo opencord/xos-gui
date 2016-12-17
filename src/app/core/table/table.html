@@ -15,10 +15,10 @@
                 {{col.label}}
                 <span ng-if="vm.config.order">
                     <a href="" ng-click="vm.orderBy = col.prop; vm.reverse = false">
-                      <i class="glyphicon glyphicon-chevron-up"></i>
+                      <i class="fa fa-chevron-up"></i>
                     </a>
                     <a href="" ng-click="vm.orderBy = col.prop; vm.reverse = true">
-                      <i class="glyphicon glyphicon-chevron-down"></i>
+                      <i class="fa fa-chevron-down"></i>
                     </a>
                   </span>
             </th>
@@ -51,8 +51,8 @@
             <td ng-repeat="col in vm.columns">
                 <span ng-if="!col.type || col.type === 'text'">{{item[col.prop]}}</span>
                 <span ng-if="col.type === 'boolean'">
-                    <i class="glyphicon"
-                       ng-class="{'glyphicon-ok': item[col.prop], 'glyphicon-remove': !item[col.prop]}">
+                    <i class="fa"
+                       ng-class="{'fa-ok': item[col.prop], 'fa-remove': !item[col.prop]}">
                     </i>
                   </span>
                 <span ng-if="col.type === 'date'">
@@ -73,7 +73,7 @@
                     {{col.formatter(item)}}
                   </span>
                 <span ng-if="col.type === 'icon'">
-                    <i class="glyphicon glyphicon-{{col.formatter(item)}}">
+                    <i class="fa fa-{{col.formatter(item)}}">
                     </i>
                   </span>
             </td>
@@ -83,7 +83,7 @@
                    ng-click="action.cb(item)"
                    title="{{action.label}}">
                     <i
-                            class="glyphicon glyphicon-{{action.icon}}"
+                            class="fa fa-{{action.icon}}"
                             style="color: {{action.color}};"></i>
                 </a>
             </td>

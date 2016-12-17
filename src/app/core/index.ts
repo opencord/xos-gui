@@ -7,6 +7,7 @@ import {xosTable} from './table/table';
 import {RuntimeStates} from './services/runtime-states';
 import {NavigationService} from './services/navigation';
 import {PageTitle} from './services/page-title';
+import {ConfigHelpers} from './services/helpers/config.helpers';
 
 export const xosCore = 'xosCore';
 
@@ -16,6 +17,7 @@ angular
   .provider('RuntimeStates', RuntimeStates)
   .service('NavigationService', NavigationService)
   .service('PageTitle', PageTitle)
+  .service('ConfigHelpers', ConfigHelpers)
   .component('xosHeader', xosHeader)
   .component('xosFooter', xosFooter)
   .component('xosNav', xosNav)

@@ -7,6 +7,10 @@ function routesConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
   $locationProvider.html5Mode(false).hashPrefix('');
   $urlRouterProvider.otherwise('/');
 
+  // TODO onload redirect to correct URL
+  // routes are created asynchronously so by default any time you reload
+  // you end up in /
+
   $stateProvider
     .state('xos', {
       abstract: true,

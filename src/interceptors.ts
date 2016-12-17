@@ -45,6 +45,7 @@ export function NoHyperlinksInterceptor() {
   return {
     request: (req) => {
       if (req.url.indexOf('.html') === -1) {
+        // NOTE this may fail if there are already query params
         req.url += '?no_hyperlinks=1';
       }
       return req;

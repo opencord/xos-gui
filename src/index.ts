@@ -23,38 +23,10 @@ import {IXosCrudData} from './app/views/crud/crud';
 import * as _ from 'lodash';
 import {IXosNavigationService} from './app/core/services/navigation';
 import {IXosPageTitleService} from './app/core/services/page-title';
+import {IXosConfigHelpersService} from './app/core/services/helpers/config.helpers';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
-};
-
-const modeldefToTableCfg = (fields: {name: string, type: string}[]): any[] => {
-  const excluded_fields = [
-    'created',
-    'updated',
-    'enacted',
-    'policed',
-    'backend_register',
-    'deleted',
-    'write_protect',
-    'lazy_blocked',
-    'no_sync',
-    'no_policy',
-    'omf_friendly',
-    'enabled'
-  ];
-  const cfg =  _.map(fields, (f) => {
-    if (excluded_fields.indexOf(f.name) > -1) {
-      return;
-    }
-    return {
-      label: `${f.name}`, // TODO confert name to label
-      prop: f.name
-    };
-  })
-    .filter(v => angular.isDefined(v));
-
-  return cfg;
 };
 
 angular
@@ -69,25 +41,27 @@ angular
     ModelDefs: IModeldefsService,
     RuntimeStates: IRuntimeStatesService,
     NavigationService: IXosNavigationService,
+    ConfigHelpers: IXosConfigHelpersService,
     PageTitle: IXosPageTitleService
   ) => {
     // Dinamically add a  core states
     ModelDefs.get()
       .then((models: IModeldef[]) => {
+        // TODO move in a separate service and test
         _.forEach(models, (m: IModeldef) => {
           const state: IXosState = {
             parent: 'xos',
-            url: `${m.name.toLowerCase()}s`, // TODO use https://github.com/blakeembrey/pluralize
+            url: ConfigHelpers.pluralize(m.name.toLowerCase()),
             component: 'xosCrud',
             data: {
               model: m.name,
               xosTableCfg: {
-                columns: modeldefToTableCfg(m.fields)
+                columns: ConfigHelpers.modeldefToTableCfg(m.fields)
               }
             }
           };
-          RuntimeStates.addState(`${m.name.toLowerCase()}s`, state);
-          NavigationService.add({label: `${m.name}s`, url: `${m.name.toLowerCase()}s`});
+          RuntimeStates.addState(ConfigHelpers.pluralize(m.name.toLowerCase()), state);
+          NavigationService.add({label: ConfigHelpers.pluralize(m.name), url: ConfigHelpers.pluralize(m.name.toLowerCase())});
         });
       });
   });

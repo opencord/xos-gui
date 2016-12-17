@@ -57,7 +57,7 @@ describe('The ModelStore service', () => {
     WebSocket = _WebSocket_;
 
     // ModelRest will call the backend
-    httpBackend.expectGET(`${AppConfig.apiEndpoint}/core/tests`)
+    httpBackend.expectGET(`${AppConfig.apiEndpoint}/core/samples`)
       .respond(queryData);
   }));
 
@@ -67,7 +67,7 @@ describe('The ModelStore service', () => {
 
   it('the first event should be the resource response', (done) => {
     let event = 0;
-    service.query('test')
+    service.query('sample')
       .subscribe(collection => {
         event++;
         if (event === 2) {
@@ -83,7 +83,7 @@ describe('The ModelStore service', () => {
   describe('when a web-socket event is received for that model', () => {
     it('should update the collection', (done) => {
       let event = 0;
-      service.query('test')
+      service.query('sample')
         .subscribe(
           collection => {
             event++;
@@ -102,7 +102,7 @@ describe('The ModelStore service', () => {
         );
       window.setTimeout(() => {
         WebSocket.next({
-          model: 'test',
+          model: 'sample',
           msg: {
             changed_fields: ['id'],
             object: {id: 3, name: 'baz'},
