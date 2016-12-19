@@ -50,13 +50,13 @@ describe('The ConfigHelpers service', () => {
     it('should format an array of strings', () => {
       let strings: string[] = ['camelCase', 'snake_case', 'kebab-case'];
       let labels = ['Camel case', 'Snake case', 'Kebab case'];
-      expect(service.toLabel(strings)).toEqual(labels);
+      expect(service.toLabels(strings)).toEqual(labels);
     });
 
     it('should set plural on an array of strings', () => {
       let strings: string[] = ['camelCase', 'snake_case', 'kebab-case'];
       let labels = ['Camel cases', 'Snake cases', 'Kebab cases'];
-      expect(service.toLabel(strings, true)).toEqual(labels);
+      expect(service.toLabels(strings, true)).toEqual(labels);
     });
   });
 

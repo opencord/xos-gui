@@ -1,8 +1,23 @@
 <div class="nav">
   <ul>
-    <li ng-repeat="route in vm.routes" ui-sref-active="active" ng-class="vm.isRouteActive(route)">
-      <a ng-if="route.state" ui-sref="{{route.state}}">{{route.label}}</a>
-      <a ng-if="route.url" href="#/{{route.url}}">{{route.label}}</a>
+    <li
+      ng-repeat="route in vm.routes track by $index"
+      ui-sref-active="active"
+      ng-class="vm.isRouteActive(route)">
+      <a ng-if="route.state" ui-sref="{{route.state}}" ng-click="vm.activateRoute(route)">
+        <i ng-if="route.children" class="fa fa-chevron-right"></i>
+        {{route.label}}
+      </a>
+      <a ng-if="route.url" href="#/{{route.url}}" ng-click="vm.activateRoute(route)">
+        <i ng-if="route.children" class="fa fa-chevron-right"></i>
+        {{route.label}}
+      </a>
+      <ul class="child-routes" ng-if="route.children" ng-class="{opened: route.opened}">
+        <li ng-repeat="childRoute in route.children" ui-sref-active="active">
+          <a ng-if="childRoute.state" ui-sref="{{childRoute.state}}">{{childRoute.label}}</a>
+          <a ng-if="childRoute.url" href="#/{{childRoute.url}}">{{childRoute.label}}</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </div>

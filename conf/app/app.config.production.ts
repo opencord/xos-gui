@@ -1,10 +1,4 @@
-/// <reference path="../../../typings/index.d.ts"/>
-
-export interface IAppConfig {
-    apiEndpoint: string;
-    websocketClient: string;
-}
-
+import {IAppConfig} from './interfaces';
 export const AppConfig: IAppConfig = {
     apiEndpoint: '/api',
     websocketClient: ''

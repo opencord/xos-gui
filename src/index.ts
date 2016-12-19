@@ -38,20 +38,28 @@ angular
   .factory('NoHyperlinksInterceptor', NoHyperlinksInterceptor)
   .component('xos', main)
   .run((
+    $location: ng.ILocationService,
+    $state: ng.ui.IStateService,
     ModelDefs: IModeldefsService,
     RuntimeStates: IRuntimeStatesService,
     NavigationService: IXosNavigationService,
     ConfigHelpers: IXosConfigHelpersService,
     PageTitle: IXosPageTitleService
   ) => {
+
+    // save the last visited state before reload
+    const lastRoute = window.location.hash.replace('#', '');
+
     // Dinamically add a  core states
     ModelDefs.get()
       .then((models: IModeldef[]) => {
         // TODO move in a separate service and test
         _.forEach(models, (m: IModeldef) => {
+          const stateUrl = `/${ConfigHelpers.pluralize(m.name.toLowerCase())}`;
+          const stateName = `xos.core.${ConfigHelpers.pluralize(m.name.toLowerCase())}`;
           const state: IXosState = {
-            parent: 'xos',
-            url: ConfigHelpers.pluralize(m.name.toLowerCase()),
+            parent: 'core',
+            url: stateUrl,
             component: 'xosCrud',
             data: {
               model: m.name,
@@ -60,8 +68,19 @@ angular
               }
             }
           };
-          RuntimeStates.addState(ConfigHelpers.pluralize(m.name.toLowerCase()), state);
-          NavigationService.add({label: ConfigHelpers.pluralize(m.name), url: ConfigHelpers.pluralize(m.name.toLowerCase())});
+
+          RuntimeStates.addState(stateName, state);
+          NavigationService.add({
+            label: ConfigHelpers.pluralize(m.name),
+            state: stateName,
+            parent: 'xos.core'
+          });
         });
+
+        // after setting up dynamic routes, redirect to previous state
+        $location.path(lastRoute);
+        // $state.get().forEach(s => {
+        //   console.log($state.href(s.name));
+        // });
       });
   });

@@ -12,7 +12,8 @@ gulp.task('clean', clean);
 gulp.task('other', other);
 gulp.task('brand', styleConfig);
 gulp.task('appConfig', appConfig);
-gulp.task('config', gulp.series('brand', 'appConfig'));
+gulp.task('copyCfgInterfaces', copyCfgInterfaces);
+gulp.task('config', gulp.series('copyCfgInterfaces', 'brand', 'appConfig'));
 
 function clean() {
   return del([conf.paths.dist, conf.paths.tmp]);
@@ -39,11 +40,19 @@ function appConfig() {
 }
 
 function styleConfig() {
+  // TODO copy interfaces
   const env = process.env.BRAND || 'cord';
   return gulp.src([
     path.join(conf.paths.appConfig, `style.config.${env}.ts`)
   ])
     .pipe(rename('style.config.ts'))
+    .pipe(gulp.dest(cfgFolder));
+}
+
+function copyCfgInterfaces() {
+  return gulp.src([
+    path.join(conf.paths.appConfig, `interfaces.ts`)
+  ])
     .pipe(gulp.dest(cfgFolder));
 }
 
