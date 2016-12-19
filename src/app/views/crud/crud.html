@@ -1,2 +1,26 @@
-<h1>{{vm.title}}</h1>
-<xos-table config="vm.tableCfg" data="vm.tableData"></xos-table>
+<div class="row">
+    <div class="col-xs-8">
+        <h1>{{vm.title}}</h1>
+    </div>
+    <div class="col-xs-4">
+        <a class="btn btn-default" ng-if="!vm.list" href="{{vm.baseUrl}}">Back</a>
+    </div>
+</div>
+<div ng-if="vm.list">
+    <div class="row" ng-show="vm.related.length > 0">
+        <div class="col-xs-4">
+            <h4>Related Items: </h4>
+        </div>
+        <div class="col-xs-8 text-right">
+            <a ng-repeat="r in vm.related" href="#/core/{{r.toLowerCase()}}s/" class="btn btn-default">
+                {{r}}
+            </a>
+        </div>
+    </div>
+    <xos-table config="vm.tableCfg" data="vm.tableData"></xos-table>
+</div>
+
+<div ng-if="!vm.list">
+    <!--<pre>{{vm.model | json}}</pre>-->
+    <xos-form ng-model="vm.model" config="vm.formCfg"></xos-form>
+</div>

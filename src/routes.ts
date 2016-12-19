@@ -27,7 +27,7 @@ function routesConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
       template: '<div ui-view=></div>'
     })
     .state('test', {
-      url: '/test',
+      url: '/test/:id?',
       parent: 'xos.core',
       template: '<h1>Child</h1>'
     });
