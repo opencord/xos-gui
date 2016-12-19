@@ -15,7 +15,6 @@ xos-nav {
     > li {
       display: flex;
       flex-direction: column;
-      padding: 10px 20px;
       border-bottom: 1px solid darken(grey, 20);
 
       &.active {
@@ -31,7 +30,28 @@ xos-nav {
       }
 
       > a {
+        padding: 10px 20px;
         cursor: pointer;
+      }
+
+      // child router
+      > ul {
+        height: 0;
+        overflow: hidden;
+        transition: .5s all;
+
+        > li {
+          padding-left: 20px;
+          background: darken(grey, 15);
+
+          &:hover, &.active {
+            background: darken(grey, 20);
+          }
+        }
+      }
+
+      > ul.opened {
+        height: auto;
       }
     }
   }

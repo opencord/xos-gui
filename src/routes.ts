@@ -7,10 +7,8 @@ function routesConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
   $locationProvider.html5Mode(false).hashPrefix('');
   $urlRouterProvider.otherwise('/');
 
-  // TODO onload redirect to correct URL
-  // routes are created asynchronously so by default any time you reload
-  // you end up in /
-
+  // declare here static endpoints,
+  // core related endpoints are dynamically generated
   $stateProvider
     .state('xos', {
       abstract: true,
@@ -22,9 +20,15 @@ function routesConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
       parent: 'xos',
       template: '<h1>Dashboard</h1>'
     })
-    .state('xos.nodes', {
-      url: 'nodes',
+    .state('xos.core', {
+      url: 'core',
       parent: 'xos',
-      template: '<h1>Nodes</h1>'
+      abstract: true,
+      template: '<div ui-view=></div>'
+    })
+    .state('test', {
+      url: '/test',
+      parent: 'xos.core',
+      template: '<h1>Child</h1>'
     });
 }

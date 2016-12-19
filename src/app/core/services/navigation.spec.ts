@@ -6,9 +6,7 @@ import {IXosNavigationService, IXosNavigationRoute} from './navigation';
 
 let service: IXosNavigationService;
 
-const defaultRoutes: IXosNavigationRoute[] = [
-  {label: 'Home', state: 'xos.dashboard'}
-];
+let defaultRoutes: IXosNavigationRoute[];
 
 describe('The Navigation service', () => {
 
@@ -18,6 +16,7 @@ describe('The Navigation service', () => {
     NavigationService: IXosNavigationService,
   ) => {
     service = NavigationService;
+    defaultRoutes = angular.copy(service.query());
   }));
 
   it('should return navigation routes', () => {
@@ -31,7 +30,17 @@ describe('The Navigation service', () => {
     ];
     service.add(testRoutes[0]);
     service.add(testRoutes[1]);
-    expect(service.query()).toEqual(defaultRoutes.concat(testRoutes));
+    const serviceRoutes = service.query();
+    expect(serviceRoutes).toEqual(defaultRoutes.concat(testRoutes));
+  });
+
+  it('should add a child route', () => {
+    const testRoute: IXosNavigationRoute = {
+      label: 'TestState', state: 'xos.test', parent: 'xos.core'
+    };
+    service.add(testRoute);
+    defaultRoutes[1].children = [testRoute];
+    expect(service.query()).toEqual(defaultRoutes);
   });
 
   it('should not add route that have both url and state', () => {

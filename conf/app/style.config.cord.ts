@@ -1,11 +1,11 @@
-/// <reference path="../../../typings/index.d.ts"/>
-
-export interface IStyleConfig {
-    projectName: string;
-    favicon: string;
-}
-
+import {IStyleConfig} from './interfaces';
 export const StyleConfig: IStyleConfig = {
     projectName: 'CORD',
-    favicon: 'cord-favicon.png'
+    favicon: 'cord-favicon.png',
+    routes: [
+        {
+            label: 'Slices',
+            state: 'xos.core.slices'
+        }
+    ]
 };

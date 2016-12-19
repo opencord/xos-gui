@@ -11,6 +11,7 @@ export interface IXosConfigHelpersService {
   modeldefToTableCfg(fields: IXosModelDefsField[]): any[]; // TODO use a proper interface
   pluralize(string: string, quantity?: number, count?: boolean): string;
   toLabel(string: string, pluralize?: boolean): string;
+  toLabels(string: string[], pluralize?: boolean): string[];
 }
 
 export class ConfigHelpers {
@@ -24,13 +25,15 @@ export class ConfigHelpers {
     return pluralize(string, quantity, count);
   }
 
-  toLabel(string: string, pluralize?: boolean): string {
-
-    if (angular.isArray(string)) {
-      return _.map(string, s => {
+  toLabels(strings: string[], pluralize?: boolean): string[] {
+    if (angular.isArray(strings)) {
+      return _.map(strings, s => {
         return this.toLabel(s, pluralize);
       });
     }
+  }
+
+  toLabel(string: string, pluralize?: boolean): string {
 
     if (pluralize) {
       string = this.pluralize(string);
