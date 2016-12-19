@@ -28,4 +28,9 @@ describe('The PageTitle service', () => {
     service.set('sample');
     expect($window.document.title).toEqual(`${StyleConfig.projectName} - sample`);
   });
+
+  it('should convert dots to >', () => {
+    service.set('core.sample.bread.crumb');
+    expect($window.document.title).toEqual(`${StyleConfig.projectName} - core > sample > bread > crumb`);
+  });
 });

@@ -13,7 +13,7 @@
         {{route.label}}
       </a>
       <ul class="child-routes" ng-if="route.children" ng-class="{opened: route.opened}">
-        <li ng-repeat="childRoute in route.children" ui-sref-active="active">
+        <li ng-repeat="childRoute in route.children | orderBy:'label'" ui-sref-active="active">
           <a ng-if="childRoute.state" ui-sref="{{childRoute.state}}">{{childRoute.label}}</a>
           <a ng-if="childRoute.url" href="#/{{childRoute.url}}">{{childRoute.label}}</a>
         </li>

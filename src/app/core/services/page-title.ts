@@ -21,6 +21,7 @@ export class PageTitle {
   }
 
   set(title: string) {
+    title = title.split('.').join(' > ');
     this.$window.document.title = `${StyleConfig.projectName} - ${title}`;
   }
 

@@ -8,7 +8,7 @@ export interface IXosModelDefsField {
 }
 
 export interface IXosConfigHelpersService {
-  modeldefToTableCfg(fields: IXosModelDefsField[]): any[]; // TODO use a proper interface
+  modeldefToTableCfg(fields: IXosModelDefsField[], baseUrl: string): any[]; // TODO use a proper interface
   pluralize(string: string, quantity?: number, count?: boolean): string;
   toLabel(string: string, pluralize?: boolean): string;
   toLabels(string: string[], pluralize?: boolean): string[];
@@ -46,7 +46,7 @@ export class ConfigHelpers {
     return this.capitalizeFirst(string);
   }
 
-  modeldefToTableCfg(fields: IXosModelDefsField[]): IXosTableColumn[] {
+  modeldefToTableCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[] {
     const excluded_fields = [
       'created',
       'updated',
@@ -69,6 +69,11 @@ export class ConfigHelpers {
         label: this.toLabel(f.name),
         prop: f.name
       };
+
+      if (f.name === 'id') {
+        // NOTE can we find a better method to generalize?
+        col.link = item => `#/core${baseUrl.replace(':id?', item.id)}`;
+      }
 
       if (f.name === 'backend_status') {
         col.type = 'icon';

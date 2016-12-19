@@ -1,2 +1,14 @@
-<h1>{{vm.title}}</h1>
-<xos-table config="vm.tableCfg" data="vm.tableData"></xos-table>
+<div class="row">
+    <div class="col-xs-8">
+        <h1>{{vm.title}}</h1>
+    </div>
+    <div class="col-xs-4">
+        <a class="btn btn-default" ng-if="!vm.list" href="{{vm.baseUrl}}">Back</a>
+    </div>
+</div>
+<xos-table ng-if="vm.list" config="vm.tableCfg" data="vm.tableData"></xos-table>
+
+<div ng-if="!vm.list">
+    <!--<pre>{{vm.model | json}}</pre>-->
+    <xos-form ng-model="vm.model" config="vm.formCfg"></xos-form>
+</div>
