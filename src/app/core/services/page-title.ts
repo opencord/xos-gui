@@ -12,7 +12,7 @@ export class PageTitle {
     private $transitions: any // missing definition
   ) {
     this.$transitions.onSuccess({ to: '**' }, (transtion) => {
-      this.set(this.formatStateName(transtion.$to().name));
+      this.set(transtion.$to().name);
     });
   }
 
@@ -21,12 +21,12 @@ export class PageTitle {
   }
 
   set(title: string) {
-    this.$window.document.title = `${StyleConfig.projectName} - ${title}`;
+    this.$window.document.title = `${StyleConfig.projectName} - ${this.formatStateName(title)}`;
   }
 
   private formatStateName(stateName: string): string {
     // TODO pluralize and capitalize first letter only
-    return stateName.replace('xos.', '').toUpperCase();
+    return stateName.replace('xos.', '').split('.').join(' > ');
   }
 }
 

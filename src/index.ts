@@ -55,17 +55,22 @@ angular
       .then((models: IModeldef[]) => {
         // TODO move in a separate service and test
         _.forEach(models, (m: IModeldef) => {
-          const stateUrl = `/${ConfigHelpers.pluralize(m.name.toLowerCase())}`;
+          const stateUrl = `/${ConfigHelpers.pluralize(m.name.toLowerCase())}/:id?`;
           const stateName = `xos.core.${ConfigHelpers.pluralize(m.name.toLowerCase())}`;
           const state: IXosState = {
             parent: 'core',
             url: stateUrl,
             component: 'xosCrud',
+            params: {
+              id: null
+            },
             data: {
               model: m.name,
+              related: m.relations,
               xosTableCfg: {
-                columns: ConfigHelpers.modeldefToTableCfg(m.fields)
-              }
+                columns: ConfigHelpers.modeldefToTableCfg(m.fields, stateUrl)
+              },
+              // TODO add form config
             }
           };
 
@@ -80,7 +85,7 @@ angular
         // after setting up dynamic routes, redirect to previous state
         $location.path(lastRoute);
         // $state.get().forEach(s => {
-        //   console.log($state.href(s.name));
+        //   console.log(s.name, $state.href(s.name), s);
         // });
       });
   });

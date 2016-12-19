@@ -41,7 +41,6 @@ function appConfig() {
 }
 
 function styleConfig() {
-  // TODO copy interfaces
   const env = process.env.BRAND || 'cord';
   return gulp.src([
     path.join(conf.paths.appConfig, `style.config.${env}.ts`)
