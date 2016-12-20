@@ -1,5 +1,6 @@
 /// <reference path="../typings/index.d.ts" />
 
+
 import * as angular from 'angular';
 
 import 'angular-ui-router';
@@ -13,6 +14,8 @@ import './index.scss';
 import {xosCore} from './app/core/index';
 import {xosDataSources} from './app/datasources/index';
 import {xosViews} from './app/views/index';
+import {xosTemplate} from './app/template/index';
+
 import {
   interceptorConfig, userStatusInterceptor, CredentialsInterceptor,
   NoHyperlinksInterceptor
@@ -30,7 +33,14 @@ export interface IXosState extends angular.ui.IState {
 };
 
 angular
-  .module('app', [xosCore, xosDataSources, xosViews, 'ui.router', 'ngResource'])
+  .module('app', [
+    xosCore,
+    xosDataSources,
+    xosViews,
+    'ui.router',
+    'ngResource',
+    xosTemplate // template module
+  ])
   .config(routesConfig)
   .config(interceptorConfig)
   .factory('UserStatusInterceptor', userStatusInterceptor)
