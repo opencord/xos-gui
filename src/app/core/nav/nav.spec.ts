@@ -39,7 +39,7 @@ describe('Nav component', () => {
   }));
 
   it('should render a list of routes', () => {
-    const routes = $('.nav ul li', element);
+    const routes = $('.nav li:not(.nav-info)', element);
     expect(routes.length).toBe(2);
   });
 
@@ -51,7 +51,7 @@ describe('Nav component', () => {
       ]}
     ];
     scope.$apply();
-    const childRouteContainer = $('.child-routes', element);
+    const childRouteContainer = $('.nav-second li', element);
     expect(childRouteContainer.length).toBe(1);
   });
 });

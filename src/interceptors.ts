@@ -44,7 +44,7 @@ export function CredentialsInterceptor($cookies: angular.cookies.ICookiesService
 export function NoHyperlinksInterceptor() {
   return {
     request: (req) => {
-      if (req.url.indexOf('.html') === -1) {
+      if (req.url.indexOf('.html') === -1 && req.url.indexOf('login') !== -1) {
         // NOTE this may fail if there are already query params
         req.url += '?no_hyperlinks=1';
       }
