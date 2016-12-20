@@ -5,6 +5,10 @@ function routesConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
   $stateProvider
     .state('login', {
       url: '/login',
-      component: 'xosLogin'
+      component: 'xosLogin',
+      data: {
+        specialClass: 'blank'
+      }
     });
 }
+

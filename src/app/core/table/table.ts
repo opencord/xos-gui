@@ -37,10 +37,14 @@ class TableCtrl {
   public columns: any[];
   public orderBy: string;
   public reverse: boolean;
+  public classes: string;
   private config: IXosTableCfg;
 
 
   $onInit() {
+
+    this.classes = 'table table-striped'; // table-bordered
+
     if (!this.config) {
       throw new Error('[xosTable] Please provide a configuration via the "config" attribute');
     }

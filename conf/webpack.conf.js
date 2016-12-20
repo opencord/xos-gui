@@ -44,6 +44,10 @@ module.exports = {
         loaders: [
           'html'
         ]
+      },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg|jpg|gif|jpeg)$/,
+        loader: 'url-loader?limit=100000'
       }
     ]
   },
@@ -76,5 +80,11 @@ module.exports = {
   },
   tslint: {
     configuration: require('../tslint.json')
+  },
+  stats: {
+    colors: true,
+    modules: true,
+    reasons: true,
+    errorDetails: true
   }
 };

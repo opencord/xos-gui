@@ -1,23 +1,35 @@
-<div class="nav">
-  <ul>
-    <li
-      ng-repeat="route in vm.routes track by $index"
-      ui-sref-active="active"
-      ng-class="vm.isRouteActive(route)">
-      <a ng-if="route.state" ui-sref="{{route.state}}" ng-click="vm.activateRoute(route)">
-        <i ng-if="route.children" class="fa fa-chevron-right"></i>
-        {{route.label}}
-      </a>
-      <a ng-if="route.url" href="#/{{route.url}}" ng-click="vm.activateRoute(route)">
-        <i ng-if="route.children" class="fa fa-chevron-right"></i>
-        {{route.label}}
-      </a>
-      <ul class="child-routes" ng-if="route.children" ng-class="{opened: route.opened}">
-        <li ng-repeat="childRoute in route.children | orderBy:'label'" ui-sref-active="active">
-          <a ng-if="childRoute.state" ui-sref="{{childRoute.state}}">{{childRoute.label}}</a>
-          <a ng-if="childRoute.url" href="#/{{childRoute.url}}">{{childRoute.label}}</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
+<!-- Navigation -->
+<aside class="navigation">
+  <!-- Navigation-->
+  <nav>
+    <ul class="nav luna-nav">
+      <!--<li class="nav-category">-->
+        <!--Main-->
+      <!--</li>-->
+      <li
+          ng-repeat="route in vm.routes track by $index"
+          ui-sref-active="active">
+        <a ng-if="route.state && !route.children" ui-sref="{{route.state}}" ng-click="vm.activateRoute(route)">
+          {{route.label}}
+        </a>
+        <a ng-if="route.state && route.children" ng-click="vm.activateRoute(route)">
+          {{route.label}}<span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+        </a>
+        <ul class="nav nav-second" uib-collapse="vm.isSelected(route.state, vm.navSelected)">
+          <li ng-repeat="childRoute in route.children | orderBy:'label'" ui-sref-active="active">
+            <a ui-sref="{{childRoute.state}}"> {{childRoute.label}}</a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-info">
+        <i class="pe pe-7s-shield text-accent"></i>
+
+        <div class="m-t-xs">
+          <span class="c-white">{{vm.appName}}</span>
+          monitoring and administration for networks applications.
+        </div>
+      </li>
+    </ul>
+  </nav>
+  <!-- End navigation-->
+</aside>

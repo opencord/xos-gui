@@ -1,19 +1,55 @@
-<header class="header">
-  <p class="header-title">
-    <a href="#/" target="_blank">
-      {{vm.title}}
-    </a>
-  </p>
-  <p class="header-date notification">
-    <i ng-if="vm.newNotifications.length > 0" class="badge"></i>
-    <i class="fa fa-bell" ng-click="vm.showNotification = !vm.showNotification"></i>
-    <div class="notification-panel" ng-show="vm.showNotification">
-      <ul>
-        <li ng-repeat="n in vm.notifications track by $index" ng-click="vm.viewNotification(n)" ng-class="{viewed: n.viewed}">
-          <b>{{n.model}}</b><br>
-          <i>{{n.msg.object.name}} status is {{n.msg.object.backend_status}}</i>
+<!--<header class="header">-->
+  <!--<p class="header-title">-->
+    <!--<a href="#/" target="_blank">-->
+      <!--{{vm.title}}-->
+    <!--</a>-->
+  <!--</p>-->
+  <!--<p class="header-date notification">-->
+    <!--<i ng-if="vm.newNotifications.length > 0" class="badge"></i>-->
+    <!--<i class="fa fa-bell" ng-click="vm.showNotification = !vm.showNotification"></i>-->
+    <!--<div class="notification-panel" ng-show="vm.showNotification">-->
+      <!--<ul>-->
+        <!--<li ng-repeat="n in vm.notifications track by $index" ng-click="vm.viewNotification(n)" ng-class="{viewed: n.viewed}">-->
+          <!--<b>{{n.model}}</b><br>-->
+          <!--<i>{{n.msg.object.name}} status is {{n.msg.object.backend_status}}</i>-->
+        <!--</li>-->
+      <!--</ul>-->
+    <!--</div>-->
+  <!--</p>-->
+<!--</header>-->
+
+
+<!-- Header -->
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <div id="mobile-menu">
+        <minimaliza-menu></minimaliza-menu>
+      </div>
+      <a class="navbar-brand" href="#/">
+        <em class="brand-title">{{vm.title}}</em>
+        <span>v.1.2</span>
+      </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <minimaliza-menu></minimaliza-menu>
+      <!--<form class="navbar-form navbar-left">-->
+        <!--<input type="text" class="form-control" placeholder="Search data for analysis" style="width: 175px">-->
+      <!--</form>-->
+      <ul class="nav navbar-nav navbar-right">
+        <!--<li class="dropdown">-->
+          <!--<a ui-sref="main.versions">-->
+            <!--<i class="fa fa-bell"></i>-->
+            <!--<span ng-if="vm.newNotifications.length > 0" class="label label-warning pull-right">{{vm.newNotifications.length}}</span>-->
+          <!--</a>-->
+        <!--</li>-->
+        <li class=" profil-link">
+          <a ui-sref="commonviews.login">
+            <span class="profile-address">luna@company.io</span>
+            <img src="../../images/profile.jpg" class="img-circle" alt="">
+          </a>
         </li>
       </ul>
     </div>
-  </p>
-</header>
+  </div>
+</nav>

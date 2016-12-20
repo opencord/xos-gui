@@ -18,14 +18,25 @@ const MockStore = function() {
     return events.asObservable();
   };
 };
-const sampleNotification = {
+
+interface ImockToastr {
+  info(msg: string, title: string): void;
+}
+
+const MockToastr: ImockToastr = {
+  info: jasmine.createSpy('info')
+};
+
+const MockToastrConfig = {};
+
+const infoNotification = {
   model: 'TestModel',
   msg: {
     changed_fields: ['backend_status'],
     pk: 1,
     object: {
       name: 'TestName',
-      backend_status: 'Test Status'
+      backend_status: '1 - Test Status'
     }
   }
 };
@@ -35,7 +46,9 @@ describe('header component', () => {
     angular
       .module('xosHeader', ['app/core/header/header.html'])
       .component('xosHeader', xosHeader)
-      .service('SynchronizerStore', MockStore);
+      .service('SynchronizerStore', MockStore)
+      .value('toastr', MockToastr)
+      .value('toastrConfig', MockToastrConfig);
     angular.mock.module('xosHeader');
   });
 
@@ -51,57 +64,26 @@ describe('header component', () => {
   }));
 
   it('should render the appropriate title', () => {
-    const header = element.find('a');
-    expect(header.html().trim()).toEqual(StyleConfig.projectName);
-
-    const badge = $('i.badge', element);
-    expect(badge.length).toBe(0);
+    const header = $('a.navbar-brand .brand-title', element).text();
+    expect(header.trim()).toEqual(StyleConfig.projectName);
   });
 
-  it('should display a badge if there are unread notifications', () => {
-    sendEvent(sampleNotification);
-    scope.$digest();
-
-    const badge = $('i.badge', element);
-    expect(badge.length).toBe(1);
+  it('should configure toastr', () => {
+    expect(MockToastrConfig).toEqual({
+      newestOnTop: false,
+      positionClass: 'toast-top-right',
+      preventDuplicates: false,
+      preventOpenDuplicates: false,
+      progressBar: true,
+    });
   });
 
-  it('should not display a badge if there are notifications have been read', () => {
-    sendEvent(angular.extend({viewed: true}, sampleNotification));
+  it('should display a toastr for a new notification', () => {
+    sendEvent(infoNotification);
     scope.$digest();
 
-    const badge = $('i.badge', element);
-    expect(badge.length).toBe(0);
+    expect(MockToastr.info).toHaveBeenCalledWith('Synchronization started for: TestName', 'TestModel');
   });
 
-  it('should display a list of notifications', () => {
-    isolatedScope.showNotification = true;
-    sendEvent(angular.extend({viewed: true}, sampleNotification));
-    sendEvent(angular.extend({viewed: false}, sampleNotification));
-    scope.$digest();
-
-    const badge = $('i.badge', element);
-    expect(badge.length).toBe(1);
-    const notificationPanel = $('.notification-panel', element);
-    expect(notificationPanel.length).toBe(1);
-
-    expect($('.notification-panel li', element).length).toBe(2);
-  });
-
-  it('should add the viewed class to an readed notification', () => {
-    isolatedScope.showNotification = true;
-    sendEvent(angular.extend({viewed: true}, sampleNotification));
-    scope.$digest();
-    expect($('.notification-panel li:first-child', element)).toHaveClass('viewed');
-    scope.$digest();
-  });
-
-  it('should not add the viewed class to an unread notification', () => {
-    isolatedScope.showNotification = true;
-    sendEvent(angular.extend({viewed: false}, sampleNotification));
-    scope.$digest();
-    expect($('.notification-panel li:first-child', element)).not.toHaveClass('viewed');
-    scope.$digest();
-  });
-
+  // TODO test error and success toaster call
 });

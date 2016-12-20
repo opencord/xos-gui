@@ -36,6 +36,10 @@ module.exports = {
         loaders: [
           'html'
         ]
+      },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg|jpg|gif|jpeg)$/,
+        loader: 'url-loader?limit=100000'
       }
     ]
   },

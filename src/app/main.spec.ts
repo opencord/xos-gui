@@ -16,6 +16,6 @@ describe('main component', () => {
     const element = $compile('<app></app>')($rootScope);
     $rootScope.$digest();
     expect(element.find('xos-header').length).toEqual(1);
-    expect(element.find('xos-footer').length).toEqual(1);
+    // expect(element.find('xos-footer').length).toEqual(1);
   }));
 });

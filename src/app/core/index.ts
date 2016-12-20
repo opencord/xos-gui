@@ -12,11 +12,12 @@ import {xosLinkWrapper} from './link-wrapper/link-wrapper';
 import {XosFormHelpers} from './form/form-helpers';
 import {xosForm} from './form/form';
 import {xosField} from './field/field';
+import 'angular-toastr';
 
 export const xosCore = 'xosCore';
 
 angular
-  .module('xosCore', ['ui.router'])
+  .module('xosCore', ['ui.router', 'toastr'])
   .config(routesConfig)
   .provider('RuntimeStates', RuntimeStates)
   .service('NavigationService', NavigationService)
