@@ -30,6 +30,7 @@ class HeaderController {
       );
   }
 
+  // TODO display a list of notification in the template
   public viewNotification = (notification: INotification) => {
     notification.viewed = true;
     this.newNotifications = this.getNewNotifications(this.notifications);

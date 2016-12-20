@@ -11,6 +11,7 @@ class LoginCtrl {
   }
 
   public login(username: string, password: string) {
+    console.log(username, password);
     this.authService.login({
       username: username,
       password: password
