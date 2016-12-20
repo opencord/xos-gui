@@ -1,9 +1,12 @@
 import './nav.scss';
 import {IXosNavigationService, IXosNavigationRoute} from '../services/navigation';
+import {StyleConfig} from '../../config/style.config';
 
 class NavCtrl {
   static $inject = ['$scope', '$state', 'NavigationService'];
   public routes: IXosNavigationRoute[];
+  public navSelected: string;
+  public appName: string;
 
   constructor(
     private $scope: ng.IScope,
@@ -18,14 +21,40 @@ class NavCtrl {
     this.$scope.$watch(() => this.navigationService.query(), (routes) => {
       this.routes = routes;
     });
+    this.appName = StyleConfig.projectName;
   }
 
-  isRouteActive(route: IXosNavigationRoute) {
-    return this.$state.current.url === route.url ? 'active' : '';
-  }
+  // isRouteActive(route: IXosNavigationRoute) {
+  //   return this.$state.current.url === route.url ? 'active' : '';
+  // }
 
   activateRoute(route: IXosNavigationRoute) {
-    route.opened = !route.opened;
+    console.log(route);
+    this.navSelected = route.state;
+  }
+
+  includes(state: string): boolean {
+    return this.$state.includes(state);
+  }
+
+  isSelected(navId: string, navSelected: string) {
+    var activeRoute = this.$state.current.name;
+    var separateRoutes = activeRoute.split('.');
+
+    if (!navSelected) {
+      navSelected = separateRoutes[1];
+    }
+
+    if (navId === navSelected) {
+      return false;
+    }
+    else if (this.$state.current.name.indexOf(navId) === -1 && navId === navSelected ) {
+      return false;
+    }
+    else {
+      return true;
+    }
+
   }
 }
 
