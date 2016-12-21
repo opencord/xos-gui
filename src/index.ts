@@ -27,6 +27,7 @@ import * as _ from 'lodash';
 import {IXosNavigationService} from './app/core/services/navigation';
 import {IXosPageTitleService} from './app/core/services/page-title';
 import {IXosConfigHelpersService} from './app/core/services/helpers/config.helpers';
+import {StyleConfig} from './app/config/style.config';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -48,6 +49,7 @@ angular
   .factory('NoHyperlinksInterceptor', NoHyperlinksInterceptor)
   .component('xos', main)
   .run(function($rootScope: ng.IRootScopeService, $transitions: any) {
+    $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
     $transitions.onSuccess({ to: '**' }, (transtion) => {
       if (transtion.$to().name === 'login') {
         $rootScope['class'] = 'blank';

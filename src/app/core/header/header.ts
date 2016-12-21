@@ -2,6 +2,7 @@ import './header.scss';
 import {StyleConfig} from '../../config/style.config';
 import {IWSEvent} from '../../datasources/websocket/global';
 import {IStoreService} from '../../datasources/stores/synchronizer.store';
+import * as $ from 'jquery';
 
 export interface INotification extends IWSEvent {
   viewed?: boolean;

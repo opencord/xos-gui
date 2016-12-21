@@ -68,6 +68,10 @@ describe('header component', () => {
     expect(header.trim()).toEqual(StyleConfig.projectName);
   });
 
+  it('should set the appropriate favicon', () => {
+    console.log($('#favicon').attr('href'));
+  });
+
   it('should configure toastr', () => {
     expect(MockToastrConfig).toEqual({
       newestOnTop: false,

@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'angular-toastr/dist/angular-toastr.min.css';
 import '../style/style.scss';
 import '../style/stroke-icons/style.css';
+import '../style/pe-icons/pe-icon-7-stroke.css';
 
 
 (function () {

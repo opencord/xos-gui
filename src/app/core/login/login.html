@@ -4,10 +4,9 @@
   <!--<button type="button" ng-click="vm.login(username, password)">Login</button>-->
 <!--</form>-->
 <!-- Main content-->
-<section class="content">
+<section class="content" ng-style="vm.loginStyle">
 
   <div class="container-center animated slideInDown">
-
     <div class="view-header">
       <div class="header-icon">
         <i class="pe page-header-icon pe-7s-unlock"></i>
@@ -19,7 +18,7 @@
         </small>
       </div>
     </div>
-
+    <hr>
     <div class="panel panel-filled">
       <div class="panel-body">
         <form id="loginForm" ng-submit="vm.login(username, password)" novalidate>
