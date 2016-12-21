@@ -2,6 +2,7 @@ import {IStyleConfig} from './interfaces';
 export const StyleConfig: IStyleConfig = {
     projectName: 'CORD',
     favicon: 'cord-favicon.png',
+    background: 'cord-bg.jpg',
     routes: [
         {
             label: 'Slices',

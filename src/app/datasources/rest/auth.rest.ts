@@ -19,8 +19,6 @@ export interface IXosAuthService {
 }
 export class AuthService {
 
-
-  /** @ngInject */
   constructor(
     private $http: angular.IHttpService,
     private $q: angular.IQService,
