@@ -69,9 +69,9 @@ describe('The AuthService service', () => {
     it('should remove user auth from cookies', (done) => {
       service.logout()
         .then((res) => {
-          expect($cookies.get('xoscsrftoken')).toEqual(null);
-          expect($cookies.get('xossessionid')).toEqual(null);
-          expect($cookies.get('xosuser')).toEqual(null);
+          expect($cookies.get('xoscsrftoken')).toEqual(undefined);
+          expect($cookies.get('xossessionid')).toEqual(undefined);
+          expect($cookies.get('xosuser')).toEqual(undefined);
           done();
         })
         .catch(e => {

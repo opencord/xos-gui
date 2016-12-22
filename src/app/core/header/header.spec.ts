@@ -5,7 +5,6 @@ import 'jasmine-jquery';
 import * as angular from 'angular';
 import 'angular-mocks';
 import {xosHeader, INotification} from './header';
-import {StyleConfig} from '../../config/style.config';
 import {Subject} from 'rxjs';
 
 let element, scope: angular.IRootScopeService, compile: ng.ICompileService, isolatedScope;
@@ -19,12 +18,14 @@ const MockStore = function() {
   };
 };
 
-interface ImockToastr {
-  info(msg: string, title: string): void;
-}
-
-const MockToastr: ImockToastr = {
+const MockToastr = {
   info: jasmine.createSpy('info')
+};
+
+const MockAuth = {
+  getUser: () => {
+    return {email: 'test@xos.us'};
+  }
 };
 
 const MockToastrConfig = {};
@@ -36,7 +37,7 @@ const infoNotification = {
     pk: 1,
     object: {
       name: 'TestName',
-      backend_status: '1 - Test Status'
+      backend_status: '0 - In Progress'
     }
   }
 };
@@ -48,7 +49,8 @@ describe('header component', () => {
       .component('xosHeader', xosHeader)
       .service('SynchronizerStore', MockStore)
       .value('toastr', MockToastr)
-      .value('toastrConfig', MockToastrConfig);
+      .value('toastrConfig', MockToastrConfig)
+      .value('AuthService', MockAuth);
     angular.mock.module('xosHeader');
   });
 
@@ -63,13 +65,14 @@ describe('header component', () => {
     isolatedScope.notifications = [];
   }));
 
-  it('should render the appropriate title', () => {
-    const header = $('a.navbar-brand .brand-title', element).text();
-    expect(header.trim()).toEqual(StyleConfig.projectName);
+  it('should render the appropriate logo', () => {
+    const header = $('a.navbar-brand img', element).attr('src');
+    // webpack convert img to base64, how to test?
+    expect(header.trim()).not.toBeNull();
   });
 
-  it('should set the appropriate favicon', () => {
-    console.log($('#favicon').attr('href'));
+  it('should print user email', () => {
+    expect($('.profile-address', element).text()).toBe('test@xos.us');
   });
 
   it('should configure toastr', () => {

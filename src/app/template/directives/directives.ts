@@ -34,7 +34,6 @@ export function minimalizaMenu($rootScope) {
     restrict: 'EA',
     template: '<div class="left-nav-toggle"><a href ng-click="minimalize()"><i class="stroke-hamburgermenu"></i> </a>',
     controller: function ($scope, $element) {
-      console.log('mimalize');
       $scope.minimalize = function () {
         $("body").toggleClass("nav-toggle");
       }
