@@ -25,7 +25,9 @@ module.exports = {
       {
         test: /.html$/,
         loaders: [
-          'html'
+          'html?' + JSON.stringify({
+            attrs: ["img:src", "img:ng-src"]
+          })
         ]
       },
       {

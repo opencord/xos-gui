@@ -90,7 +90,20 @@ angular
               model: m.name,
               related: m.relations,
               xosTableCfg: {
-                columns: ConfigHelpers.modeldefToTableCfg(m.fields, stateUrl)
+                columns: ConfigHelpers.modeldefToTableCfg(m.fields, stateUrl),
+                filter: 'fulltext',
+                order: {field: 'id', reverse: false}, // TODO understand dynamic interfaces
+                actions: [
+                  {
+                    label: 'delete',
+                    icon: 'remove',
+                    color: 'red',
+                    cb: (item) => {
+                      console.log(item);
+                      item.$delete();
+                    }
+                  }
+                ]
               },
               // TODO add form config
             }

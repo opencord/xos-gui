@@ -8,19 +8,20 @@
                     ng-model="vm.query"/>
         </div>
     </div>
-    <table ng-class="vm.classes">
+    <div class="table-responsive">
+        <table ng-class="vm.classes">
         <thead>
         <tr>
             <th ng-repeat="col in vm.columns">
                 {{col.label}}
-                <span ng-if="vm.config.order">
+                <div ng-if="vm.config.order">
                     <a href="" ng-click="vm.orderBy = col.prop; vm.reverse = false">
                       <i class="fa fa-chevron-up"></i>
                     </a>
                     <a href="" ng-click="vm.orderBy = col.prop; vm.reverse = true">
                       <i class="fa fa-chevron-down"></i>
                     </a>
-                  </span>
+                </div>
             </th>
             <th ng-if="vm.config.actions">Actions:</th>
         </tr>
@@ -90,6 +91,7 @@
         </tr>
         </tbody>
     </table>
+    </div>
 <!--</div>-->
 <!--<div ng-show="(vm.data.length == 0 || !vm.data) && vm.loader == false">-->
     <!--<xos-alert config="{type: 'info'}">-->

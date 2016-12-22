@@ -22,13 +22,15 @@ export interface IXosTableColumn {
 }
 
 interface IXosTableCgfOrder {
-  reverse: boolean;
+  reverse?: boolean;
   field: string;
 }
 
 export interface IXosTableCfg {
   columns: any[];
-  order?: IXosTableCgfOrder; // | boolean;
+  order?: IXosTableCgfOrder;
+  filter?: string;
+  actions?: any[]; // TODO create interface
 }
 
 class TableCtrl {

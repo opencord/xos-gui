@@ -35,7 +35,7 @@ class HeaderController {
       // tapToDismiss: false
     });
 
-    this.userEmail = this.authService.getUser().email;
+    this.userEmail = this.authService.getUser() ? this.authService.getUser().email : '';
 
     this.syncStore.query()
       .subscribe(

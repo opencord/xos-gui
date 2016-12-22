@@ -30,7 +30,8 @@ export class ConfigHelpers {
     'no_policy',
     'omf_friendly',
     'enabled',
-    'validators'
+    'validators',
+    'password'
   ];
 
   constructor() {

@@ -21,7 +21,8 @@ export interface IXosUser {
 export interface IXosAuthService {
   login(data: IAuthRequestData): Promise<any>;
   logout(): Promise<any>;
-  getUser(): IXosUser;
+  getUser(): any; // NOTE how to define return user || false ???
+  isAuthenticated(): boolean;
 }
 export class AuthService {
 
@@ -67,6 +68,16 @@ export class AuthService {
   }
 
   public getUser(): IXosUser {
-    return JSON.parse(this.$cookies.get('xosuser'));
+    const user = this.$cookies.get('xosuser');
+    if (angular.isDefined(user)) {
+      return JSON.parse(user);
+    }
+    return;
+  }
+
+  public isAuthenticated(): boolean {
+    const token = this.$cookies.get('xoscsrftoken');
+    const session = this.$cookies.get('xossessionid');
+    return angular.isDefined(token) && angular.isDefined(session);
   }
 }

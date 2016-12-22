@@ -18,6 +18,8 @@ export class ModelStore {
     private ModelRest: IXosResourceService
   ) {
   }
+  // FIXME if called multiple time (for different collection),
+  // it return the same observable while it should return different ones
 
   query(model: string) {
     this.loadInitialData(model);

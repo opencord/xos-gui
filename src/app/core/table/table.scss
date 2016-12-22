@@ -1,7 +1,10 @@
+xos-table {
+  .row + .table-responsive {
+    margin-top: 10px;
+  }
+}
+
 table {
-  width: 100%;
-  max-width: 100%;
-  margin-bottom: 20px;
   border-collapse: collapse !important;
   background: darken(grey, 20);
   border: 1px solid darken(grey, 35);

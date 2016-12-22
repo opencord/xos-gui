@@ -33,7 +33,7 @@ export function CredentialsInterceptor($cookies: angular.cookies.ICookiesService
       if (!$cookies.get('xoscsrftoken') || !$cookies.get('xossessionid')) {
         return req;
       }
-      // req.headers['X-CSRFToken'] = $cookies.get('xoscsrftoken');
+      req.headers['X-CSRFToken'] = $cookies.get('xoscsrftoken');
       req.headers['x-csrftoken'] = $cookies.get('xoscsrftoken');
       req.headers['x-sessionid'] = $cookies.get('xossessionid');
       return req;

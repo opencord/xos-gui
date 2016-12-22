@@ -1,5 +1,18 @@
 xos-nav {
+  .navigation {
+    max-height: 100%;
+    display: block;
+    overflow-y: scroll;
+
+    nav {
+      margin-bottom: 200px;
+    }
+  }
+
   .nav-info {
+    position: fixed !important;
+    bottom: 0;
+    width: 200px;
     .row + .row:last-child {
       margin-top: 20px;
     }
