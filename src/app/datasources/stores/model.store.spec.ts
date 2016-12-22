@@ -57,7 +57,7 @@ describe('The ModelStore service', () => {
     WebSocket = _WebSocket_;
 
     // ModelRest will call the backend
-    httpBackend.expectGET(`${AppConfig.apiEndpoint}/core/samples`)
+    httpBackend.whenGET(`${AppConfig.apiEndpoint}/core/samples`)
       .respond(queryData);
   }));
 
@@ -110,6 +110,41 @@ describe('The ModelStore service', () => {
           }
         });
       }, 1);
+      $scope.$apply();
+      httpBackend.flush();
+    });
+  });
+
+  describe('when multiple stores are requested', () => {
+
+    beforeEach(() => {
+      httpBackend.expectGET(`${AppConfig.apiEndpoint}/core/firsts`)
+        .respond([
+          {first: 'foo'}
+        ]);
+      httpBackend.expectGET(`${AppConfig.apiEndpoint}/core/seconds`)
+        .respond([
+          {second: 'foo'}
+        ]);
+    });
+    it('should create different Subject', (done) => {
+      let fevent = 0;
+      let sevent = 0;
+      service.query('first')
+        .subscribe(first => {
+          fevent++;
+          if (fevent >= 2) {
+            service.query('second')
+              .subscribe(second => {
+                sevent++;
+                if (sevent === 2) {
+                  console.log(first, second);
+                  expect(first).not.toEqual(second);
+                  done();
+                }
+              });
+          }
+        });
       $scope.$apply();
       httpBackend.flush();
     });
