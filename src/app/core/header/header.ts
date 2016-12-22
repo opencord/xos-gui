@@ -9,9 +9,9 @@ export interface INotification extends IWSEvent {
 
 class HeaderController {
   static $inject = ['$scope', 'SynchronizerStore', 'toastr', 'toastrConfig'];
-  public title: string;
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
+  public version: string;
 
   constructor(
     private $scope: angular.IScope,
@@ -19,7 +19,7 @@ class HeaderController {
     private toastr: ng.toastr.IToastrService,
     private toastrConfig: ng.toastr.IToastrConfig
   ) {
-
+    this.version = require('../../../../package.json').version;
     angular.extend(this.toastrConfig, {
       newestOnTop: false,
       positionClass: 'toast-top-right',
@@ -32,19 +32,17 @@ class HeaderController {
       // tapToDismiss: false
     });
 
-    this.title = StyleConfig.projectName;
-
     this.syncStore.query()
       .subscribe(
         (event: IWSEvent) => {
           $scope.$evalAsync(() => {
             let toastrMsg: string;
             let toastrLevel: string;
-            if (event.msg.object.backend_status.indexOf('1') > -1) {
+            if (event.msg.object.backend_status.indexOf('0') > -1) {
               toastrMsg = 'Synchronization started for:';
               toastrLevel = 'info';
             }
-            else if (event.msg.object.backend_status.indexOf('0') > -1) {
+            else if (event.msg.object.backend_status.indexOf('1') > -1) {
               toastrMsg = 'Synchronization succedeed for:';
               toastrLevel = 'success';
             }
@@ -56,24 +54,28 @@ class HeaderController {
             if (toastrLevel && toastrMsg) {
               this.toastr[toastrLevel](`${toastrMsg} ${event.msg.object.name}`, event.model);
             }
-            this.notifications.unshift(event);
-            this.newNotifications = this.getNewNotifications(this.notifications);
+            // this.notifications.unshift(event);
+            // this.newNotifications = this.getNewNotifications(this.notifications);
           });
         }
       );
   }
 
-  // TODO display a list of notification in the template
-  public viewNotification = (notification: INotification) => {
-    notification.viewed = true;
-    this.newNotifications = this.getNewNotifications(this.notifications);
-  };
+  public getLogo(): string {
+    return require(`../../images/brand/${StyleConfig.logo}`);
+  }
 
-  private getNewNotifications = (notifications: INotification[]) => {
-    return this.notifications.filter((n: INotification) => {
-      return !n.viewed;
-    });
-  };
+  // TODO display a list of notification in the template (if it make sense)
+  // public viewNotification = (notification: INotification) => {
+  //   notification.viewed = true;
+  //   this.newNotifications = this.getNewNotifications(this.notifications);
+  // };
+  //
+  // private getNewNotifications = (notifications: INotification[]) => {
+  //   return this.notifications.filter((n: INotification) => {
+  //     return !n.viewed;
+  //   });
+  // };
 }
 
 export const xosHeader: angular.IComponentOptions = {

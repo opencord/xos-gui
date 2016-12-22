@@ -3,6 +3,8 @@ export const StyleConfig: IStyleConfig = {
     projectName: 'OpenCloud',
     favicon: 'opencloud-favicon.png',
     background: 'opencloud-bg.jpg',
+    payoff: 'Your OS resource manager',
+    logo: 'opencloud-logo.png',
     routes: [
         {
             label: 'Slices',

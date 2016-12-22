@@ -44,7 +44,7 @@ export class AuthService {
 
   public logout(): Promise<any> {
     const d = this.$q.defer();
-    this.$http.post(`${AppConfig.apiEndpoint}/utility/login/`, {
+    this.$http.post(`${AppConfig.apiEndpoint}/utility/logout/`, {
       xoscsrftoken: this.$cookies.get('xoscsrftoken'),
       xossessionid: this.$cookies.get('xossessionid')
     })
