@@ -74,7 +74,7 @@ export class ConfigHelpers {
         prop: f.name
       };
 
-      if (f.name === 'id') {
+      if (f.name === 'id' || f.name === 'name') {
         // NOTE can we find a better method to generalize?
         col.link = item => `#/core${baseUrl.replace(':id?', item.id)}`;
       }
@@ -93,6 +93,7 @@ export class ConfigHelpers {
           }
         };
       }
+
       return col;
     })
       .filter(v => angular.isDefined(v));

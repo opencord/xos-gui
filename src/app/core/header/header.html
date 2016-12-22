@@ -27,8 +27,8 @@
         <minimaliza-menu></minimaliza-menu>
       </div>
       <a class="navbar-brand" href="#/">
-        <em class="brand-title">{{vm.title}}</em>
-        <span>v.1.2</span>
+        <img class="img-responsive" ng-src="{{vm.getLogo()}}" alt="">
+        <span>v.{{vm.version}}</span>
       </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
@@ -45,7 +45,7 @@
         <!--</li>-->
         <li class=" profil-link">
           <a ui-sref="commonviews.login">
-            <span class="profile-address">luna@company.io</span>
+            <span class="profile-address">{{vm.userEmail}}</span>
             <img src="../../images/profile.jpg" class="img-circle" alt="">
           </a>
         </li>

@@ -3,6 +3,8 @@ export const StyleConfig: IStyleConfig = {
     projectName: 'CORD',
     favicon: 'cord-favicon.png',
     background: 'cord-bg.jpg',
+    payoff: 'Your VNF orchestrator',
+    logo: 'cord-logo.png',
     routes: [
         {
             label: 'Slices',

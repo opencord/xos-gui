@@ -18,12 +18,17 @@ const NavigationService = function(){
   this.query = () => baseRoutes;
 };
 
+const AuthMock = {
+  logout: jasmine.createSpy('logout')
+};
+
 describe('Nav component', () => {
   beforeEach(() => {
     angular
       .module('xosNav', ['app/core/nav/nav.html', 'ui.router'])
       .component('xosNav', xosNav)
-      .service('NavigationService', NavigationService);
+      .service('NavigationService', NavigationService)
+      .value('AuthService', AuthMock);
     angular.mock.module('xosNav');
   });
 
@@ -53,5 +58,14 @@ describe('Nav component', () => {
     scope.$apply();
     const childRouteContainer = $('.nav-second li', element);
     expect(childRouteContainer.length).toBe(1);
+  });
+
+  it('should call the logout method', () => {
+    // NOTE upgrade to test the ng-click binding
+    // const btn = $(element).find('.nav-info .btn-block');
+    // btn.click();
+    // scope.$digest();
+    isolatedScope.vm.logout();
+    expect(AuthMock.logout).toHaveBeenCalled();
   });
 });

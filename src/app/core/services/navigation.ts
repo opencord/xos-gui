@@ -23,16 +23,20 @@ export class NavigationService {
   constructor() {
     const defaultRoutes = [
       {
+        label: 'Home',
+        state: 'xos.dashboard'
+      },
+      {
         label: 'Core',
         state: 'xos.core'
       },
-      {
-        label: 'Home',
-        state: 'xos.dashboard'
-      }
     ];
     // adding configuration defined routes
-    this.routes = StyleConfig.routes.concat(defaultRoutes).reverse();
+    // this.routes = StyleConfig.routes.concat(defaultRoutes).reverse();
+    this.routes = defaultRoutes;
+    StyleConfig.routes.forEach(r => {
+      this.add(r);
+    });
   }
 
   query() {

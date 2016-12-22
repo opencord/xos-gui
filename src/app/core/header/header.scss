@@ -1,3 +1,21 @@
 #toast-container [toast]:not(:first-child) {
   margin-top: 10px !important;
 }
+
+xos-header {
+  .navbar-brand {
+    padding: 10px 30px !important;
+    position: relative;
+    background: #24262d !important;
+    span {
+      position: absolute;
+      right: 30px;
+      bottom: 0;
+      color: #24262d;
+    }
+  }
+
+  .navbar-default {
+    background: #2a2d35 !important;
+  }
+}

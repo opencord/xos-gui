@@ -33,7 +33,7 @@ export function CredentialsInterceptor($cookies: angular.cookies.ICookiesService
       if (!$cookies.get('xoscsrftoken') || !$cookies.get('xossessionid')) {
         return req;
       }
-      req.headers['X-CSRFToken'] = $cookies.get('xoscsrftoken');
+      // req.headers['X-CSRFToken'] = $cookies.get('xoscsrftoken');
       req.headers['x-csrftoken'] = $cookies.get('xoscsrftoken');
       req.headers['x-sessionid'] = $cookies.get('xossessionid');
       return req;
@@ -44,7 +44,11 @@ export function CredentialsInterceptor($cookies: angular.cookies.ICookiesService
 export function NoHyperlinksInterceptor() {
   return {
     request: (req) => {
-      if (req.url.indexOf('.html') === -1 && req.url.indexOf('login') !== -1) {
+      if (
+        req.url.indexOf('.html') === -1
+        // && req.url.indexOf('login') === -1
+        // && req.url.indexOf('logout') === -1
+      ) {
         // NOTE this may fail if there are already query params
         req.url += '?no_hyperlinks=1';
       }

@@ -1,3 +1,8 @@
+html, body.blank {
+  height: 100%;
+  min-height: 100%;
+}
+
 .content > div {
   opacity: 1 !important;
 }

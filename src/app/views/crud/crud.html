@@ -8,7 +8,7 @@
                         <a class="btn btn-default" ng-if="!vm.list" href="{{vm.baseUrl}}">Back</a>
                     </div>
                     <div class="header-icon">
-                        <i class="pe page-header-icon pe-7s-plugin"></i>
+                        <i class="pe page-header-icon pe-7s-note2"></i>
                     </div>
                     <div class="header-title">
                         <h3>{{vm.title}}</h3>
@@ -27,9 +27,11 @@
                         <h4>Related Items: </h4>
                     </div>
                     <div class="col-lg-8 text-right">
-                        <a ng-repeat="r in vm.related" href="#/core/{{r.toLowerCase()}}s/" class="btn btn-default">
-                            {{r}}
-                        </a>
+                        <div class="btn-group">
+                            <a ng-repeat="r in vm.related" href="#/core/{{r.toLowerCase()}}s/" class="btn btn-default">
+                                {{r}}
+                            </a>
+                        </div>
                     </div>
                     <hr>
                 </div>
