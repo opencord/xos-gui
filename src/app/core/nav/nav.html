@@ -22,11 +22,26 @@
         </ul>
       </li>
       <li class="nav-info">
-        <i class="pe pe-7s-shield text-accent"></i>
-
-        <div class="m-t-xs">
-          <span class="c-white">{{vm.appName}}</span>
-          monitoring and administration for networks applications.
+        <div class="row">
+          <div class="col-sm-4">
+            <i class="pe pe-7s-shield text-accent"></i>
+          </div>
+          <div class="col-sm-8">
+            <h4 class="c-white">{{vm.appName}}</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <span class="c-white">{{vm.payoff}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <i class="pe pe-7s-lock text-accent"></i>
+          </div>
+          <div class="col-sm-8">
+            <a ng-click="vm.logout()" class="btn btn-accent btn-block btn-logout">Logout</a>
+          </div>
         </div>
       </li>
     </ul>
