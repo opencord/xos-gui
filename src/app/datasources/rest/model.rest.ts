@@ -16,6 +16,6 @@ export class ModelRest implements IXosResourceService {
   }
 
   public getResource(url: string): ng.resource.IResourceClass<ng.resource.IResource<any>> {
-    return this.resource = this.$resource(`${AppConfig.apiEndpoint}${url}/:id`, {id: '@id'});
+    return this.resource = this.$resource(`${AppConfig.apiEndpoint}${url}/:id/`, {id: '@id'});
   }
 }

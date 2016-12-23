@@ -13,10 +13,7 @@ export function userStatusInterceptor($state: angular.ui.IStateService) {
 
   const checkLogin = (res) => {
     if (res.status === 403) {
-      $state.go('login');
-    }
-    else if (res.data.status === 403) {
-      $state.go('login');
+      // $state.go('login');
     }
     return res;
   };
@@ -33,7 +30,7 @@ export function CredentialsInterceptor($cookies: angular.cookies.ICookiesService
       if (!$cookies.get('xoscsrftoken') || !$cookies.get('xossessionid')) {
         return req;
       }
-      req.headers['X-CSRFToken'] = $cookies.get('xoscsrftoken');
+      // req.headers['X-CSRFToken'] = $cookies.get('xoscsrftoken');
       req.headers['x-csrftoken'] = $cookies.get('xoscsrftoken');
       req.headers['x-sessionid'] = $cookies.get('xossessionid');
       return req;

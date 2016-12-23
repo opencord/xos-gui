@@ -138,7 +138,6 @@ describe('The ModelStore service', () => {
               .subscribe(second => {
                 sevent++;
                 if (sevent === 2) {
-                  console.log(first, second);
                   expect(first).not.toEqual(second);
                   done();
                 }
