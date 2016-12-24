@@ -37,7 +37,7 @@ class NavCtrl {
   }
 
   isSelected(navId: string, navSelected: string) {
-
+    console.log(navId, navSelected);
     // TODO activate only one state
 
     const activeRoute = this.$state.current.name;

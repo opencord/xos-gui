@@ -7,6 +7,17 @@ xos-nav {
     nav {
       margin-bottom: 200px;
     }
+
+    li {
+      cursor: pointer;
+    }
+
+    // do not activate nav items that are just container
+    li.nav-container.active a {
+      border: none;
+      padding-left: 25px;
+      color: #848c94;
+    }
   }
 
   .nav-info {
