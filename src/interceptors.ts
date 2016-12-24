@@ -13,7 +13,7 @@ export function userStatusInterceptor($state: angular.ui.IStateService) {
 
   const checkLogin = (res) => {
     if (res.status === 403) {
-      // $state.go('login');
+      $state.go('login');
     }
     return res;
   };
