@@ -1,5 +1,5 @@
 import {IAppConfig} from './interfaces';
 export const AppConfig: IAppConfig = {
-    apiEndpoint: 'http://localhost:4000/api',
-    websocketClient: 'http://localhost:4000'
+    apiEndpoint: 'http://xos.dev:3000/api',
+    websocketClient: 'http://xos.dev:3000'
 };
