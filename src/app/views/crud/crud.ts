@@ -74,6 +74,13 @@ class CrudController {
       this.list = false;
     }
   }
+
+  public getRelatedItem(relation: string, item: any): number {
+    if (angular.isDefined(item[relation.toLowerCase()])) {
+      return item[relation.toLowerCase()];
+    }
+    return 0;
+  }
 }
 
 export const xosCrud: angular.IComponentOptions = {

@@ -20,22 +20,25 @@
                 <hr>
             </div>
         </div>
-        <div ng-if="vm.list">
-            <div class="row" ng-show="vm.related.length > 0">
-                <div class="view-header">
-                    <div class="col-lg-4">
-                        <h4>Related Items: </h4>
-                    </div>
-                    <div class="col-lg-8 text-right">
-                        <div class="btn-group">
-                            <a ng-repeat="r in vm.related" href="#/core/{{r.toLowerCase()}}s/" class="btn btn-default">
-                                {{r}}
-                            </a>
-                        </div>
-                    </div>
-                    <hr>
+        <div class="row" ng-show="vm.related.length > 0">
+            <div class="view-header">
+                <div class="col-lg-4">
+                    <h4>Related Items: </h4>
                 </div>
+                <div class="col-lg-8 text-right">
+                    <div class="btn-group">
+                        <a ng-if="vm.list" ng-repeat="r in vm.related" href="#/core/{{r.toLowerCase()}}s/" class="btn btn-default">
+                            {{r}}
+                        </a>
+                        <a ng-if="!vm.list && vm.getRelatedItem(r, vm.model)" ng-repeat="r in vm.related" href="#/core/{{r.toLowerCase()}}s/{{vm.getRelatedItem(r, vm.model)}}" class="btn btn-default">
+                            {{r}}
+                        </a>
+                    </div>
+                </div>
+                <hr>
             </div>
+        </div>
+        <div ng-if="vm.list">
             <xos-table config="vm.tableCfg" data="vm.tableData"></xos-table>
         </div>
 
