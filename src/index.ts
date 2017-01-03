@@ -100,7 +100,13 @@ angular
                     color: 'red',
                     cb: (item) => {
                       console.log(item);
-                      item.$delete();
+                      item.$delete()
+                        .then(res => {
+                          console.log(res);
+                        })
+                        .catch(err => {
+                          console.error(err);
+                        });
                     }
                   }
                 ]

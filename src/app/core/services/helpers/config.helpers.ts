@@ -76,7 +76,7 @@ export class ConfigHelpers {
       };
 
       if (f.name === 'id' || f.name === 'name') {
-        // NOTE can we find a better method to generalize?
+        // NOTE can we find a better method to generalize the route?
         col.link = item => `#/core${baseUrl.replace(':id?', item.id)}`;
       }
 
