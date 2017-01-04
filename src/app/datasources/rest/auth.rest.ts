@@ -37,7 +37,6 @@ export class AuthService {
     const d = this.$q.defer();
     this.$http.post(`${AppConfig.apiEndpoint}/utility/login/`, data)
       .then((res: IAuthResponseData) => {
-        console.log(res.data);
         this.$cookies.put('xoscsrftoken', res.data.xoscsrftoken);
         this.$cookies.put('xossessionid', res.data.xossessionid);
         this.$cookies.put('xosuser', res.data.user);
