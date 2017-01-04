@@ -29,7 +29,7 @@ import {IXosPageTitleService} from './app/core/services/page-title';
 import {IXosConfigHelpersService} from './app/core/services/helpers/config.helpers';
 import {StyleConfig} from './app/config/style.config';
 import {IXosResourceService} from './app/datasources/rest/model.rest';
-import {IXosModelHelpersService} from './app/core/services/helpers/model.helper';
+import {IXosModelHelpersService} from './app/datasources/helpers/model.helper';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
