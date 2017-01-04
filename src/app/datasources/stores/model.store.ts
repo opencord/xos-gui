@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs/Rx';
 import {IWSEvent, IWSEventService} from '../websocket/global';
 import {IXosResourceService} from '../rest/model.rest';
 import {IStoreHelpersService} from '../helpers/store.helpers';
-import {IXosModelHelpersService} from '../../core/services/helpers/model.helper';
+import {IXosModelHelpersService} from '../helpers/model.helpers';
 
 export interface  IModelStoreService {
   query(model: string): Observable<any>;

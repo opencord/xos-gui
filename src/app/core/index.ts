@@ -13,7 +13,6 @@ import {XosFormHelpers} from './form/form-helpers';
 import {xosForm} from './form/form';
 import {xosField} from './field/field';
 import 'angular-toastr';
-import {ModelHelpers} from './services/helpers/model.helper';
 
 export const xosCore = 'xosCore';
 
@@ -25,7 +24,6 @@ angular
   .service('PageTitle', PageTitle)
   .service('XosFormHelpers', XosFormHelpers)
   .service('ConfigHelpers', ConfigHelpers)
-  .service('ModelHelpers', ModelHelpers)
   .directive('xosLinkWrapper', xosLinkWrapper)
   .component('xosHeader', xosHeader)
   .component('xosFooter', xosFooter)

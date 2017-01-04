@@ -7,7 +7,7 @@ import {IWSEvent} from '../websocket/global';
 import {StoreHelpers} from '../helpers/store.helpers';
 import {ModelRest} from '../rest/model.rest';
 import {AppConfig} from '../../config/app.config';
-import {ModelHelpers} from '../../core/services/helpers/model.helper';
+import {ModelHelpers} from '../helpers/model.helpers';
 
 let service: IModelStoreService;
 let httpBackend: ng.IHttpBackendService;

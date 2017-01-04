@@ -29,7 +29,6 @@ import {IXosPageTitleService} from './app/core/services/page-title';
 import {IXosConfigHelpersService} from './app/core/services/helpers/config.helpers';
 import {StyleConfig} from './app/config/style.config';
 import {IXosResourceService} from './app/datasources/rest/model.rest';
-import {IXosModelHelpersService} from './app/core/services/helpers/model.helper';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -69,7 +68,6 @@ angular
     RuntimeStates: IRuntimeStatesService,
     NavigationService: IXosNavigationService,
     ConfigHelpers: IXosConfigHelpersService,
-    ModelHelpers: IXosModelHelpersService,
     toastr: ng.toastr.IToastrService,
     PageTitle: IXosPageTitleService
   ) => {
@@ -105,15 +103,7 @@ angular
                     color: 'red',
                     cb: (item) => {
                       let obj = angular.copy(item);
-                      // check that item in an angular resource
-                      if (!item.$delete) {
-                        const endpoint = ModelHelpers.urlFromCoreModel(m.name);
-                        const resource = ModelRest.getResource(endpoint);
-                        // create a resource with that item
-                        item = new resource(item);
 
-                      }
-                      console.log(item);
                       item.$delete()
                         .then((res) => {
                           if (res.status === 404) {

@@ -2,10 +2,10 @@ import * as angular from 'angular';
 import 'angular-mocks';
 import 'angular-ui-router';
 
-import {IXosModelHelpersService, ModelHelpers} from './model.helper';
+import {IXosModelHelpersService, ModelHelpers} from './model.helpers';
 
 let service: IXosModelHelpersService;
-describe('The ConfigHelpers service', () => {
+describe('The ModelHelpers service', () => {
 
   beforeEach(() => {
     angular
