@@ -12,7 +12,7 @@ export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourc
 export function userStatusInterceptor($state: angular.ui.IStateService) {
 
   const checkLogin = (res) => {
-    if (res.status === 403) {
+    if (res.status === 403 || res.status === -1) {
       $state.go('login');
     }
     return res;
