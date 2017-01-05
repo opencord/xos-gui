@@ -2,10 +2,10 @@ import * as angular from 'angular';
 import 'angular-mocks';
 import 'angular-ui-router';
 import {StoreHelpers, IStoreHelpersService} from './store.helpers';
-import {ModelHelpers} from './model.helpers';
 import {ModelRest} from '../rest/model.rest';
 import {BehaviorSubject} from 'rxjs';
 import {IWSEvent} from '../websocket/global';
+import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
 
 let service: IStoreHelpersService;
 let subject: BehaviorSubject<any>;
@@ -16,8 +16,8 @@ describe('The StoreHelpers service', () => {
 
   beforeEach(() => {
     angular
-      .module('test', ['ngResource'])
-      .service('ModelHelpers', ModelHelpers) // NOTE evaluate mock
+      .module('test', ['ngResource', 'toastr'])
+      .service('ConfigHelpers', ConfigHelpers) // NOTE evaluate mock
       .service('ModelRest', ModelRest) // NOTE evaluate mock
       .service('StoreHelpers', StoreHelpers);
 

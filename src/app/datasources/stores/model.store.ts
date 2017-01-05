@@ -4,20 +4,20 @@ import {BehaviorSubject, Observable} from 'rxjs/Rx';
 import {IWSEvent, IWSEventService} from '../websocket/global';
 import {IXosResourceService} from '../rest/model.rest';
 import {IStoreHelpersService} from '../helpers/store.helpers';
-import {IXosModelHelpersService} from '../helpers/model.helpers';
+import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 
 export interface  IModelStoreService {
   query(model: string): Observable<any>;
 }
 
 export class ModelStore {
-  static $inject = ['WebSocket', 'StoreHelpers', 'ModelRest', 'ModelHelpers'];
+  static $inject = ['WebSocket', 'StoreHelpers', 'ModelRest', 'ConfigHelpers'];
   private _collections: any; // NOTE contains a map of {model: BehaviourSubject}
   constructor(
     private webSocket: IWSEventService,
     private storeHelpers: IStoreHelpersService,
     private ModelRest: IXosResourceService,
-    private ModelHelpers: IXosModelHelpersService
+    private ConfigHelpers: IXosConfigHelpersService
   ) {
     this._collections = {};
   }
@@ -43,7 +43,7 @@ export class ModelStore {
 
   private loadInitialData(model: string) {
     // NOTE check what is the correct pattern to pluralize this
-    const endpoint = this.ModelHelpers.urlFromCoreModel(model);
+    const endpoint = this.ConfigHelpers.urlFromCoreModel(model);
     this.ModelRest.getResource(endpoint).query().$promise
       .then(
         res => {

@@ -7,7 +7,7 @@ import {IWSEvent} from '../websocket/global';
 import {StoreHelpers} from '../helpers/store.helpers';
 import {ModelRest} from '../rest/model.rest';
 import {AppConfig} from '../../config/app.config';
-import {ModelHelpers} from '../helpers/model.helpers';
+import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
 
 let service: IModelStoreService;
 let httpBackend: ng.IHttpBackendService;
@@ -37,12 +37,12 @@ describe('The ModelStore service', () => {
 
   beforeEach(() => {
     angular
-      .module('ModelStore', ['ngResource'])
+      .module('ModelStore', ['ngResource', 'toastr'])
       .service('WebSocket', MockWs)
       .service('StoreHelpers', StoreHelpers) // TODO mock
       .service('ModelRest', ModelRest) // TODO mock
       .service('ModelStore', ModelStore)
-      .service('ModelHelpers', ModelHelpers); // TODO mock
+      .service('ConfigHelpers', ConfigHelpers); // TODO mock
 
     angular.mock.module('ModelStore');
   });

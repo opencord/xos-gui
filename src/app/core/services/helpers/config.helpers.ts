@@ -16,6 +16,7 @@ export interface IXosConfigHelpersService {
   pluralize(string: string, quantity?: number, count?: boolean): string;
   toLabel(string: string, pluralize?: boolean): string;
   toLabels(string: string[], pluralize?: boolean): string[];
+  urlFromCoreModel(name: string): string;
 }
 
 export class ConfigHelpers {
@@ -44,11 +45,11 @@ export class ConfigHelpers {
     pluralize.addPluralRule(/slice$/i, 'slices');
   }
 
-  pluralize(string: string, quantity?: number, count?: boolean): string {
+  public pluralize(string: string, quantity?: number, count?: boolean): string {
     return pluralize(string, quantity, count);
   }
 
-  toLabels(strings: string[], pluralize?: boolean): string[] {
+  public toLabels(strings: string[], pluralize?: boolean): string[] {
     if (angular.isArray(strings)) {
       return _.map(strings, s => {
         return this.toLabel(s, pluralize);
@@ -56,7 +57,7 @@ export class ConfigHelpers {
     }
   }
 
-  toLabel(string: string, pluralize?: boolean): string {
+  public toLabel(string: string, pluralize?: boolean): string {
 
     if (pluralize) {
       string = this.pluralize(string);
@@ -69,7 +70,7 @@ export class ConfigHelpers {
     return this.capitalizeFirst(string);
   }
 
-  modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg {
+  public modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg {
     const cfg = {
       columns: this.modelFieldsToColumnsCfg(model.fields, baseUrl),
       filter: 'fulltext',
@@ -100,7 +101,7 @@ export class ConfigHelpers {
     return cfg;
   }
 
-  modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[] {
+  public modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[] {
 
     const columns =  _.map(fields, (f) => {
       if (this.excluded_fields.indexOf(f.name) > -1) {
@@ -137,6 +138,10 @@ export class ConfigHelpers {
 
     return columns;
   };
+
+  public urlFromCoreModel(name: string): string {
+    return `/core/${this.pluralize(name.toLowerCase())}`;
+  }
 
   private fromCamelCase(string: string): string {
     return string.split(/(?=[A-Z])/).map(w => w.toLowerCase()).join(' ');

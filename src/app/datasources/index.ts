@@ -5,12 +5,12 @@ import {ModelStore} from './stores/model.store';
 import {StoreHelpers} from './helpers/store.helpers';
 import {SynchronizerStore} from './stores/synchronizer.store';
 import {ModeldefsService} from './rest/modeldefs.rest';
-import {ModelHelpers} from './helpers/model.helpers';
+import {xosCore} from '../core/index';
 
 export const xosDataSources = 'xosDataSources';
 
 angular
-  .module('xosDataSources', ['ngCookies', 'ngResource'])
+  .module('xosDataSources', ['ngCookies', 'ngResource', xosCore])
   .service('ModelRest', ModelRest)
   .service('AuthService', AuthService)
   .service('WebSocket', WebSocketEvent);
@@ -18,7 +18,6 @@ angular
 angular
   .module('xosDataSources')
   .service('StoreHelpers', StoreHelpers)
-  .service('ModelHelpers', ModelHelpers)
   .service('SynchronizerStore', SynchronizerStore)
   .service('ModelStore', ModelStore)
   .service('ModelDefs', ModeldefsService);

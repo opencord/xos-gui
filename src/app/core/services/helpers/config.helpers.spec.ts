@@ -117,4 +117,9 @@ describe('The ConfigHelpers service', () => {
       expect(cfg.actions.length).toBe(1);
     });
   });
+
+  it('should convert a core model name in an URL', () => {
+    expect(service.urlFromCoreModel('Slice')).toBe('/core/slices');
+    expect(service.urlFromCoreModel('Xos')).toBe('/core/xosses');
+  });
 });
