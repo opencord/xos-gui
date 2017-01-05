@@ -1,15 +1,18 @@
 import * as _ from 'lodash';
 import * as pluralize from 'pluralize';
-import {IXosTableColumn} from '../../table/table';
+import {IXosTableColumn, IXosTableCfg} from '../../table/table';
+import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
 
 export interface IXosModelDefsField {
   name: string;
   type: string;
+  validators?: any;
 }
 
 export interface IXosConfigHelpersService {
   excluded_fields: string[];
-  modeldefToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): any[]; // TODO use a proper interface
+  modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg;
+  modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[]; // TODO use a proper interface
   pluralize(string: string, quantity?: number, count?: boolean): string;
   toLabel(string: string, pluralize?: boolean): string;
   toLabels(string: string[], pluralize?: boolean): string[];
@@ -34,7 +37,9 @@ export class ConfigHelpers {
     'password'
   ];
 
-  constructor() {
+  constructor(
+    private toastr: ng.toastr.IToastrService
+  ) {
     pluralize.addIrregularRule('xos', 'xosses');
     pluralize.addPluralRule(/slice$/i, 'slices');
   }
@@ -64,7 +69,38 @@ export class ConfigHelpers {
     return this.capitalizeFirst(string);
   }
 
-  modeldefToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[] {
+  modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg {
+    const cfg = {
+      columns: this.modelFieldsToColumnsCfg(model.fields, baseUrl),
+      filter: 'fulltext',
+      order: {field: 'id', reverse: false},
+      actions: [
+        {
+          label: 'delete',
+          icon: 'remove',
+          color: 'red',
+          cb: (item) => {
+            let obj = angular.copy(item);
+
+            item.$delete()
+              .then((res) => {
+                if (res.status === 404) {
+                  // TODO understand why it does not go directly in catch
+                  throw new Error();
+                }
+                this.toastr.info(`${model.name} ${obj.name} succesfully deleted`);
+              })
+              .catch(() => {
+                this.toastr.error(`Error while deleting ${obj.name}`);
+              });
+          }
+        }
+      ]
+    };
+    return cfg;
+  }
+
+  modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[] {
 
     const columns =  _.map(fields, (f) => {
       if (this.excluded_fields.indexOf(f.name) > -1) {

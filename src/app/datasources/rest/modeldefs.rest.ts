@@ -1,13 +1,9 @@
 import {AppConfig} from '../../config/app.config';
-
-interface IModeldefField {
-  name: string;
-  type: string;
-}
+import {IXosModelDefsField} from '../../core/services/helpers/config.helpers';
 
 export interface IModeldef {
-  fields: IModeldefField[];
-  relations: string[];
+  fields: IXosModelDefsField[];
+  relations?: string[];
   name: string;
 }
 
