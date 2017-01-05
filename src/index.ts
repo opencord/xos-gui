@@ -92,34 +92,7 @@ angular
             data: {
               model: m.name,
               related: m.relations,
-              xosTableCfg: {
-                columns: ConfigHelpers.modeldefToColumnsCfg(m.fields, stateUrl),
-                filter: 'fulltext',
-                order: {field: 'id', reverse: false}, // TODO understand dynamic interfaces
-                actions: [
-                  {
-                    label: 'delete',
-                    icon: 'remove',
-                    color: 'red',
-                    cb: (item) => {
-                      let obj = angular.copy(item);
-
-                      item.$delete()
-                        .then((res) => {
-                          if (res.status === 404) {
-                            // TODO understand why it does not go directly in catch
-                            throw new Error();
-                          }
-                          toastr.info(`${m.name} ${obj.name} succesfully deleted`);
-                        })
-                        .catch(() => {
-                          console.log(obj);
-                          toastr.error(`Error while deleting ${obj.name}`);
-                        });
-                    }
-                  }
-                ]
-              },
+              xosTableCfg: ConfigHelpers.modelToTableCfg(m, stateUrl)
               // TODO add form config
             }
           };
