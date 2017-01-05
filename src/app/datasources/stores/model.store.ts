@@ -23,7 +23,6 @@ export class ModelStore {
   }
 
   query(model: string) {
-
     // if there isn't already an observable for that item
     if (!this._collections[model]) {
       this._collections[model] = new BehaviorSubject([]); // NOTE maybe this can be created when we get response from the resource

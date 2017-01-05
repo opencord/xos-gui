@@ -93,7 +93,7 @@ angular
               model: m.name,
               related: m.relations,
               xosTableCfg: {
-                columns: ConfigHelpers.modeldefToTableCfg(m.fields, stateUrl),
+                columns: ConfigHelpers.modeldefToColumnsCfg(m.fields, stateUrl),
                 filter: 'fulltext',
                 order: {field: 'id', reverse: false}, // TODO understand dynamic interfaces
                 actions: [
@@ -134,8 +134,5 @@ angular
 
         // after setting up dynamic routes, redirect to previous state
         $location.path(lastRoute);
-        // $state.get().forEach(s => {
-        //   console.log(s.name, $state.href(s.name), s);
-        // });
       });
   });
