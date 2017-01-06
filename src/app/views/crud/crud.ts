@@ -88,3 +88,4 @@ export const xosCrud: angular.IComponentOptions = {
   controllerAs: 'vm',
   controller: CrudController
 };
+

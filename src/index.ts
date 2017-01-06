@@ -109,3 +109,4 @@ angular
         $location.path(lastRoute);
       });
   });
+

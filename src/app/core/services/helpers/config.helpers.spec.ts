@@ -118,3 +118,4 @@ describe('The ConfigHelpers service', () => {
     });
   });
 });
+

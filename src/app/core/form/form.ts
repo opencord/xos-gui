@@ -17,7 +17,6 @@ class FormCtrl {
     private XosFormHelpers: IXosFormHelpersService,
     private ConfigHelpers: IXosConfigHelpersService
   ) {
-
   }
 
   $onInit() {
