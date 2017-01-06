@@ -6,6 +6,7 @@ import {ModelRest} from '../rest/model.rest';
 import {BehaviorSubject} from 'rxjs';
 import {IWSEvent} from '../websocket/global';
 import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
+import {AuthService} from '../rest/auth.rest';
 
 let service: IStoreHelpersService;
 let subject: BehaviorSubject<any>;
@@ -16,10 +17,11 @@ describe('The StoreHelpers service', () => {
 
   beforeEach(() => {
     angular
-      .module('test', ['ngResource', 'toastr'])
+      .module('test', ['ngResource', 'toastr', 'ngCookies'])
       .service('ConfigHelpers', ConfigHelpers) // NOTE evaluate mock
       .service('ModelRest', ModelRest) // NOTE evaluate mock
-      .service('StoreHelpers', StoreHelpers);
+      .service('StoreHelpers', StoreHelpers)
+      .service('AuthService', AuthService);
 
     angular.mock.module('test');
   });

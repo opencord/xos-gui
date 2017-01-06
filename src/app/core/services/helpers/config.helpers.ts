@@ -3,6 +3,7 @@ import * as pluralize from 'pluralize';
 import {IXosTableColumn, IXosTableCfg} from '../../table/table';
 import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosFormConfig, IXosFormInput} from '../../form/form';
+import {IXosAuthService} from '../../../datasources/rest/auth.rest';
 
 export interface IXosModelDefsField {
   name: string;
@@ -44,7 +45,8 @@ export class ConfigHelpers {
   ];
 
   constructor(
-    private toastr: ng.toastr.IToastrService
+    private toastr: ng.toastr.IToastrService,
+    private AuthService: IXosAuthService
   ) {
     pluralize.addIrregularRule('xos', 'xosses');
     pluralize.addPluralRule(/slice$/i, 'slices');
@@ -165,18 +167,31 @@ export class ConfigHelpers {
   public modelToFormCfg(model: IModeldef): IXosFormConfig {
     return {
       formName: `${model.name}Form`,
-      exclude: ['backend_status'],
+      exclude: ['backend_status', 'creator'],
       actions: [{
         label: 'Save',
         class: 'success',
         icon: 'ok',
         cb: (item, form) => {
+          const model = angular.copy(item);
+
+          // TODO remove ManyToMany relations and save them separately (how??)
+          delete item.networks;
+
+          // adding userId as creator
+          item.creator = this.AuthService.getUser().id;
+
           item.$save()
-            .then(res => {
-              this.toastr.success(`${item.name} succesfully saved`);
+            .then((res) => {
+              if (res.status === 403 || res.status === 405 || res.status === 500) {
+                // TODO understand why 405 does not go directly in catch (it may be realted to ng-rest-gw)
+                throw new Error();
+              }
+              this.toastr.success(`${model.name} succesfully saved`);
             })
             .catch(err => {
-              this.toastr.error(`Error while saving ${item.name}`);
+              // TODO keep the edited model
+              this.toastr.error(`Error while saving ${model.name}`);
             });
         }
       }],

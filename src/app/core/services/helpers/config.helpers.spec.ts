@@ -2,8 +2,7 @@ import * as angular from 'angular';
 import 'angular-mocks';
 import 'angular-ui-router';
 
-import {IXosConfigHelpersService} from './config.helpers';
-import {xosCore} from '../../index';
+import {IXosConfigHelpersService, ConfigHelpers} from './config.helpers';
 import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosTableCfg} from '../../table/table';
 import {IXosFormInput, IXosFormConfig} from '../../form/form';
@@ -50,7 +49,17 @@ const model: IModeldef = {
 
 describe('The ConfigHelpers service', () => {
 
-  beforeEach(angular.mock.module(xosCore));
+  beforeEach(() => {
+    angular
+      .module('test', ['toastr'])
+      .service('ConfigHelpers', ConfigHelpers)
+      .value('AuthService', {
+        getUser: () => {
+          return {id: 1};
+        }
+      });
+    angular.mock.module('test');
+  });
 
   beforeEach(angular.mock.inject((
     ConfigHelpers: IXosConfigHelpersService,

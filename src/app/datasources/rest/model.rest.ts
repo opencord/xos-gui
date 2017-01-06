@@ -6,7 +6,6 @@ export interface IXosResourceService {
 
 export class ModelRest implements IXosResourceService {
   static $inject = ['$resource'];
-  private resource: angular.resource.IResourceClass<any>;
 
   /** @ngInject */
   constructor(
@@ -16,6 +15,18 @@ export class ModelRest implements IXosResourceService {
   }
 
   public getResource(url: string): ng.resource.IResourceClass<ng.resource.IResource<any>> {
-    return this.resource = this.$resource(`${AppConfig.apiEndpoint}${url}/:id/`, {id: '@id'});
+    const resource: angular.resource.IResourceClass<any> = this.$resource(`${AppConfig.apiEndpoint}${url}/:id/`, {id: '@id'}, {
+      update: { method: 'PUT' }
+    });
+
+    resource.prototype.$save = function() {
+      if (this.id) {
+        return this.$update();
+      } else {
+        return resource.save(this).$promise;
+      }
+    };
+
+    return resource;
   }
 }

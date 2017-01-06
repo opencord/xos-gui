@@ -8,6 +8,7 @@ import {StoreHelpers} from '../helpers/store.helpers';
 import {ModelRest} from '../rest/model.rest';
 import {AppConfig} from '../../config/app.config';
 import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
+import {AuthService} from '../rest/auth.rest';
 
 let service: IModelStoreService;
 let httpBackend: ng.IHttpBackendService;
@@ -37,12 +38,13 @@ describe('The ModelStore service', () => {
 
   beforeEach(() => {
     angular
-      .module('ModelStore', ['ngResource', 'toastr'])
+      .module('ModelStore', ['ngResource', 'toastr', 'ngCookies'])
       .service('WebSocket', MockWs)
       .service('StoreHelpers', StoreHelpers) // TODO mock
       .service('ModelRest', ModelRest) // TODO mock
       .service('ModelStore', ModelStore)
-      .service('ConfigHelpers', ConfigHelpers); // TODO mock
+      .service('ConfigHelpers', ConfigHelpers) // TODO mock
+      .service('AuthService', AuthService);
 
     angular.mock.module('ModelStore');
   });
