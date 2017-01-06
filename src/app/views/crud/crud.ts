@@ -2,14 +2,17 @@ import {IXosTableCfg} from '../../core/table/table';
 import {IModelStoreService} from '../../datasources/stores/model.store';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 import * as _ from 'lodash';
+import {IXosFormConfig} from '../../core/form/form';
+import {IXosResourceService} from '../../datasources/rest/model.rest';
 export interface IXosCrudData {
   model: string;
   related: string[];
   xosTableCfg: IXosTableCfg;
+  xosFormCfg: IXosFormConfig;
 }
 
 class CrudController {
-  static $inject = ['$scope', '$state', '$stateParams', 'ModelStore', 'ConfigHelpers'];
+  static $inject = ['$scope', '$state', '$stateParams', 'ModelStore', 'ConfigHelpers', 'ModelRest'];
 
   public data: IXosCrudData;
   public tableCfg: IXosTableCfg;
@@ -27,7 +30,8 @@ class CrudController {
     private $state: angular.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
     private store: IModelStoreService,
-    private ConfigHelpers: IXosConfigHelpersService
+    private ConfigHelpers: IXosConfigHelpersService,
+    private ModelRest: IXosResourceService
   ) {
     this.data = this.$state.current.data;
     this.tableCfg = this.data.xosTableCfg;
@@ -39,19 +43,7 @@ class CrudController {
 
     this.related = $state.current.data.related;
 
-    this.formCfg = {
-      formName: 'sampleForm',
-      actions: [
-        {
-          label: 'Save',
-          icon: 'ok', // refers to bootstraps glyphicon
-          cb: (item) => { // receive the model
-            console.log(item);
-          },
-          class: 'success'
-        }
-      ]
-    };
+    this.formCfg = $state.current.data.xosFormCfg;
 
     this.store.query(this.data.model)
       .subscribe(
@@ -61,8 +53,8 @@ class CrudController {
             this.title = this.ConfigHelpers.pluralize(this.data.model, event.length);
             this.tableData = event;
 
-            // if it is a detail page
-            if ($stateParams['id']) {
+            // if it is a detail page for an existing model
+            if ($stateParams['id'] && $stateParams['id'] !== 'add') {
               this.model = _.find(this.tableData, {id: parseInt($stateParams['id'], 10)});
             }
           });
@@ -72,11 +64,19 @@ class CrudController {
     // if it is a detail page
     if ($stateParams['id']) {
       this.list = false;
+
+      // if it is the create page
+      if ($stateParams['id'] === 'add') {
+        // generate a resource for an empty model
+        const endpoint = this.ConfigHelpers.urlFromCoreModel(this.data.model);
+        const resource = this.ModelRest.getResource(endpoint);
+        this.model = new resource({});
+      }
     }
   }
 
   public getRelatedItem(relation: string, item: any): number {
-    if (angular.isDefined(item[relation.toLowerCase()])) {
+    if (item && angular.isDefined(item[relation.toLowerCase()])) {
       return item[relation.toLowerCase()];
     }
     return 0;
@@ -88,3 +88,4 @@ export const xosCrud: angular.IComponentOptions = {
   controllerAs: 'vm',
   controller: CrudController
 };
+

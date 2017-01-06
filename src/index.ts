@@ -78,7 +78,7 @@ angular
     // Dinamically add a  core states
     ModelDefs.get()
       .then((models: IModeldef[]) => {
-        // TODO move in a separate service and test
+        // TODO move in a separate service and test (StateConfig service in Core)
         _.forEach(models, (m: IModeldef) => {
           const stateUrl = `/${ConfigHelpers.pluralize(m.name.toLowerCase())}/:id?`;
           const stateName = `xos.core.${ConfigHelpers.pluralize(m.name.toLowerCase())}`;
@@ -92,8 +92,8 @@ angular
             data: {
               model: m.name,
               related: m.relations,
-              xosTableCfg: ConfigHelpers.modelToTableCfg(m, stateUrl)
-              // TODO add form config
+              xosTableCfg: ConfigHelpers.modelToTableCfg(m, stateUrl),
+              xosFormCfg: ConfigHelpers.modelToFormCfg(m)
             }
           };
 
@@ -109,3 +109,4 @@ angular
         $location.path(lastRoute);
       });
   });
+
