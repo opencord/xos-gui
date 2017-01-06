@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as pluralize from 'pluralize';
 import {IXosTableColumn, IXosTableCfg} from '../../table/table';
 import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
+import {IXosFormConfig, IXosFormInput} from '../../form/form';
 
 export interface IXosModelDefsField {
   name: string;
@@ -11,8 +12,10 @@ export interface IXosModelDefsField {
 
 export interface IXosConfigHelpersService {
   excluded_fields: string[];
-  modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg;
   modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[]; // TODO use a proper interface
+  modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg;
+  modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[];
+  modelToFormCfg(model: IModeldef): IXosFormConfig;
   pluralize(string: string, quantity?: number, count?: boolean): string;
   toLabel(string: string, pluralize?: boolean): string;
   toLabels(string: string[], pluralize?: boolean): string[];
@@ -35,7 +38,9 @@ export class ConfigHelpers {
     'omf_friendly',
     'enabled',
     'validators',
-    'password'
+    'password',
+    'backend_need_delete',
+    'backend_need_reap'
   ];
 
   constructor(
@@ -43,6 +48,7 @@ export class ConfigHelpers {
   ) {
     pluralize.addIrregularRule('xos', 'xosses');
     pluralize.addPluralRule(/slice$/i, 'slices');
+    pluralize.addSingularRule(/slice$/i, 'slice');
   }
 
   public pluralize(string: string, quantity?: number, count?: boolean): string {
@@ -143,6 +149,41 @@ export class ConfigHelpers {
     return `/core/${this.pluralize(name.toLowerCase())}`;
   }
 
+  public modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[] {
+
+    return _.map(fields, f => {
+      return {
+        name: f.name,
+        label: this.toLabel(f.name),
+        type: f.type,
+        validators: f.validators
+      };
+    })
+      .filter(f => this.excluded_fields.indexOf(f.name) === -1);
+  }
+
+  public modelToFormCfg(model: IModeldef): IXosFormConfig {
+    return {
+      formName: `${model.name}Form`,
+      exclude: ['backend_status'],
+      actions: [{
+        label: 'Save',
+        class: 'success',
+        icon: 'ok',
+        cb: (item, form) => {
+          item.$save()
+            .then(res => {
+              this.toastr.success(`${item.name} succesfully saved`);
+            })
+            .catch(err => {
+              this.toastr.error(`Error while saving ${item.name}`);
+            });
+        }
+      }],
+      inputs: this.modelFieldToInputCfg(model.fields)
+    };
+  }
+
   private fromCamelCase(string: string): string {
     return string.split(/(?=[A-Z])/).map(w => w.toLowerCase()).join(' ');
   }
@@ -159,4 +200,3 @@ export class ConfigHelpers {
     return string.slice(0, 1).toUpperCase() + string.slice(1);
   }
 }
-

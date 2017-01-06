@@ -4,6 +4,45 @@ import * as _ from 'lodash';
 import {IXosFormHelpersService} from './form-helpers';
 import {IXosConfigHelpersService} from '../services/helpers/config.helpers';
 
+export interface IXosFormAction {
+  label: string;
+  icon: string;
+  class: string;
+  cb(item: any, form: any): void;
+}
+
+export interface IXosFeedback {
+  show: boolean;
+  message: string;
+  type: string; // NOTE is possible to enumerate success, error, warning, info?
+}
+
+export interface IXosFormInputValidator {
+  minlength?: number;
+  maxlength?: number;
+  required?: boolean;
+  min?: number;
+  max?: number;
+  custom?(value: any): any;
+    // do your validation here and return true | false
+    // alternatively you can return an array [errorName, true|false]
+}
+
+export interface IXosFormInput {
+  name: string;
+  label: string;
+  type: string; // options are: [date, boolean, number, email, string, select],
+  validators: IXosFormInputValidator;
+}
+
+export interface IXosFormConfig {
+  exclude?: string[];
+  actions: IXosFormAction[];
+  feedback?: IXosFeedback;
+  inputs: IXosFormInput[];
+  formName: string;
+}
+
 class FormCtrl {
   $inject = ['$onInit', '$scope', 'XosFormHelpers', 'ConfigHelpers'];
 
@@ -17,7 +56,6 @@ class FormCtrl {
     private XosFormHelpers: IXosFormHelpersService,
     private ConfigHelpers: IXosConfigHelpersService
   ) {
-
   }
 
   $onInit() {
@@ -29,6 +67,11 @@ class FormCtrl {
       throw new Error('[xosForm] Please provide an action list in the configuration');
     }
 
+    if (!this.config.formName) {
+      throw new Error('[xosForm] Please provide a formName property in the config');
+    }
+
+    // NOTE is needed ??
     if (!this.config.feedback) {
       this.config.feedback =  {
         show: false,
@@ -37,36 +80,8 @@ class FormCtrl {
       };
     }
 
-    // TODO Define this list in a service (eg: ConfigHelper)
-    this.excludedField = this.ConfigHelpers.excluded_fields;
-    if (this.config && this.config.exclude) {
-      this.excludedField = this.excludedField.concat(this.config.exclude);
-    }
-
-    this.formField = [];
-
-    this.$scope.$watch(() => this.config, () => {
-      if (!this.ngModel) {
-        return;
-      }
-      let diff = _.difference(Object.keys(this.ngModel), this.excludedField);
-      let modelField = this.XosFormHelpers.parseModelField(diff);
-      this.formField = this.XosFormHelpers.buildFormStructure(modelField, this.config.fields, this.ngModel, this.config.order);
-    }, true);
-
-    this.$scope.$watch(() => this.ngModel, (model) => {
-      console.log(this.ngModel);
-      // empty from old stuff
-      this.formField = {};
-      if (!model) {
-        return;
-      }
-      let diff = _.difference(Object.keys(model), this.excludedField);
-      let modelField = this.XosFormHelpers.parseModelField(diff);
-      this.formField = this.XosFormHelpers.buildFormStructure(modelField, this.config.fields, model, this.config.order);
-      console.log(this.formField);
-    });
-
+    // remove excluded inputs
+    _.remove(this.config.inputs, i => this.config.exclude.indexOf(i.name) > -1);
   }
 }
 

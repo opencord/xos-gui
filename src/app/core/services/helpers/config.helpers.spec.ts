@@ -6,6 +6,7 @@ import {IXosConfigHelpersService} from './config.helpers';
 import {xosCore} from '../../index';
 import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosTableCfg} from '../../table/table';
+import {IXosFormInput, IXosFormConfig} from '../../form/form';
 
 let service: IXosConfigHelpersService;
 
@@ -20,12 +21,24 @@ const model: IModeldef = {
     {
       type: 'string',
       name: 'name',
-      validators: {}
+      validators: {
+        required: true
+      }
     },
     {
       type: 'string',
       name: 'something',
-      validators: {}
+      validators: {
+        maxlength: 30
+      }
+    },
+    {
+      type: 'number',
+      name: 'else',
+      validators: {
+        min: 20,
+        max: 40
+      }
     },
     {
       type: 'date',
@@ -51,6 +64,7 @@ describe('The ConfigHelpers service', () => {
       expect(service.pluralize('test', 1)).toEqual('test');
       expect(service.pluralize('xos')).toEqual('xosses');
       expect(service.pluralize('slice')).toEqual('slices');
+      expect(service.pluralize('Slice', 1)).toEqual('Slice');
     });
 
     it('should preprend count to string', () => {
@@ -104,7 +118,11 @@ describe('The ConfigHelpers service', () => {
       expect(cols[2].prop).toBe('something');
       expect(cols[2].link).not.toBeDefined();
 
-      expect(cols[3]).not.toBeDefined();
+      expect(cols[3].label).toBe('Else');
+      expect(cols[3].prop).toBe('else');
+      expect(cols[3].link).not.toBeDefined();
+
+      expect(cols[4]).not.toBeDefined();
     });
   });
 
@@ -118,8 +136,47 @@ describe('The ConfigHelpers service', () => {
     });
   });
 
+  describe('the modelFieldToInputConfig', () => {
+    it('should return an array of inputs', () => {
+      const inputs: IXosFormInput[] = service.modelFieldToInputCfg(model.fields);
+      expect(inputs[0].name).toBe('id');
+      expect(inputs[0].type).toBe('number');
+      expect(inputs[0].label).toBe('Id');
+
+      expect(inputs[1].name).toBe('name');
+      expect(inputs[1].type).toBe('string');
+      expect(inputs[1].label).toBe('Name');
+      expect(inputs[1].validators.required).toBe(true);
+
+      expect(inputs[2].name).toBe('something');
+      expect(inputs[2].type).toBe('string');
+      expect(inputs[2].label).toBe('Something');
+      expect(inputs[2].validators.maxlength).toBe(30);
+
+      expect(inputs[3].name).toBe('else');
+      expect(inputs[3].type).toBe('number');
+      expect(inputs[3].label).toBe('Else');
+      expect(inputs[3].validators.min).toBe(20);
+      expect(inputs[3].validators.max).toBe(40);
+    });
+  });
+
+  describe('the modelToFormCfg method', () => {
+    it('should return a form config', () => {
+      const config: IXosFormConfig = service.modelToFormCfg(model);
+      expect(config.formName).toBe('TestForm');
+      expect(config.actions.length).toBe(1);
+      expect(config.actions[0].label).toBe('Save');
+      expect(config.actions[0].class).toBe('success');
+      expect(config.actions[0].icon).toBe('ok');
+      expect(config.actions[0].cb).toBeDefined();
+      expect(config.inputs.length).toBe(4);
+    });
+  });
+
   it('should convert a core model name in an URL', () => {
     expect(service.urlFromCoreModel('Slice')).toBe('/core/slices');
     expect(service.urlFromCoreModel('Xos')).toBe('/core/xosses');
   });
 });
+
