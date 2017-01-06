@@ -5,6 +5,7 @@
                 <div class="view-header">
                     <div class="pull-right text-right" style="line-height: 14px">
                         <!--<small>UI Elements<br>General<br> <span class="c-white">Grid system</span></small>-->
+                        <a class="btn btn-default" ng-if="vm.list" href="{{vm.baseUrl}}add">Add</a>
                         <a class="btn btn-default" ng-if="!vm.list" href="{{vm.baseUrl}}">Back</a>
                     </div>
                     <div class="header-icon">
@@ -20,7 +21,7 @@
                 <hr>
             </div>
         </div>
-        <div class="row" ng-show="vm.related.length > 0">
+        <div class="row" ng-show="vm.related.length > 0 && vm.model.id">
             <div class="view-header">
                 <div class="col-lg-4">
                     <h4>Related Items: </h4>
