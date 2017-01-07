@@ -35,3 +35,24 @@ html, body.blank {
 .alert-danger {
   @include alert-variant($background-dark-color, $alert-danger-text, $alert-danger-border);
 }
+
+body {
+  height: 90%;
+}
+.wrapper,
+[ui-view],
+xos {
+  height: 100%;
+}
+
+.content {
+  height: 100%;
+  > div {
+    opacity: 1 !important;
+
+  }
+  .container-fluid {
+    height: 100%;
+  }
+}
+
