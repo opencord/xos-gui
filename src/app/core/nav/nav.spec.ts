@@ -19,7 +19,7 @@ const NavigationService = function(){
 };
 
 const AuthMock = {
-  logout: jasmine.createSpy('logout')
+  logout: jasmine.createSpy('logout').and.returnValue({then: () => {}})
 };
 
 describe('Nav component', () => {

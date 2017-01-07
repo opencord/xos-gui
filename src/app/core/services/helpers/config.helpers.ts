@@ -4,6 +4,7 @@ import {IXosTableColumn, IXosTableCfg} from '../../table/table';
 import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosFormConfig, IXosFormInput} from '../../form/form';
 import {IXosAuthService} from '../../../datasources/rest/auth.rest';
+import {IModelStoreService} from '../../../datasources/stores/model.store';
 
 export interface IXosModelDefsField {
   name: string;
@@ -46,7 +47,8 @@ export class ConfigHelpers {
 
   constructor(
     private toastr: ng.toastr.IToastrService,
-    private AuthService: IXosAuthService
+    private AuthService: IXosAuthService,
+    // private ModelStore: IModelStoreService
   ) {
     pluralize.addIrregularRule('xos', 'xosses');
     pluralize.addPluralRule(/slice$/i, 'slices');
@@ -123,6 +125,17 @@ export class ConfigHelpers {
       if (f.name === 'id' || f.name === 'name') {
         // NOTE can we find a better method to generalize the route?
         col.link = item => `#/core${baseUrl.replace(':id?', item.id)}`;
+      }
+
+      // if the field identify a relation, create a link
+      if (f.relation && f.relation.type === 'many_to_one') {
+        // TODO read the related model name and replace the value, use the xosTable format method?
+        col.type = 'custom';
+        col.formatter = item => {
+          // this.populateRelated(item, item[f.name], f.relation.model)
+          return item[f.name];
+        };
+        col.link = item => `#${this.urlFromCoreModel(f.relation.model)}/${item[f.name]}`;
       }
 
       if (f.name === 'backend_status') {
@@ -214,4 +227,12 @@ export class ConfigHelpers {
   private capitalizeFirst(string: string): string {
     return string.slice(0, 1).toUpperCase() + string.slice(1);
   }
+
+  // FIXME Circular dependency found: ConfigHelpers <- StoreHelpers <- ModelStore <- ConfigHelpers
+  // private populateRelated(item: any, fk: string, relatedModel: string): any {
+  //   this.ModelStore.query(relatedModel)
+  //     .subscribe(res => {
+  //       console.log(res);
+  //     });
+  // }
 }
