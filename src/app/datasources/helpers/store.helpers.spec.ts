@@ -39,6 +39,12 @@ describe('The StoreHelpers service', () => {
     expect(service.updateCollection).toBeDefined();
   });
 
+
+  it('should convert a core model name in an URL', () => {
+    expect(service.urlFromCoreModel('Slice')).toBe('/core/slices');
+    expect(service.urlFromCoreModel('Xos')).toBe('/core/xosses');
+  });
+
   describe('when updating a collection', () => {
 
     beforeEach(() => {

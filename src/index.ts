@@ -29,6 +29,7 @@ import {IXosPageTitleService} from './app/core/services/page-title';
 import {IXosConfigHelpersService} from './app/core/services/helpers/config.helpers';
 import {StyleConfig} from './app/config/style.config';
 import {IXosResourceService} from './app/datasources/rest/model.rest';
+import {IXosAuthService} from './app/datasources/rest/auth.rest';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -68,9 +69,18 @@ angular
     RuntimeStates: IRuntimeStatesService,
     NavigationService: IXosNavigationService,
     ConfigHelpers: IXosConfigHelpersService,
+    AuthService: IXosAuthService,
+    $transitions: any,
     toastr: ng.toastr.IToastrService,
     PageTitle: IXosPageTitleService
   ) => {
+
+    // check the user login
+    $transitions.onSuccess({ to: '**' }, (transtion) => {
+      if (!AuthService.getUser()) {
+        $state.go('login');
+      }
+    });
 
     // save the last visited state before reload
     const lastRoute = window.location.hash.replace('#', '');

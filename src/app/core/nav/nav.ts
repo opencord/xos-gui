@@ -56,7 +56,10 @@ class NavCtrl {
   }
 
   logout() {
-    this.authService.logout();
+    this.authService.logout()
+      .then(() => {
+        this.$state.go('login');
+      });
   }
 }
 

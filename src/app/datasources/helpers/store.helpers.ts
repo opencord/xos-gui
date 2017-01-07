@@ -1,20 +1,24 @@
 import {BehaviorSubject} from 'rxjs';
 import * as _ from 'lodash';
+import * as pluralize from 'pluralize';
 import {IWSEvent} from '../websocket/global';
 import {IXosResourceService} from '../rest/model.rest';
-import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 
 export interface IStoreHelpersService {
+  urlFromCoreModel(name: string): string;
   updateCollection(event: IWSEvent, subject: BehaviorSubject<any>): BehaviorSubject<any>;
 }
 
 export class StoreHelpers {
-  static $inject = ['ConfigHelpers', 'ModelRest'];
+  static $inject = ['ModelRest'];
 
   constructor (
-    private configHelpers: IXosConfigHelpersService,
     private modelRest: IXosResourceService
   ) {
+  }
+
+  public urlFromCoreModel(name: string): string {
+    return `/core/${pluralize(name.toLowerCase())}`;
   }
 
   public updateCollection(event: IWSEvent, subject: BehaviorSubject<any>): BehaviorSubject<any> {
@@ -27,7 +31,7 @@ export class StoreHelpers {
     const isDeleted: boolean = _.includes(event.msg.changed_fields, 'deleted');
 
     // generate a resource for the model
-    const endpoint = this.configHelpers.urlFromCoreModel(event.model);
+    const endpoint = this.urlFromCoreModel(event.model);
     const resource = this.modelRest.getResource(endpoint);
     const model = new resource(event.msg.object);
 

@@ -71,7 +71,8 @@
                     </dl>
                   </span>
                 <span ng-if="col.type === 'custom'">
-                    {{col.formatter(item)}}
+                    {{item[col.prop + '-formatted']}}
+                    <i class="ng-hide">{{col.formatter(item)}}</i>
                   </span>
                 <span ng-if="col.type === 'icon'">
                     <i class="fa fa-{{col.formatter(item)}}">

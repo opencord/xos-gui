@@ -4,25 +4,23 @@ import {BehaviorSubject, Observable} from 'rxjs/Rx';
 import {IWSEvent, IWSEventService} from '../websocket/global';
 import {IXosResourceService} from '../rest/model.rest';
 import {IStoreHelpersService} from '../helpers/store.helpers';
-import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 
 export interface  IModelStoreService {
   query(model: string): Observable<any>;
 }
 
 export class ModelStore {
-  static $inject = ['WebSocket', 'StoreHelpers', 'ModelRest', 'ConfigHelpers'];
+  static $inject = ['WebSocket', 'StoreHelpers', 'ModelRest'];
   private _collections: any; // NOTE contains a map of {model: BehaviourSubject}
   constructor(
     private webSocket: IWSEventService,
     private storeHelpers: IStoreHelpersService,
     private ModelRest: IXosResourceService,
-    private ConfigHelpers: IXosConfigHelpersService
   ) {
     this._collections = {};
   }
 
-  query(model: string) {
+  public query(model: string) {
     // if there isn't already an observable for that item
     if (!this._collections[model]) {
       this._collections[model] = new BehaviorSubject([]); // NOTE maybe this can be created when we get response from the resource
@@ -41,9 +39,13 @@ export class ModelStore {
     return this._collections[model].asObservable();
   }
 
+  public get(model: string, id: number) {
+    // TODO implement a get method
+  }
+
   private loadInitialData(model: string) {
     // NOTE check what is the correct pattern to pluralize this
-    const endpoint = this.ConfigHelpers.urlFromCoreModel(model);
+    const endpoint = this.storeHelpers.urlFromCoreModel(model);
     this.ModelRest.getResource(endpoint).query().$promise
       .then(
         res => {

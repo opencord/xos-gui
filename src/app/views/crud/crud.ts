@@ -4,6 +4,7 @@ import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpe
 import * as _ from 'lodash';
 import {IXosFormConfig} from '../../core/form/form';
 import {IXosResourceService} from '../../datasources/rest/model.rest';
+import {IStoreHelpersService} from '../../datasources/helpers/store.helpers';
 export interface IXosCrudData {
   model: string;
   related: string[];
@@ -12,7 +13,7 @@ export interface IXosCrudData {
 }
 
 class CrudController {
-  static $inject = ['$scope', '$state', '$stateParams', 'ModelStore', 'ConfigHelpers', 'ModelRest'];
+  static $inject = ['$scope', '$state', '$stateParams', 'ModelStore', 'ConfigHelpers', 'ModelRest', 'StoreHelpers'];
 
   public data: IXosCrudData;
   public tableCfg: IXosTableCfg;
@@ -31,7 +32,8 @@ class CrudController {
     private $stateParams: ng.ui.IStateParamsService,
     private store: IModelStoreService,
     private ConfigHelpers: IXosConfigHelpersService,
-    private ModelRest: IXosResourceService
+    private ModelRest: IXosResourceService,
+    private StoreHelpers: IStoreHelpersService
   ) {
     this.data = this.$state.current.data;
     this.tableCfg = this.data.xosTableCfg;
@@ -68,7 +70,7 @@ class CrudController {
       // if it is the create page
       if ($stateParams['id'] === 'add') {
         // generate a resource for an empty model
-        const endpoint = this.ConfigHelpers.urlFromCoreModel(this.data.model);
+        const endpoint = this.StoreHelpers.urlFromCoreModel(this.data.model);
         const resource = this.ModelRest.getResource(endpoint);
         this.model = new resource({});
       }

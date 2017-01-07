@@ -57,6 +57,9 @@ describe('The ConfigHelpers service', () => {
         getUser: () => {
           return {id: 1};
         }
+      })
+      .value('ModelStore', {
+
       });
     angular.mock.module('test');
   });
@@ -181,11 +184,6 @@ describe('The ConfigHelpers service', () => {
       expect(config.actions[0].cb).toBeDefined();
       expect(config.inputs.length).toBe(4);
     });
-  });
-
-  it('should convert a core model name in an URL', () => {
-    expect(service.urlFromCoreModel('Slice')).toBe('/core/slices');
-    expect(service.urlFromCoreModel('Xos')).toBe('/core/xosses');
   });
 });
 
