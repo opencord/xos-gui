@@ -7,11 +7,12 @@ export interface IXosComponentInjectorService {
 }
 
 export class XosComponentInjector implements IXosComponentInjectorService {
-  static $inject = ['$rootScope', '$compile'];
+  static $inject = ['$rootScope', '$compile', '$timeout'];
 
   constructor (
     private $rootScope: ng.IRootScopeService,
-    private $compile: ng.ICompileService
+    private $compile: ng.ICompileService,
+    private $timeout: ng.ITimeoutService
   ) {
   }
 
@@ -23,6 +24,7 @@ export class XosComponentInjector implements IXosComponentInjectorService {
     else {
       targetEl = target;
     }
+    console.log(targetEl);
 
     const componentTagName = this.camelToSnakeCase(componentName);
     let scope = this.$rootScope.$new();
@@ -39,6 +41,10 @@ export class XosComponentInjector implements IXosComponentInjectorService {
 
     const componentTag = `<${componentTagName} ${attr}>${transclude || ''}</${componentTagName}>`;
     const element = this.$compile(componentTag)(scope);
+
+    this.$timeout(function() {
+      scope.$apply();
+    });
 
     targetEl.append(element);
   }
