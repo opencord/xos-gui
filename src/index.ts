@@ -52,7 +52,9 @@ angular
     xosViews,
     'ui.router',
     'ngResource',
-    xosTemplate // template module
+    xosTemplate, // template module
+    'mcord', // use dynamic modules instead
+    'ui.bootstrap'
   ])
   .config(XosLogDecorator)
   .config(routesConfig)
@@ -63,6 +65,7 @@ angular
   .component('xos', main)
   .run(function($log: ng.ILogService, $rootScope: ng.IRootScopeService, $transitions: any, StyleConfig: IXosStyleConfig) {
     $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
+    $log.debug('App Start');
     $transitions.onSuccess({ to: '**' }, (transtion) => {
       if (transtion.$to().name === 'login') {
         $rootScope['class'] = 'blank';
@@ -119,3 +122,5 @@ angular
 
   });
 
+// IMPORT MCORD MODULE
+import './app/mcord/index';

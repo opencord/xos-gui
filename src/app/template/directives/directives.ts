@@ -9,14 +9,25 @@ import * as $ from 'jquery';
 /**
  * minimalizaSidebar - Directive for minimalize sidebar
  */
-export function minimalizaMenu($rootScope) {
+export function minimalizaMenu($rootScope: ng.IRootScopeService) {
   return {
     restrict: 'EA',
     template: '<div class="left-nav-toggle"><a href ng-click="minimalize()"><i class="stroke-hamburgermenu"></i> </a>',
     controller: function ($scope, $element) {
+
       $scope.minimalize = function () {
         $("body").toggleClass("nav-toggle");
-      }
+        $rootScope.$emit('ui.nav.toggle');
+      };
+
+      // TODO move in a global key listener
+      // $(document).on('keyup', (e) => {
+      //   if (e.key === 'n') {
+      //     $scope.$apply(() => {
+      //       $scope.minimalize();
+      //     });
+      //   }
+      // });
     }
   };
 }
