@@ -63,6 +63,7 @@ angular
   .component('xos', main)
   .run(function($log: ng.ILogService, $rootScope: ng.IRootScopeService, $transitions: any, StyleConfig: IXosStyleConfig) {
     $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
+    $log.debug('App Start');
     $transitions.onSuccess({ to: '**' }, (transtion) => {
       if (transtion.$to().name === 'login') {
         $rootScope['class'] = 'blank';
@@ -118,3 +119,5 @@ angular
 
   });
 
+// IMPORT MCORD MODULE
+import './app/mcord/index';
