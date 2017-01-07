@@ -13,7 +13,7 @@ export function userStatusInterceptor($state: angular.ui.IStateService) {
 
   const checkLogin = (res) => {
     // NOTE why are returning 403 in place of 401??
-    if (res.status === 401 || res.status === -1) {
+    if (res.status === 403 || res.status === -1) {
       $state.go('login');
     }
     return res;
