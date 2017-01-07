@@ -35,6 +35,7 @@ export class NavigationService {
     // this.routes = StyleConfig.routes.concat(defaultRoutes).reverse();
     this.routes = defaultRoutes;
     StyleConfig.routes.forEach(r => {
+      console.log(r);
       this.add(r);
     });
   }
