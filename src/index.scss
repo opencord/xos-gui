@@ -3,6 +3,23 @@ html, body.blank {
   min-height: 100%;
 }
 
-.content > div {
-  opacity: 1 !important;
+body {
+  height: 90%;
 }
+.wrapper,
+[ui-view],
+xos {
+  height: 100%;
+}
+
+.content {
+  height: 100%;
+  > div {
+    opacity: 1 !important;
+
+  }
+  .container-fluid {
+    height: 100%;
+  }
+}
+

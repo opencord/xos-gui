@@ -1,0 +1,59 @@
+@import './../../../style/vars';
+
+mcord-topo{
+  height: 100%;
+  width: 100%;
+  display: block;
+  > svg {
+    height: 100%;
+    width: 100%;
+  }
+
+  /* Nodes */
+  .node {
+    stroke: $color-accent;
+    fill: $background-dark-color;
+  }
+
+  .node,
+  .node + text {
+    cursor: pointer;
+  }
+
+  text {
+    pointer-events: none;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;
+    fill: #fff;
+  }
+
+  .node.control {
+    stroke-dasharray: 5;
+    stroke: lighten($color-accent, 40);
+  }
+
+  /* Icons */
+  .node ~ .icon {
+    stroke: $color-accent;
+    fill: $color-accent;
+  }
+
+  .node.control ~ .icon {
+    stroke: lighten($color-accent, 40);
+    fill: lighten($color-accent, 40);
+  }
+
+  /* Links */
+  .link {
+    stroke: darken($color-accent, 10);
+    stroke-width: 2px;
+    cursor: pointer;
+  }
+
+  .link.control {
+    stroke-dasharray: 5;
+    stroke: lighten($color-accent, 40);
+  }
+}
