@@ -71,6 +71,7 @@ class HeaderController {
 
     // redirect to selected page
     this.routeSelected = (item: IXosNavigationRoute) => {
+      console.log(`go to: ${item.state}`);
       this.$state.go(item.state);
       this.query = null;
     };

@@ -14,6 +14,7 @@ import {xosForm} from './form/form';
 import {xosField} from './field/field';
 import 'angular-toastr';
 import {xosAlert} from './alert/alert';
+import {xosValidation} from './validation/validation';
 
 export const xosCore = 'xosCore';
 
@@ -37,4 +38,5 @@ angular
   .component('xosTable', xosTable)
   .component('xosForm', xosForm)
   .component('xosField', xosField)
-  .component('xosAlert', xosAlert);
+  .component('xosAlert', xosAlert)
+  .component('xosValidation', xosValidation);
