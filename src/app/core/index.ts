@@ -17,7 +17,11 @@ import 'angular-toastr';
 export const xosCore = 'xosCore';
 
 angular
-  .module('xosCore', ['ui.router', 'toastr'])
+  .module('xosCore', [
+    'ui.router',
+    'toastr',
+    'ui.bootstrap.typeahead'
+  ])
   .config(routesConfig)
   .provider('RuntimeStates', RuntimeStates)
   .service('NavigationService', NavigationService)

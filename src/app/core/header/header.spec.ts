@@ -45,12 +45,13 @@ const infoNotification = {
 describe('header component', () => {
   beforeEach(() => {
     angular
-      .module('xosHeader', ['app/core/header/header.html'])
+      .module('xosHeader', ['app/core/header/header.html', 'ui.router'])
       .component('xosHeader', xosHeader)
       .service('SynchronizerStore', MockStore)
       .value('toastr', MockToastr)
       .value('toastrConfig', MockToastrConfig)
-      .value('AuthService', MockAuth);
+      .value('AuthService', MockAuth)
+      .value('NavigationService', {});
     angular.mock.module('xosHeader');
   });
 

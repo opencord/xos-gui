@@ -3,24 +3,33 @@ import {StyleConfig} from '../../config/style.config';
 import {IWSEvent} from '../../datasources/websocket/global';
 import {IStoreService} from '../../datasources/stores/synchronizer.store';
 import {IXosAuthService} from '../../datasources/rest/auth.rest';
+import {IXosNavigationService, IXosNavigationRoute} from '../services/navigation';
+import {IStateService} from 'angular-ui-router';
+import * as _ from 'lodash';
+import * as $ from 'jquery';
 
 export interface INotification extends IWSEvent {
   viewed?: boolean;
 }
 
 class HeaderController {
-  static $inject = ['$scope', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig'];
+  static $inject = ['$scope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService'];
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
   public version: string;
   public userEmail: string;
+  public routeSelected: (route: IXosNavigationRoute) => void;
+  public states: IXosNavigationRoute[];
+  public query: string;
 
   constructor(
     private $scope: angular.IScope,
+    private $state: IStateService,
     private authService: IXosAuthService,
     private syncStore: IStoreService,
     private toastr: ng.toastr.IToastrService,
-    private toastrConfig: ng.toastr.IToastrConfig
+    private toastrConfig: ng.toastr.IToastrConfig,
+    private NavigationService: IXosNavigationService
   ) {
     this.version = require('../../../../package.json').version;
     angular.extend(this.toastrConfig, {
@@ -34,6 +43,39 @@ class HeaderController {
       // timeOut: 0,
       // tapToDismiss: false
     });
+
+    // TODO set a global event after routes have been loaded
+    window.setTimeout(() => {
+      this.states = this.NavigationService.query().reduce((list, state) => {
+        // if it does not have child (otherwise it is abstract)
+        if (!state.children || state.children.length === 0) {
+          list.push(state);
+        }
+        // else push child
+        if (state.children && state.children.length > 0) {
+          state.children.forEach(c => {
+            list.push(c);
+          });
+        }
+        return list;
+      }, []);
+      console.log(this.states.length);
+      this.states = _.uniqBy(this.states, 'state');
+      console.log(this.states.length);
+    }, 500);
+
+    // listen for keypress
+    $(document).on('keyup', (e) => {
+      if (e.key === 'f') {
+        $('.navbar-form input').focus();
+      }
+    });
+
+    // redirect to selected page
+    this.routeSelected = (item: IXosNavigationRoute) => {
+      this.$state.go(item.state);
+      this.query = null;
+    };
 
     this.userEmail = this.authService.getUser() ? this.authService.getUser().email : '';
 
