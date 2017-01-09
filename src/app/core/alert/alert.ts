@@ -8,7 +8,7 @@ class AlertCtrl {
 
   static $inject = ['$timeout'];
 
-  public config: any;
+  public config: IXosAlertConfig;
   public show: boolean;
   public dismiss: () => void;
 
@@ -30,7 +30,6 @@ class AlertCtrl {
       this.show = false;
     };
 
-    console.log(this.config);
     if (this.config.autoHide) {
 
       let to = this.$timeout(() => {

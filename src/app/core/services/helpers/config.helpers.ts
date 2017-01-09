@@ -5,7 +5,6 @@ import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosFormConfig, IXosFormInput} from '../../form/form';
 import {IXosAuthService} from '../../../datasources/rest/auth.rest';
 import {IModelStoreService} from '../../../datasources/stores/model.store';
-import {IXosAlertConfig} from '../../alert/alert';
 
 export interface IXosModelDefsField {
   name: string;
@@ -217,7 +216,7 @@ export class ConfigHelpers {
           type: 'danger',
           closeBtn: true
         };
-        console.log(formCfg);
+
         return;
       }
 
@@ -235,6 +234,12 @@ export class ConfigHelpers {
             // TODO understand why 405 does not go directly in catch (it may be realted to ng-rest-gw)
             throw new Error();
           }
+          formCfg.feedback = {
+            show: true,
+            message: `${model.name} succesfully saved`,
+            type: 'success',
+            closeBtn: true
+          };
           this.toastr.success(`${model.name} succesfully saved`);
         })
         .catch(err => {
