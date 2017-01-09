@@ -171,13 +171,14 @@ export class ConfigHelpers {
 
   public modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[] {
 
-    return _.map(fields, f => {
+    return _.map(fields, (f: IXosModelDefsField) => {
       if (f.relation) {
-        const input = {
+        const input: IXosFormInput = {
           name: f.name,
           label: this.toLabel(f.name),
           type: 'select',
-          validators: f.validators
+          validators: f.validators,
+          hint: f.hint
         };
         this.populateSelectField(f, input);
         return input;
@@ -194,38 +195,54 @@ export class ConfigHelpers {
   }
 
   public modelToFormCfg(model: IModeldef): IXosFormConfig {
-    return {
+    const formCfg: IXosFormConfig = {
       formName: `${model.name}Form`,
       exclude: ['backend_status', 'creator'],
       actions: [{
         label: 'Save',
         class: 'success',
         icon: 'ok',
-        cb: (item, form) => {
-          const model = angular.copy(item);
-
-          // TODO remove ManyToMany relations and save them separately (how??)
-          delete item.networks;
-
-          // adding userId as creator
-          item.creator = this.AuthService.getUser().id;
-
-          item.$save()
-            .then((res) => {
-              if (res.status === 403 || res.status === 405 || res.status === 500) {
-                // TODO understand why 405 does not go directly in catch (it may be realted to ng-rest-gw)
-                throw new Error();
-              }
-              this.toastr.success(`${model.name} succesfully saved`);
-            })
-            .catch(err => {
-              // TODO keep the edited model
-              this.toastr.error(`Error while saving ${model.name}`);
-            });
-        }
+        cb: null
       }],
       inputs: this.modelFieldToInputCfg(model.fields)
     };
+
+    formCfg.actions[0].cb = (item, form: angular.IFormController) => {
+
+      if (!form.$valid) {
+        formCfg.feedback = {
+          show: true,
+          message: 'Form is invalid',
+          type: 'danger',
+          closeBtn: true
+        };
+        console.log(formCfg);
+        return;
+      }
+
+      const model = angular.copy(item);
+
+      // TODO remove ManyToMany relations and save them separately (how??)
+      delete item.networks;
+
+      // adding userId as creator
+      item.creator = this.AuthService.getUser().id;
+
+      item.$save()
+        .then((res) => {
+          if (res.status === 403 || res.status === 405 || res.status === 500) {
+            // TODO understand why 405 does not go directly in catch (it may be realted to ng-rest-gw)
+            throw new Error();
+          }
+          this.toastr.success(`${model.name} succesfully saved`);
+        })
+        .catch(err => {
+          // TODO keep the edited model
+          this.toastr.error(`Error while saving ${model.name}`);
+        });
+    };
+
+    return formCfg;
   }
 
   private fromCamelCase(string: string): string {
