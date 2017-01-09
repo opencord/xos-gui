@@ -2,10 +2,11 @@ import * as angular from 'angular';
 import 'angular-mocks';
 import 'angular-ui-router';
 
-import {IXosConfigHelpersService, ConfigHelpers} from './config.helpers';
+import {IXosConfigHelpersService, ConfigHelpers, IXosModelDefsField} from './config.helpers';
 import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosTableCfg} from '../../table/table';
 import {IXosFormInput, IXosFormConfig} from '../../form/form';
+import {BehaviorSubject} from 'rxjs';
 
 let service: IXosConfigHelpersService;
 
@@ -183,6 +184,63 @@ describe('The ConfigHelpers service', () => {
       expect(config.actions[0].icon).toBe('ok');
       expect(config.actions[0].cb).toBeDefined();
       expect(config.inputs.length).toBe(4);
+    });
+  });
+
+  describe('the private methods', () => {
+    let modelStoreMock, toastr, auth;
+
+    beforeEach(angular.mock.inject((_toastr_, AuthService) => {
+      modelStoreMock = {
+        query: () => {
+          const subject = new BehaviorSubject([
+            {id: 1, humanReadableName: 'test'},
+            {id: 2, humanReadableName: 'second'}
+          ]);
+          return subject.asObservable();
+        }
+      };
+      toastr = _toastr_;
+      auth = AuthService;
+    }));
+
+    const field: IXosModelDefsField = {
+      name: 'test',
+      type: 'number',
+      relation: {
+        model: 'Test',
+        type: 'many_to_one'
+      }
+    };
+
+    describe('the populateRelated method', () => {
+      const item = {
+        test: 2
+      };
+      it('should add the formatted data to the column definition', () => {
+        service = new ConfigHelpers(toastr, auth, modelStoreMock);
+        service['populateRelated'](item, item.test, field);
+        expect(item['test-formatted']).toBe('second');
+      });
+    });
+
+    describe('the populateSelectField', () => {
+
+      const input: IXosFormInput = {
+        name: 'test',
+        label: 'Test',
+        type: 'select',
+        validators: {}
+      };
+
+      it('should add the available choice to the select', () => {
+        service = new ConfigHelpers(toastr, auth, modelStoreMock);
+        service['populateSelectField'](field, input);
+        expect(input.options).toEqual([
+          {id: 1, label: 'test'},
+          {id: 2, label: 'second'}
+        ]);
+      });
     });
   });
 });

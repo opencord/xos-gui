@@ -59,9 +59,7 @@ class HeaderController {
         }
         return list;
       }, []);
-      console.log(this.states.length);
       this.states = _.uniqBy(this.states, 'state');
-      console.log(this.states.length);
     }, 500);
 
     // listen for keypress

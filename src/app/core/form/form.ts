@@ -28,11 +28,17 @@ export interface IXosFormInputValidator {
     // alternatively you can return an array [errorName, true|false]
 }
 
+export interface IXosFormInputOptions {
+  id: number;
+  label: string;
+}
+
 export interface IXosFormInput {
   name: string;
   label: string;
   type: string; // options are: [date, boolean, number, email, string, select],
   validators: IXosFormInputValidator;
+  options?: IXosFormInputOptions[];
 }
 
 export interface IXosFormConfig {
