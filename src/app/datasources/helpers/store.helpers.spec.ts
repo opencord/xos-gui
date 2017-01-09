@@ -43,6 +43,11 @@ describe('The StoreHelpers service', () => {
   it('should convert a core model name in an URL', () => {
     expect(service.urlFromCoreModel('Slice')).toBe('/core/slices');
     expect(service.urlFromCoreModel('Xos')).toBe('/core/xosses');
+
+    // handling exceptions
+    expect(service.urlFromCoreModel('SiteRole')).toBe('/core/site_roles');
+    expect(service.urlFromCoreModel('SliceRole')).toBe('/core/slice_roles');
+    expect(service.urlFromCoreModel('SlicePrivilege')).toBe('/core/slice_privileges');
   });
 
   describe('when updating a collection', () => {

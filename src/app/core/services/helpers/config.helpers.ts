@@ -172,6 +172,17 @@ export class ConfigHelpers {
   public modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[] {
 
     return _.map(fields, f => {
+      if (f.relation) {
+        const input = {
+          name: f.name,
+          label: this.toLabel(f.name),
+          type: 'select',
+          validators: f.validators
+        };
+        this.populateSelectField(f, input);
+        return input;
+      }
+
       return {
         name: f.name,
         label: this.toLabel(f.name),
@@ -246,6 +257,16 @@ export class ConfigHelpers {
             item[`${field.name}-formatted`] = angular.isDefined(ri.name) ? ri.name : ri.humanReadableName;
           }
         }
+      });
+  }
+
+  // augment a select field with related model informations
+  private populateSelectField(field: IXosModelDefsField, input: IXosFormInput): void {
+    this.ModelStore.query(field.relation.model)
+      .subscribe(res => {
+        input.options = _.map(res, item => {
+          return {id: item.id, label: item.humanReadableName ? item.humanReadableName : item.name};
+        });
       });
   }
 }
