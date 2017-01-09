@@ -15,6 +15,8 @@ export interface IXosFeedback {
   show: boolean;
   message: string;
   type: string; // NOTE is possible to enumerate success, error, warning, info?
+  autoHide?: number;
+  closeBtn?: boolean;
 }
 
 export interface IXosFormInputValidator {
@@ -37,6 +39,7 @@ export interface IXosFormInput {
   name: string;
   label: string;
   type: string; // options are: [date, boolean, number, email, string, select],
+  hint?: string;
   validators: IXosFormInputValidator;
   options?: IXosFormInputOptions[];
 }
@@ -77,12 +80,13 @@ class FormCtrl {
       throw new Error('[xosForm] Please provide a formName property in the config');
     }
 
-    // NOTE is needed ??
+    // NOTE needed to avoid xosAlert throw an error
     if (!this.config.feedback) {
       this.config.feedback =  {
         show: false,
         message: 'Form submitted successfully !!!',
-        type: 'success'
+        type: 'success',
+        closeBtn: true
       };
     }
 

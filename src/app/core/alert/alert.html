@@ -1,0 +1,6 @@
+<div ng-cloak class="alert alert-{{vm.config.type}}" ng-hide="!vm.show">
+    <button type="button" class="close" ng-if="vm.config.closeBtn" ng-click="vm.dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <p ng-transclude></p>
+</div>

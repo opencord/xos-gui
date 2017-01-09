@@ -13,6 +13,7 @@ import {XosFormHelpers} from './form/form-helpers';
 import {xosForm} from './form/form';
 import {xosField} from './field/field';
 import 'angular-toastr';
+import {xosAlert} from './alert/alert';
 
 export const xosCore = 'xosCore';
 
@@ -35,4 +36,5 @@ angular
   .component('xosLogin', xosLogin)
   .component('xosTable', xosTable)
   .component('xosForm', xosForm)
-  .component('xosField', xosField);
+  .component('xosField', xosField)
+  .component('xosAlert', xosAlert);

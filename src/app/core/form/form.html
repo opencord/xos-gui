@@ -6,9 +6,11 @@
     <!--</div>-->
     <div class="form-group" ng-repeat="field in vm.config.inputs">
         <xos-field name="field.name" field="field" ng-model="vm.ngModel[field.name]"></xos-field>
+        <!--<xos-validation field="vm[vm.config.formName || 'form'][name]" form = "vm[vm.config.formName || 'form']"></xos-validation>-->
+        <p ng-show="(field.hint).length >0" role="alert">{{field.hint}}</p>
     </div>
     <div class="form-group" ng-if="vm.config.actions">
-        <!--<xos-alert config="vm.config.feedback" show="vm.config.feedback.show">{{vm.config.feedback.message}}</xos-alert>-->
+        <xos-alert config="vm.config.feedback" show="vm.config.feedback.show">{{vm.config.feedback.message}}</xos-alert>
         <button role="button" href=""
                 ng-repeat="action in vm.config.actions"
                 ng-click="action.cb(vm.ngModel, vm[vm.config.formName || 'form'])"
