@@ -1,7 +1,7 @@
 // TODO check used deps
 
-import {pageTitle, minimalizaMenu, panelTools} from './directives/directives';
-export const xosTemplate = 'luna';
+import {minimalizaMenu, panelTools} from './directives/directives';
+export const xosTemplate = 'xosTemplate';
 
 import 'angular-ui-bootstrap';
 import 'angular-animate';
@@ -14,7 +14,7 @@ import '../style/pe-icons/pe-icon-7-stroke.css';
 
 
 (function () {
-  angular.module('luna', [
+  angular.module('xosTemplate', [
     'ui.router',                // Angular flexible routing
     'ui.bootstrap',             // AngularJS native directives for Bootstrap
     // 'angular-flot',             // Flot chart
@@ -26,7 +26,6 @@ import '../style/pe-icons/pe-icon-7-stroke.css';
     // 'datatables.buttons',       // Datatables Buttons
     // 'ui.tree'                   // Angular ui Tree
   ])
-    .directive('pageTitle', pageTitle)
     .directive('minimalizaMenu', minimalizaMenu)
     // .directive('sparkline', sparkline)
     .directive('panelTools', panelTools);
