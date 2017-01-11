@@ -1,5 +1,5 @@
 import {IAppConfig} from './interfaces';
 export const AppConfig: IAppConfig = {
-    apiEndpoint: '/api',
-    websocketClient: ''
+    apiEndpoint: '/spa/api',
+    websocketClient: '/spa'
 };
