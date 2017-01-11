@@ -22,6 +22,7 @@ COPY ${CODE_SOURCE} ${CODE_DEST}
 # Install Deps
 WORKDIR ${CODE_DEST}
 RUN npm install 
+RUN npm run typings
 
 # Override nginx configutaion
 RUN mkdir -p /var/log/nginx/log
