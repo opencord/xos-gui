@@ -19,11 +19,14 @@ RUN apt-get install -y nodejs
 # Add the app
 COPY ${CODE_SOURCE} ${CODE_DEST}
 
-# Build the app
+# Install Deps
 WORKDIR ${CODE_DEST}
 RUN npm install 
-RUN npm run build
 
 # Override nginx configutaion
+RUN mkdir -p /var/log/nginx/log
 RUN mv ${CODE_SOURCE}/nginx.conf /etc/nginx/conf.d/default.conf
-#RUN service nginx restart
+
+# Build the app
+EXPOSE 4000
+RUN npm run build
