@@ -85,6 +85,7 @@ angular
     // save the last visited state before reload
     const lastRoute = window.location.hash.replace('#', '');
 
+    // TODO this must be triggered only when user is authenticated
     // Dinamically add a  core states
     ModelDefs.get()
       .then((models: IModeldef[]) => {

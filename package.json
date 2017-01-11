@@ -78,8 +78,10 @@
     "webpack": "2.1.0-beta.20"
   },
   "scripts": {
+    "postinstall": "npm run typings",
     "build": "gulp",
     "start": "gulp serve",
+    "typings": "typings install",
     "serve:dist": "gulp serve:dist",
     "pretest": "npm run lint",
     "test": "gulp test",
