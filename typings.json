@@ -11,5 +11,8 @@
     "jquery": "registry:dt/jquery#1.10.0+20161119044246",
     "require": "registry:dt/require#2.1.20+20160316155526",
     "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654"
+  },
+  "dependencies": {
+    "angular-toastr": "registry:dt/angular-toastr#1.6.0+20160708003927"
   }
 }

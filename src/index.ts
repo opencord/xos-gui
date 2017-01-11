@@ -77,6 +77,7 @@ angular
 
     // check the user login
     $transitions.onSuccess({ to: '**' }, (transtion) => {
+      console.log(transtion.$to().name)
       if (!AuthService.getUser()) {
         $state.go('login');
       }
@@ -85,6 +86,7 @@ angular
     // save the last visited state before reload
     const lastRoute = window.location.hash.replace('#', '');
 
+    // TODO this must be triggered only when user is authenticated
     // Dinamically add a  core states
     ModelDefs.get()
       .then((models: IModeldef[]) => {
