@@ -1,15 +1,17 @@
 import {AuthService} from '../../datasources/rest/auth.rest';
 import {StyleConfig} from '../../config/style.config';
 import './login.scss';
+import {IXosModelSetupService} from '../services/helpers/model-setup.helpers';
 
 class LoginCtrl {
-  static $inject = ['AuthService', '$state'];
+  static $inject = ['AuthService', '$state', 'ModelSetup'];
   public loginStyle: any;
   public img: string;
   /** @ngInject */
   constructor(
     private authService: AuthService,
-    private $state: angular.ui.IStateService
+    private $state: angular.ui.IStateService,
+    private ModelSetup: IXosModelSetupService
   ) {
     this.img = this.getImg(StyleConfig.background);
 
@@ -24,6 +26,10 @@ class LoginCtrl {
       password: password
     })
       .then(res => {
+        // after login set up models
+        return this.ModelSetup.setup();
+      })
+      .then(() => {
         this.$state.go('xos.dashboard');
       })
       .catch(e => console.error);
