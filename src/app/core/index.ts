@@ -15,6 +15,7 @@ import {xosField} from './field/field';
 import 'angular-toastr';
 import {xosAlert} from './alert/alert';
 import {xosValidation} from './validation/validation';
+import {ModelSetup} from './services/helpers/model-setup.helpers';
 
 export const xosCore = 'xosCore';
 
@@ -30,6 +31,7 @@ angular
   .service('PageTitle', PageTitle)
   .service('XosFormHelpers', XosFormHelpers)
   .service('ConfigHelpers', ConfigHelpers)
+  .service('ModelSetup', ModelSetup)
   .directive('xosLinkWrapper', xosLinkWrapper)
   .component('xosHeader', xosHeader)
   .component('xosFooter', xosFooter)
