@@ -5,6 +5,7 @@ import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosFormConfig, IXosFormInput} from '../../form/form';
 import {IXosAuthService} from '../../../datasources/rest/auth.rest';
 import {IModelStoreService} from '../../../datasources/stores/model.store';
+import {IXosState} from '../../../../index';
 
 export interface IXosModelDefsField {
   name: string;
@@ -20,16 +21,19 @@ export interface IXosModelDefsField {
 export interface IXosConfigHelpersService {
   excluded_fields: string[];
   modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[]; // TODO use a proper interface
-  modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg;
+  modelToTableCfg(model: IModeldef, modelName: string): IXosTableCfg;
   modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[];
   modelToFormCfg(model: IModeldef): IXosFormConfig;
   pluralize(string: string, quantity?: number, count?: boolean): string;
   toLabel(string: string, pluralize?: boolean): string;
   toLabels(string: string[], pluralize?: boolean): string[];
+  urlFromCoreModel(model: string): string;
+  stateFromCoreModel(name: string): string;
+  stateWithParams(name: string, model: any): string;
 }
 
 export class ConfigHelpers {
-  static $inject = ['toastr', 'AuthService', 'ModelStore'];
+  static $inject = ['$state', 'toastr', 'AuthService', 'ModelStore'];
 
   excluded_fields = [
     'created',
@@ -51,6 +55,7 @@ export class ConfigHelpers {
   ];
 
   constructor(
+    private $state: ng.ui.IStateService,
     private toastr: ng.toastr.IToastrService,
     private AuthService: IXosAuthService,
     private ModelStore: IModelStoreService
@@ -87,7 +92,7 @@ export class ConfigHelpers {
 
   public modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg {
     const cfg = {
-      columns: this.modelFieldsToColumnsCfg(model.fields, baseUrl),
+      columns: this.modelFieldsToColumnsCfg(model.fields, model.name),
       filter: 'fulltext',
       order: {field: 'id', reverse: false},
       actions: [
@@ -116,7 +121,7 @@ export class ConfigHelpers {
     return cfg;
   }
 
-  public modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[] {
+  public modelFieldsToColumnsCfg(fields: IXosModelDefsField[], modelName: string): IXosTableColumn[] {
 
     const columns =  _.map(fields, (f) => {
       if (this.excluded_fields.indexOf(f.name) > -1) {
@@ -128,8 +133,9 @@ export class ConfigHelpers {
       };
 
       if (f.name === 'id' || f.name === 'name') {
+        col.link = item => this.stateWithParams(modelName, item);
         // NOTE can we find a better method to generalize the route?
-        col.link = item => `#/core${baseUrl.replace(':id?', item.id)}`;
+        // col.link = item => `#/core${baseUrl.replace(':id?', item.id)}`;
       }
 
       // if the field identify a relation, create a link
@@ -140,7 +146,8 @@ export class ConfigHelpers {
           this.populateRelated(item, item[f.name], f);
           return item[f.name];
         };
-        col.link = item => `#${this.urlFromCoreModel(f.relation.model)}/${item[f.name]}`;
+        col.link = item => this.stateWithParams(f.relation.model, item);
+        // col.link = item => `#${this.urlFromCoreModel(f.relation.model)}/${item[f.name]}`;
       }
 
       if (f.name === 'backend_status') {
@@ -166,7 +173,23 @@ export class ConfigHelpers {
   };
 
   public urlFromCoreModel(name: string): string {
+
     return `/core/${this.pluralize(name.toLowerCase())}`;
+  }
+
+  public stateFromCoreModel(name: string): string {
+    const state: ng.ui.IState = _.find(this.$state.get(), (s: IXosState) => {
+      if (s.data) {
+        return s.data.model === name;
+      }
+      return false;
+    });
+    return state.name;
+  }
+
+  public stateWithParams(name: string, model: any): string {
+    const state = this.stateFromCoreModel(name);
+    return `${state}({id: ${model['id']}})`;
   }
 
   public modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[] {

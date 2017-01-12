@@ -61,6 +61,20 @@ describe('The ConfigHelpers service', () => {
       })
       .value('ModelStore', {
 
+      })
+      .value('$state', {
+        get: () => {
+          return [
+            {
+              name: 'xos.core.tests',
+              data: {model: 'Test'}
+            },
+            {
+              name: 'xos.core.slices',
+              data: {model: 'Slices'}
+            }
+          ];
+        }
       });
     angular.mock.module('test');
   });
@@ -113,6 +127,30 @@ describe('The ConfigHelpers service', () => {
       let strings: string[] = ['camelCase', 'snake_case', 'kebab-case'];
       let labels = ['Camel cases', 'Snake cases', 'Kebab cases'];
       expect(service.toLabels(strings, true)).toEqual(labels);
+    });
+  });
+
+  describe('the navigation methods', () => {
+    describe('urlFromCoreModels', () => {
+      it('should return the URL for a given model', () => {
+        expect(service.urlFromCoreModel('Test')).toBe('/core/tests');
+      });
+    });
+    describe('stateFromCoreModels', () => {
+
+      let state: ng.ui.IStateService;
+
+      beforeEach(angular.mock.inject(($state) => {
+        state = $state;
+      }));
+
+      it('should return the state for a given model', () => {
+        expect(service.stateFromCoreModel('Test')).toBe('xos.core.tests');
+      });
+
+      it('should return the state with params for a given model', () => {
+        expect(service.stateWithParams('Test', {id: 1})).toBe('xos.core.tests({id: 1})');
+      });
     });
   });
 
@@ -188,7 +226,7 @@ describe('The ConfigHelpers service', () => {
   });
 
   describe('the private methods', () => {
-    let modelStoreMock, toastr, auth;
+    let modelStoreMock, toastr, auth, stateMock;
 
     beforeEach(angular.mock.inject((_toastr_, AuthService) => {
       modelStoreMock = {
@@ -202,6 +240,9 @@ describe('The ConfigHelpers service', () => {
       };
       toastr = _toastr_;
       auth = AuthService;
+      stateMock = {
+        get: ''
+      };
     }));
 
     const field: IXosModelDefsField = {
@@ -218,7 +259,7 @@ describe('The ConfigHelpers service', () => {
         test: 2
       };
       it('should add the formatted data to the column definition', () => {
-        service = new ConfigHelpers(toastr, auth, modelStoreMock);
+        service = new ConfigHelpers(stateMock, toastr, auth, modelStoreMock);
         service['populateRelated'](item, item.test, field);
         expect(item['test-formatted']).toBe('second');
       });
@@ -234,7 +275,7 @@ describe('The ConfigHelpers service', () => {
       };
 
       it('should add the available choice to the select', () => {
-        service = new ConfigHelpers(toastr, auth, modelStoreMock);
+        service = new ConfigHelpers(stateMock, toastr, auth, modelStoreMock);
         service['populateSelectField'](field, input);
         expect(input.options).toEqual([
           {id: 1, label: 'test'},
