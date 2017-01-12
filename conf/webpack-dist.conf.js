@@ -56,7 +56,11 @@ module.exports = {
       mangle: false // NOTE mangling was breaking the build
     }),
     new ExtractTextPlugin('index-[contenthash].css'),
-    new webpack.optimize.CommonsChunkPlugin({name: 'vendor'})
+    new webpack.optimize.CommonsChunkPlugin({name: 'vendor'}),
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery"
+    })
   ],
   postcss: () => [autoprefixer],
   output: {
