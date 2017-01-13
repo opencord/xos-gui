@@ -9,10 +9,13 @@ export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourc
   $resourceProvider.defaults.stripTrailingSlashes = false;
 }
 
-export function userStatusInterceptor($state: angular.ui.IStateService) {
+export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService) {
 
   const checkLogin = (res) => {
     if (res.status === 401 || res.status === -1) {
+      $cookies.remove('xoscsrftoken');
+      $cookies.remove('xossessionid');
+      $cookies.remove('xosuser');
       $state.go('login');
     }
     return res;

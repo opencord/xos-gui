@@ -23,6 +23,7 @@ export interface IXosAuthService {
   logout(): Promise<any>;
   getUser(): any; // NOTE how to define return user || false ???
   isAuthenticated(): boolean;
+  clearUser(): void;
 }
 export class AuthService {
 
@@ -56,15 +57,19 @@ export class AuthService {
       xossessionid: this.$cookies.get('xossessionid')
     })
       .then(() => {
-        this.$cookies.remove('xoscsrftoken');
-        this.$cookies.remove('xossessionid');
-        this.$cookies.remove('xosuser');
+        this.clearUser();
         d.resolve();
       })
       .catch(e => {
         d.reject(e);
       });
     return d.promise;
+  }
+
+  public clearUser(): void {
+    this.$cookies.remove('xoscsrftoken');
+    this.$cookies.remove('xossessionid');
+    this.$cookies.remove('xosuser');
   }
 
   public getUser(): IXosUser {

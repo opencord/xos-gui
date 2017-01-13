@@ -13,6 +13,11 @@ class LoginCtrl {
     private $state: angular.ui.IStateService,
     private ModelSetup: IXosModelSetupService
   ) {
+
+    if (this.authService.isAuthenticated()) {
+      this.$state.go('xos.dashboard');
+    }
+
     this.img = this.getImg(StyleConfig.background);
 
     this.loginStyle = {
