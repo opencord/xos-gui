@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const pkg = require('../package.json');
 const autoprefixer = require('autoprefixer');
+const BaseHrefWebpackPlugin = require('base-href-webpack-plugin').BaseHrefWebpackPlugin;
 
 module.exports = {
   module: {
@@ -60,6 +61,9 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery"
+    }),
+    new BaseHrefWebpackPlugin({
+      baseHref: '/spa/'
     })
   ],
   postcss: () => [autoprefixer],
