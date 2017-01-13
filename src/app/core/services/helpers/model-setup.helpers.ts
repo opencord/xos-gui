@@ -11,9 +11,10 @@ export interface IXosModelSetupService {
 }
 
 export class ModelSetup {
-  static $inject = ['$q', 'ModelDefs', 'ConfigHelpers', 'RuntimeStates', 'NavigationService'];
+  static $inject = ['$rootScope', '$q', 'ModelDefs', 'ConfigHelpers', 'RuntimeStates', 'NavigationService'];
 
   constructor(
+    private $rootScope: ng.IScope,
     private $q: ng.IQService,
     private ModelDefs: ModeldefsService,
     private ConfigHelpers: IXosConfigHelpersService,
@@ -52,7 +53,8 @@ export class ModelSetup {
             parent: 'xos.core'
           });
         });
-
+        console.log('xos.core.modelSetup');
+        this.$rootScope.$emit('xos.core.modelSetup', {done: true});
         d.resolve();
       })
       .catch(d.reject);

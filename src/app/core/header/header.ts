@@ -13,7 +13,7 @@ export interface INotification extends IWSEvent {
 }
 
 class HeaderController {
-  static $inject = ['$scope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService'];
+  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService'];
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
   public version: string;
@@ -24,6 +24,7 @@ class HeaderController {
 
   constructor(
     private $scope: angular.IScope,
+    private $rootScope: ng.IScope,
     private $state: IStateService,
     private authService: IXosAuthService,
     private syncStore: IStoreService,
@@ -44,8 +45,7 @@ class HeaderController {
       // tapToDismiss: false
     });
 
-    // TODO set a global event after routes have been loaded
-    window.setTimeout(() => {
+    this.$rootScope.$on('xos.core.modelSetup', () => {
       this.states = this.NavigationService.query().reduce((list, state) => {
         // if it does not have child (otherwise it is abstract)
         if (!state.children || state.children.length === 0) {
@@ -60,7 +60,7 @@ class HeaderController {
         return list;
       }, []);
       this.states = _.uniqBy(this.states, 'state');
-    }, 500);
+    });
 
     // listen for keypress
     $(document).on('keyup', (e) => {
@@ -71,7 +71,6 @@ class HeaderController {
 
     // redirect to selected page
     this.routeSelected = (item: IXosNavigationRoute) => {
-      console.log(`go to: ${item.state}`);
       this.$state.go(item.state);
       this.query = null;
     };
