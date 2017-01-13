@@ -7,7 +7,10 @@ export function RuntimeStates($stateProvider: ng.ui.IStateProvider): ng.IService
   this.$get = function($state: ng.ui.IStateService) {
     return {
       addState: function(name: string, state: IXosState) {
-        $stateProvider.state(name, state);
+        // prevent to add multiple time the same state
+        if (!$state.get(name)) {
+          $stateProvider.state(name, state);
+        }
       }
     };
   };
