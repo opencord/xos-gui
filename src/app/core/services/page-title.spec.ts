@@ -4,12 +4,20 @@ import 'angular-ui-router';
 import {xosCore} from '../index';
 import {IXosPageTitleService} from './page-title';
 import IWindowService = angular.IWindowService;
-import {StyleConfig} from '../../config/style.config';
 
 let service: IXosPageTitleService, $window: IWindowService;
+
+const MockStyleConfig = {
+  projectName: 'CORD'
+};
+
 describe('The PageTitle service', () => {
 
-  beforeEach(angular.mock.module(xosCore));
+  beforeEach(() => {
+    angular.module(xosCore)
+      .constant('StyleConfig', MockStyleConfig);
+    angular.mock.module(xosCore);
+  });
 
   beforeEach(angular.mock.inject((
     PageTitle: IXosPageTitleService,
@@ -26,11 +34,11 @@ describe('The PageTitle service', () => {
 
   it('should set a page title', () => {
     service.set('sample');
-    expect($window.document.title).toEqual(`${StyleConfig.projectName} - sample`);
+    expect($window.document.title).toEqual(`${MockStyleConfig.projectName} - sample`);
   });
 
   it('should convert dots to >', () => {
     service.set('core.sample.bread.crumb');
-    expect($window.document.title).toEqual(`${StyleConfig.projectName} - core > sample > bread > crumb`);
+    expect($window.document.title).toEqual(`${MockStyleConfig.projectName} - core > sample > bread > crumb`);
   });
 });

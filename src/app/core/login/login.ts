@@ -1,27 +1,28 @@
 import {AuthService} from '../../datasources/rest/auth.rest';
-import {StyleConfig} from '../../config/style.config';
 import './login.scss';
 import {IXosModelSetupService} from '../services/helpers/model-setup.helpers';
+import {IXosStyleConfig} from '../../../index';
 
 class LoginCtrl {
-  static $inject = ['AuthService', '$state', 'ModelSetup'];
+  static $inject = ['AuthService', '$state', 'ModelSetup', 'StyleConfig'];
   public loginStyle: any;
   public img: string;
   /** @ngInject */
   constructor(
     private authService: AuthService,
     private $state: angular.ui.IStateService,
-    private ModelSetup: IXosModelSetupService
+    private ModelSetup: IXosModelSetupService,
+    private StyleConfig: IXosStyleConfig
   ) {
 
     if (this.authService.isAuthenticated()) {
       this.$state.go('xos.dashboard');
     }
 
-    this.img = this.getImg(StyleConfig.background);
+    this.img = this.getImg(this.StyleConfig.background);
 
     this.loginStyle = {
-      'background-image': `url('${this.getImg(StyleConfig.background)}')`
+      'background-image': `url('${this.getImg(this.StyleConfig.background)}')`
     };
   }
 

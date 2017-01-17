@@ -1,5 +1,5 @@
-import {AppConfig} from '../../config/app.config';
 import IHttpPromiseCallbackArg = angular.IHttpPromiseCallbackArg;
+import {IXosAppConfig} from '../../../index';
 export interface IAuthRequestData {
   username: string;
   password: string;
@@ -30,17 +30,18 @@ export class AuthService {
   constructor(
     private $http: angular.IHttpService,
     private $q: angular.IQService,
-    private $cookies: angular.cookies.ICookiesService
+    private $cookies: angular.cookies.ICookiesService,
+    private AppConfig: IXosAppConfig
   ) {
   }
 
   public login(data: IAuthRequestData): Promise<any> {
     const d = this.$q.defer();
-    this.$http.post(`${AppConfig.apiEndpoint}/utility/login/`, data)
+    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/login/`, data)
       .then((res: IAuthResponseData) => {
-        this.$cookies.put('xoscsrftoken', res.data.xoscsrftoken);
-        this.$cookies.put('xossessionid', res.data.xossessionid);
-        this.$cookies.put('xosuser', res.data.user);
+        this.$cookies.put('xoscsrftoken', res.data.xoscsrftoken, {path: '/'});
+        this.$cookies.put('xossessionid', res.data.xossessionid, {path: '/'});
+        this.$cookies.put('xosuser', res.data.user, {path: '/'});
         res.data.user = JSON.parse(res.data.user);
         d.resolve(res.data);
       })
@@ -52,7 +53,7 @@ export class AuthService {
 
   public logout(): Promise<any> {
     const d = this.$q.defer();
-    this.$http.post(`${AppConfig.apiEndpoint}/utility/logout/`, {
+    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/logout/`, {
       xoscsrftoken: this.$cookies.get('xoscsrftoken'),
       xossessionid: this.$cookies.get('xossessionid')
     })
@@ -67,9 +68,9 @@ export class AuthService {
   }
 
   public clearUser(): void {
-    this.$cookies.remove('xoscsrftoken');
-    this.$cookies.remove('xossessionid');
-    this.$cookies.remove('xosuser');
+    this.$cookies.remove('xoscsrftoken', {path: '/'});
+    this.$cookies.remove('xossessionid', {path: '/'});
+    this.$cookies.remove('xosuser', {path: '/'});
   }
 
   public getUser(): IXosUser {

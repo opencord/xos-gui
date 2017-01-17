@@ -6,7 +6,6 @@ import {Subject} from 'rxjs';
 import {IWSEvent} from '../websocket/global';
 import {StoreHelpers} from '../helpers/store.helpers';
 import {ModelRest} from '../rest/model.rest';
-import {AppConfig} from '../../config/app.config';
 import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
 import {AuthService} from '../rest/auth.rest';
 
@@ -34,6 +33,11 @@ const queryData = [
   {id: 1, name: 'bar'}
 ];
 
+const MockAppCfg = {
+  apiEndpoint: 'http://xos-test:3000/api',
+  websocketClient: 'http://xos-test:3000'
+};
+
 describe('The ModelStore service', () => {
 
   beforeEach(() => {
@@ -44,7 +48,8 @@ describe('The ModelStore service', () => {
       .service('ModelRest', ModelRest) // TODO mock
       .service('ModelStore', ModelStore)
       .service('ConfigHelpers', ConfigHelpers) // TODO mock
-      .service('AuthService', AuthService);
+      .service('AuthService', AuthService)
+      .constant('AppConfig', MockAppCfg);
 
     angular.mock.module('ModelStore');
   });
@@ -61,7 +66,7 @@ describe('The ModelStore service', () => {
     WebSocket = _WebSocket_;
 
     // ModelRest will call the backend
-    httpBackend.whenGET(`${AppConfig.apiEndpoint}/core/samples`)
+    httpBackend.whenGET(`${MockAppCfg.apiEndpoint}/core/samples`)
       .respond(queryData);
   }));
 
@@ -122,11 +127,11 @@ describe('The ModelStore service', () => {
   describe('when multiple stores are requested', () => {
 
     beforeEach(() => {
-      httpBackend.expectGET(`${AppConfig.apiEndpoint}/core/firsts`)
+      httpBackend.expectGET(`${MockAppCfg.apiEndpoint}/core/firsts`)
         .respond([
           {first: 'foo'}
         ]);
-      httpBackend.expectGET(`${AppConfig.apiEndpoint}/core/seconds`)
+      httpBackend.expectGET(`${MockAppCfg.apiEndpoint}/core/seconds`)
         .respond([
           {second: 'foo'}
         ]);
