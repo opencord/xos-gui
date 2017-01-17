@@ -1,5 +1,5 @@
-import {IStyleConfig} from './interfaces';
-export const StyleConfig: IStyleConfig = {
+angular.module('app')
+  .constant('StyleConfig', {
     projectName: 'CORD',
     favicon: 'cord-favicon.png',
     background: 'cord-bg.jpg',
@@ -19,4 +19,4 @@ export const StyleConfig: IStyleConfig = {
             state: 'xos.core.nodes'
         }
     ]
-};
+});

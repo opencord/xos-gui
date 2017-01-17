@@ -8,15 +8,46 @@ let service: IXosNavigationService;
 
 let defaultRoutes: IXosNavigationRoute[];
 
+const mockRoutes = [
+  {
+    label: 'Slices',
+    state: 'xos.core.slices'
+  },
+  {
+    label: 'Instances',
+    state: 'xos.core.instances'
+  },
+  {
+    label: 'Nodes',
+    state: 'xos.core.nodes'
+  }
+];
+
 describe('The Navigation service', () => {
 
-  beforeEach(angular.mock.module(xosCore));
+  beforeEach(() => {
+    angular.module(xosCore)
+      .value('StyleConfig', {
+        routes: mockRoutes
+      });
+
+    angular.mock.module(xosCore);
+  });
 
   beforeEach(angular.mock.inject((
     NavigationService: IXosNavigationService,
   ) => {
     service = NavigationService;
-    defaultRoutes = angular.copy(service.query());
+    defaultRoutes = [
+      {
+        label: 'Home',
+        state: 'xos.dashboard'
+      },
+      {
+        label: 'Core',
+        state: 'xos.core'
+      }
+    ].concat(mockRoutes);
   }));
 
   it('should return navigation routes', () => {

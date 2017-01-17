@@ -51,7 +51,11 @@ describe('header component', () => {
       .value('toastr', MockToastr)
       .value('toastrConfig', MockToastrConfig)
       .value('AuthService', MockAuth)
-      .value('NavigationService', {});
+      .value('NavigationService', {})
+      .value('StyleConfig', {
+        logo: 'cord-logo.png',
+      });
+
     angular.mock.module('xosHeader');
   });
 

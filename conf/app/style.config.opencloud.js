@@ -1,5 +1,5 @@
-import {IStyleConfig} from './interfaces';
-export const StyleConfig: IStyleConfig = {
+angular.module('app')
+  .constant('StyleConfig', {
     projectName: 'OpenCloud',
     favicon: 'opencloud-favicon.png',
     background: 'opencloud-bg.jpg',
@@ -11,4 +11,4 @@ export const StyleConfig: IStyleConfig = {
             state: 'xos.core.slices'
         }
     ]
-};
+});

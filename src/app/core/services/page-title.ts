@@ -1,4 +1,4 @@
-import {StyleConfig} from '../../config/style.config';
+import {IXosStyleConfig} from '../../../index';
 export interface IXosPageTitleService {
   get(): string;
   set(title: string): void;
@@ -6,10 +6,11 @@ export interface IXosPageTitleService {
 }
 
 export class PageTitle {
-  static $inject = ['$window', '$transitions'];
+  static $inject = ['$window', '$transitions', 'StyleConfig'];
   constructor(
     private $window: angular.IWindowService,
-    private $transitions: any // missing definition
+    private $transitions: any, // missing definition
+    private StyleConfig: IXosStyleConfig
   ) {
     this.$transitions.onSuccess({ to: '**' }, (transtion) => {
       this.set(transtion.$to().name);
@@ -21,7 +22,7 @@ export class PageTitle {
   }
 
   set(title: string) {
-    this.$window.document.title = `${StyleConfig.projectName} - ${this.formatStateName(title)}`;
+    this.$window.document.title = `${this.StyleConfig.projectName} - ${this.formatStateName(title)}`;
   }
 
   private formatStateName(stateName: string): string {
