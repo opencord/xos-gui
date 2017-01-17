@@ -30,7 +30,8 @@ describe('Nav component', () => {
       .module('xosNav', ['app/core/nav/nav.html', 'ui.router'])
       .component('xosNav', xosNav)
       .service('NavigationService', NavigationService)
-      .value('AuthService', AuthMock);
+      .value('AuthService', AuthMock)
+      .value('StyleConfig', {});
     angular.mock.module('xosNav');
   });
 

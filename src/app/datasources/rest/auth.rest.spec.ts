@@ -3,7 +3,6 @@ import 'angular-mocks';
 import 'angular-resource';
 import 'angular-cookies';
 import {xosDataSources} from '../index';
-import {AppConfig} from '../../config/app.config';
 import {IXosAuthService} from './auth.rest';
 
 let service: IXosAuthService;
@@ -11,11 +10,20 @@ let httpBackend: ng.IHttpBackendService;
 let $scope;
 let $cookies;
 
+const MockAppCfg = {
+  apiEndpoint: 'http://xos-test:3000/api',
+  websocketClient: 'http://xos-test:3000'
+};
+
 describe('The AuthService service', () => {
 
   beforeEach(angular.mock.module(xosDataSources));
 
   beforeEach(() => {
+
+    angular.module(xosDataSources)
+      .constant('AppConfig', MockAppCfg);
+
     angular.mock.module(xosDataSources);
   });
 
@@ -34,7 +42,7 @@ describe('The AuthService service', () => {
 
   describe('when logging in', () => {
     beforeEach(() => {
-      httpBackend.expectPOST(`${AppConfig.apiEndpoint}/utility/login/`)
+      httpBackend.expectPOST(`${MockAppCfg.apiEndpoint}/utility/login/`)
         .respond({
           user: JSON.stringify({usernane: 'test@xos.org'}),
           xoscsrftoken: 'token',
@@ -59,7 +67,7 @@ describe('The AuthService service', () => {
 
   describe('when logging out', () => {
     beforeEach(() => {
-      httpBackend.expectPOST(`${AppConfig.apiEndpoint}/utility/logout/`)
+      httpBackend.expectPOST(`${MockAppCfg.apiEndpoint}/utility/logout/`)
         .respond({
           user: JSON.stringify({usernane: 'test@xos.org'}),
           xoscsrftoken: 'token',
