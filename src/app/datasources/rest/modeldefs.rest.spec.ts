@@ -3,18 +3,26 @@ import 'angular-mocks';
 import 'angular-resource';
 import 'angular-cookies';
 import {xosDataSources} from '../index';
-import {AppConfig} from '../../config/app.config';
 import {IModeldefsService} from './modeldefs.rest';
 
 let service: IModeldefsService;
 let httpBackend: ng.IHttpBackendService;
 let $scope;
 
+const MockAppCfg = {
+  apiEndpoint: 'http://xos-test:3000/api',
+  websocketClient: 'http://xos-test:3000'
+};
+
 describe('The ModelDefs service', () => {
 
   beforeEach(angular.mock.module(xosDataSources));
 
   beforeEach(() => {
+
+    angular.module(xosDataSources)
+      .constant('AppConfig', MockAppCfg);
+
     angular.mock.module(xosDataSources);
   });
 
@@ -31,7 +39,7 @@ describe('The ModelDefs service', () => {
   }));
 
   it('should have a get method', (done) => {
-    httpBackend.expectGET(`${AppConfig.apiEndpoint}/utility/modeldefs/`)
+    httpBackend.expectGET(`${MockAppCfg.apiEndpoint}/utility/modeldefs/`)
       .respond([
         {name: 'ok'}
       ]);
