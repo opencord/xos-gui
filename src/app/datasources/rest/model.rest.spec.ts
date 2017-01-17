@@ -4,7 +4,6 @@ import 'angular-resource';
 import 'angular-cookies';
 import {IXosResourceService} from './model.rest';
 import {xosDataSources} from '../index';
-import {AppConfig} from '../../config/app.config';
 
 let service: IXosResourceService;
 let resource: ng.resource.IResourceClass<any>;
@@ -12,11 +11,20 @@ let httpBackend: ng.IHttpBackendService;
 let $resource;
 let $scope;
 
+const MockAppCfg = {
+  apiEndpoint: 'http://xos-test:3000/api',
+  websocketClient: 'http://xos-test:3000'
+};
+
 describe('The ModelRest service', () => {
 
   beforeEach(angular.mock.module(xosDataSources));
 
   beforeEach(() => {
+
+    angular.module(xosDataSources)
+      .constant('AppConfig', MockAppCfg);
+
     angular.mock.module(xosDataSources);
   });
 
@@ -39,7 +47,7 @@ describe('The ModelRest service', () => {
   });
 
   it('should have a query method', (done) => {
-    httpBackend.expectGET(`${AppConfig.apiEndpoint}/core/test`)
+    httpBackend.expectGET(`${MockAppCfg.apiEndpoint}/core/test`)
       .respond([
         {status: 'ok'}
       ]);
@@ -57,7 +65,7 @@ describe('The ModelRest service', () => {
   });
 
   it('should have a get method', (done) => {
-    httpBackend.expectGET(`${AppConfig.apiEndpoint}/core/test/1`)
+    httpBackend.expectGET(`${MockAppCfg.apiEndpoint}/core/test/1`)
       .respond([
         {status: 'ok'}
       ]);

@@ -1,10 +1,10 @@
 import './nav.scss';
 import {IXosNavigationService, IXosNavigationRoute} from '../services/navigation';
-import {StyleConfig} from '../../config/style.config';
 import {IXosAuthService} from '../../datasources/rest/auth.rest';
+import {IXosStyleConfig} from '../../../index';
 
 class NavCtrl {
-  static $inject = ['$scope', '$state', 'NavigationService', 'AuthService'];
+  static $inject = ['$scope', '$state', 'NavigationService', 'AuthService', 'StyleConfig'];
   public routes: IXosNavigationRoute[];
   public navSelected: string;
   public appName: string;
@@ -14,7 +14,8 @@ class NavCtrl {
     private $scope: ng.IScope,
     private $state: angular.ui.IStateService,
     private navigationService: IXosNavigationService,
-    private authService: IXosAuthService
+    private authService: IXosAuthService,
+    private StyleConfig: IXosStyleConfig
   ) {
     // NOTE we'll need to have:
     // - Base routes (defined from configuration based on BRAND)
@@ -24,8 +25,8 @@ class NavCtrl {
     this.$scope.$watch(() => this.navigationService.query(), (routes) => {
       this.routes = routes;
     });
-    this.appName = StyleConfig.projectName;
-    this.payoff = StyleConfig.payoff;
+    this.appName = this.StyleConfig.projectName;
+    this.payoff = this.StyleConfig.payoff;
   }
 
   activateRoute(route: IXosNavigationRoute) {
