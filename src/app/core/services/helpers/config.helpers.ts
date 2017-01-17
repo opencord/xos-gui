@@ -60,7 +60,7 @@ export class ConfigHelpers {
     private AuthService: IXosAuthService,
     private ModelStore: IModelStoreService
   ) {
-    pluralize.addIrregularRule('xos', 'xosses');
+    pluralize.addIrregularRule('xos', 'xoses');
     pluralize.addPluralRule(/slice$/i, 'slices');
     pluralize.addSingularRule(/slice$/i, 'slice');
   }

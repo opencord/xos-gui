@@ -89,7 +89,7 @@ describe('The ConfigHelpers service', () => {
     it('should pluralize string', () => {
       expect(service.pluralize('test')).toEqual('tests');
       expect(service.pluralize('test', 1)).toEqual('test');
-      expect(service.pluralize('xos')).toEqual('xosses');
+      expect(service.pluralize('xos')).toEqual('xoses');
       expect(service.pluralize('slice')).toEqual('slices');
       expect(service.pluralize('Slice', 1)).toEqual('Slice');
     });

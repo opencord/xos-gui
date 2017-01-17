@@ -37,7 +37,9 @@ class LoginCtrl {
       .then(() => {
         this.$state.go('xos.dashboard');
       })
-      .catch(e => console.error);
+      .catch(e => {
+        console.error(e);
+      });
   }
 
   private getImg(img: string) {

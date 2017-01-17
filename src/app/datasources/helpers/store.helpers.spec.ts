@@ -42,7 +42,7 @@ describe('The StoreHelpers service', () => {
 
   it('should convert a core model name in an URL', () => {
     expect(service.urlFromCoreModel('Slice')).toBe('/core/slices');
-    expect(service.urlFromCoreModel('Xos')).toBe('/core/xosses');
+    expect(service.urlFromCoreModel('Xos')).toBe('/core/xoses');
 
     // handling exceptions
     expect(service.urlFromCoreModel('SiteRole')).toBe('/core/site_roles');
