@@ -1,11 +1,15 @@
-import {StyleConfig} from '../../config/style.config';
-
+import {IXosStyleConfig} from '../../../index';
 class FooterCtrl {
+
+  static $inject = ['StyleConfig'];
+
   public brand: string;
 
   /** @ngInject */
-  constructor() {
-    this.brand = StyleConfig.projectName;
+  constructor(
+    private StyleConfig: IXosStyleConfig
+  ) {
+    this.brand = this.StyleConfig.projectName;
   }
 }
 
