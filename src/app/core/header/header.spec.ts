@@ -54,7 +54,8 @@ describe('header component', () => {
       .value('NavigationService', {})
       .value('StyleConfig', {
         logo: 'cord-logo.png',
-      });
+      })
+      .value('SearchService', {});
 
     angular.mock.module('xosHeader');
   });

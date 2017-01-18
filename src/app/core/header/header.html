@@ -1,23 +1,13 @@
-<!--<header class="header">-->
-  <!--<p class="header-title">-->
-    <!--<a href="#/" target="_blank">-->
-      <!--{{vm.title}}-->
-    <!--</a>-->
-  <!--</p>-->
-  <!--<p class="header-date notification">-->
-    <!--<i ng-if="vm.newNotifications.length > 0" class="badge"></i>-->
-    <!--<i class="fa fa-bell" ng-click="vm.showNotification = !vm.showNotification"></i>-->
-    <!--<div class="notification-panel" ng-show="vm.showNotification">-->
-      <!--<ul>-->
-        <!--<li ng-repeat="n in vm.notifications track by $index" ng-click="vm.viewNotification(n)" ng-class="{viewed: n.viewed}">-->
-          <!--<b>{{n.model}}</b><br>-->
-          <!--<i>{{n.msg.object.name}} status is {{n.msg.object.backend_status}}</i>-->
-        <!--</li>-->
-      <!--</ul>-->
-    <!--</div>-->
-  <!--</p>-->
-<!--</header>-->
-
+<!-- Custom template for Typeahead -->
+<script type="text/ng-template" id="customTemplate.html">
+  <a>
+    <span ng-bind-html="match.label.label | uibTypeaheadHighlight:query"></span>
+    <code class="pull-right">
+      {{match.label.type}}
+    </code>
+  </a>
+</script>
+<!-- END Custom template for Typeahead -->
 
 <!-- Header -->
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -40,7 +30,8 @@
           placeholder="Navigate routes (press 'f' to select)"
           style="width: 275px"
           ng-model="vm.query"
-          uib-typeahead="state.label for state in vm.states | filter:$viewValue | limitTo:8"
+          uib-typeahead="state for state in vm.search($viewValue) | limitTo:30"
+          typeahead-template-url="customTemplate.html"
           typeahead-on-select="vm.routeSelected($item, $model, $label)">
       </form>
       <ul class="nav navbar-nav navbar-right">

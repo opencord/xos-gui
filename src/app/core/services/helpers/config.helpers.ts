@@ -30,6 +30,7 @@ export interface IXosConfigHelpersService {
   urlFromCoreModel(model: string): string;
   stateFromCoreModel(name: string): string;
   stateWithParams(name: string, model: any): string;
+  stateWithParamsForJs(name: string, model: any): any;
 }
 
 export class ConfigHelpers {
@@ -190,6 +191,12 @@ export class ConfigHelpers {
   public stateWithParams(name: string, model: any): string {
     const state = this.stateFromCoreModel(name);
     return `${state}({id: ${model['id']}})`;
+  }
+
+  public stateWithParamsForJs(name: string, model: any): any {
+    // TODO test and interface
+    const state = this.stateFromCoreModel(name);
+    return {name: state, params: {id: model.id}};
   }
 
   public modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[] {
