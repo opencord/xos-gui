@@ -1,5 +1,5 @@
 /// <reference path="../../../../typings/index.d.ts"/>
-
+import * as _ from 'lodash';
 import {BehaviorSubject, Observable} from 'rxjs/Rx';
 import {IWSEvent, IWSEventService} from '../websocket/global';
 import {IXosResourceService} from '../rest/model.rest';
@@ -7,6 +7,7 @@ import {IStoreHelpersService} from '../helpers/store.helpers';
 
 export interface  IModelStoreService {
   query(model: string): Observable<any>;
+  search(modelName: string): any[];
 }
 
 export class ModelStore {
@@ -37,6 +38,26 @@ export class ModelStore {
       );
 
     return this._collections[model].asObservable();
+  }
+
+  public search(modelName: string): any[] {
+    return _.reduce(Object.keys(this._collections), (results, k) => {
+      // console.log(k, this._collections[k].value)
+      const partialRes = _.filter(this._collections[k].value, i => {
+        if (i.humanReadableName) {
+          return i.humanReadableName.toLowerCase().indexOf(modelName) > -1;
+        }
+        else if (i.name) {
+          return i.name.toLowerCase().indexOf(modelName) > -1;
+        }
+        return false;
+      })
+        .map(m => {
+          m.modelName = k;
+          return m;
+        });
+      return results.concat(partialRes);
+    }, []);
   }
 
   public get(model: string, id: number) {

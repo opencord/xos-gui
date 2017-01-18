@@ -4,23 +4,24 @@ import {IStoreService} from '../../datasources/stores/synchronizer.store';
 import {IXosAuthService} from '../../datasources/rest/auth.rest';
 import {IXosNavigationService, IXosNavigationRoute} from '../services/navigation';
 import {IStateService} from 'angular-ui-router';
-import * as _ from 'lodash';
 import * as $ from 'jquery';
 import {IXosStyleConfig} from '../../../index';
+import {IXosSearchService, IXosSearchResult} from '../../datasources/helpers/search.service';
 
 export interface INotification extends IWSEvent {
   viewed?: boolean;
 }
 
 class HeaderController {
-  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService', 'StyleConfig'];
+  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService', 'StyleConfig', 'SearchService'];
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
   public version: string;
   public userEmail: string;
-  public routeSelected: (route: IXosNavigationRoute) => void;
+  public routeSelected: (route: IXosSearchResult) => void;
   public states: IXosNavigationRoute[];
   public query: string;
+  public search: (query: string) => any[];
 
   constructor(
     private $scope: angular.IScope,
@@ -31,7 +32,8 @@ class HeaderController {
     private toastr: ng.toastr.IToastrService,
     private toastrConfig: ng.toastr.IToastrConfig,
     private NavigationService: IXosNavigationService,
-    private StyleConfig: IXosStyleConfig
+    private StyleConfig: IXosStyleConfig,
+    private SearchService: IXosSearchService
   ) {
     this.version = require('../../../../package.json').version;
     angular.extend(this.toastrConfig, {
@@ -46,33 +48,30 @@ class HeaderController {
       // tapToDismiss: false
     });
 
-    this.$rootScope.$on('xos.core.modelSetup', () => {
-      this.states = this.NavigationService.query().reduce((list, state) => {
-        // if it does not have child (otherwise it is abstract)
-        if (!state.children || state.children.length === 0) {
-          list.push(state);
-        }
-        // else push child
-        if (state.children && state.children.length > 0) {
-          state.children.forEach(c => {
-            list.push(c);
-          });
-        }
-        return list;
-      }, []);
-      this.states = _.uniqBy(this.states, 'state');
-    });
+    // this.$rootScope.$on('xos.core.modelSetup', () => {
+    //   this.states = _.uniqBy(this.states, 'state');
+    // });
+
+    this.search = (query: string) => {
+      return this.SearchService.search(query);
+    };
 
     // listen for keypress
     $(document).on('keyup', (e) => {
       if (e.key === 'f') {
         $('.navbar-form input').focus();
       }
+      // console.log(this.SearchService.getStates());
     });
 
     // redirect to selected page
-    this.routeSelected = (item: IXosNavigationRoute) => {
-      this.$state.go(item.state);
+    this.routeSelected = (item: IXosSearchResult) => {
+      if (angular.isString(item.state)) {
+        this.$state.go(item.state);
+      }
+      else {
+        this.$state.go(item.state.name, item.state.params);
+      }
       this.query = null;
     };
 
