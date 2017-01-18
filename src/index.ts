@@ -22,13 +22,27 @@ import {
 } from './interceptors';
 import {IXosCrudData} from './app/views/crud/crud';
 import {IXosPageTitleService} from './app/core/services/page-title';
-import {StyleConfig} from './app/config/style.config';
 import {IXosAuthService} from './app/datasources/rest/auth.rest';
 import {IXosModelSetupService} from './app/core/services/helpers/model-setup.helpers';
+import {IXosNavigationRoute} from './app/core/services/navigation';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
 };
+
+export interface IXosAppConfig {
+  apiEndpoint: string;
+  websocketClient: string;
+}
+
+export interface IXosStyleConfig {
+  projectName: string;
+  payoff: string;
+  favicon: string;
+  background: string;
+  logo: string;
+  routes: IXosNavigationRoute[];
+}
 
 angular
   .module('app', [
@@ -45,7 +59,7 @@ angular
   .factory('CredentialsInterceptor', CredentialsInterceptor)
   .factory('NoHyperlinksInterceptor', NoHyperlinksInterceptor)
   .component('xos', main)
-  .run(function($rootScope: ng.IRootScopeService, $transitions: any) {
+  .run(function($rootScope: ng.IRootScopeService, $transitions: any, StyleConfig: IXosStyleConfig) {
     $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
     $transitions.onSuccess({ to: '**' }, (transtion) => {
       if (transtion.$to().name === 'login') {

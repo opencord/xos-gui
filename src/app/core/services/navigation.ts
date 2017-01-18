@@ -1,7 +1,7 @@
 /// <reference path="../../../../typings/index.d.ts" />
 
 import * as _ from 'lodash';
-import {StyleConfig} from '../../config/style.config';
+import {IXosStyleConfig} from '../../../index';
 
 export interface IXosNavigationRoute {
   label: string;
@@ -18,9 +18,12 @@ export interface IXosNavigationService {
 }
 
 export class NavigationService {
+  static $inject = ['StyleConfig'];
   private routes: IXosNavigationRoute[];
 
-  constructor() {
+  constructor(
+    private StyleConfig: IXosStyleConfig
+  ) {
     const defaultRoutes = [
       {
         label: 'Home',
@@ -34,7 +37,7 @@ export class NavigationService {
     // adding configuration defined routes
     // this.routes = StyleConfig.routes.concat(defaultRoutes).reverse();
     this.routes = defaultRoutes;
-    StyleConfig.routes.forEach(r => {
+    this.StyleConfig.routes.forEach(r => {
       this.add(r);
     });
   }

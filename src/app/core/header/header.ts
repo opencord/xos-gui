@@ -1,5 +1,4 @@
 import './header.scss';
-import {StyleConfig} from '../../config/style.config';
 import {IWSEvent} from '../../datasources/websocket/global';
 import {IStoreService} from '../../datasources/stores/synchronizer.store';
 import {IXosAuthService} from '../../datasources/rest/auth.rest';
@@ -7,13 +6,14 @@ import {IXosNavigationService, IXosNavigationRoute} from '../services/navigation
 import {IStateService} from 'angular-ui-router';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
+import {IXosStyleConfig} from '../../../index';
 
 export interface INotification extends IWSEvent {
   viewed?: boolean;
 }
 
 class HeaderController {
-  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService'];
+  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService', 'StyleConfig'];
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
   public version: string;
@@ -30,7 +30,8 @@ class HeaderController {
     private syncStore: IStoreService,
     private toastr: ng.toastr.IToastrService,
     private toastrConfig: ng.toastr.IToastrConfig,
-    private NavigationService: IXosNavigationService
+    private NavigationService: IXosNavigationService,
+    private StyleConfig: IXosStyleConfig
   ) {
     this.version = require('../../../../package.json').version;
     angular.extend(this.toastrConfig, {
@@ -107,7 +108,7 @@ class HeaderController {
   }
 
   public getLogo(): string {
-    return require(`../../images/brand/${StyleConfig.logo}`);
+    return require(`../../images/brand/${this.StyleConfig.logo}`);
   }
 
   // TODO display a list of notification in the template (if it make sense)

@@ -13,9 +13,9 @@ export function userStatusInterceptor($state: angular.ui.IStateService, $cookies
 
   const checkLogin = (res) => {
     if (res.status === 401 || res.status === -1) {
-      $cookies.remove('xoscsrftoken');
-      $cookies.remove('xossessionid');
-      $cookies.remove('xosuser');
+      $cookies.remove('xoscsrftoken', {path: '/'});
+      $cookies.remove('xossessionid', {path: '/'});
+      $cookies.remove('xosuser', {path: '/'});
       $state.go('login');
     }
     return res;

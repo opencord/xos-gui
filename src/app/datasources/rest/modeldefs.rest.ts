@@ -1,5 +1,5 @@
-import {AppConfig} from '../../config/app.config';
 import {IXosModelDefsField} from '../../core/services/helpers/config.helpers';
+import {IXosAppConfig} from '../../../index';
 
 export interface IModeldef {
   fields: IXosModelDefsField[];
@@ -12,15 +12,19 @@ export interface IModeldefsService {
 }
 
 export class ModeldefsService {
+
+  static $inject = ['$http', '$q', 'AppConfig'];
+
   constructor(
     private $http: angular.IHttpService,
     private $q: angular.IQService,
+    private AppConfig: IXosAppConfig
   ) {
   }
 
   public get(): Promise<any> {
     const d = this.$q.defer();
-    this.$http.get(`${AppConfig.apiEndpoint}/utility/modeldefs/`)
+    this.$http.get(`${this.AppConfig.apiEndpoint}/utility/modeldefs/`)
       .then((res) => {
         d.resolve(res.data);
       })

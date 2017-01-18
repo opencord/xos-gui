@@ -1,6 +1,6 @@
 import * as io from 'socket.io-client';
 import {Subject, Observable} from 'rxjs/Rx';
-import {AppConfig} from '../../config/app.config';
+import {IXosAppConfig} from '../../../index';
 
 export interface IWSEvent {
   model: string;
@@ -16,10 +16,15 @@ export interface IWSEventService {
 }
 
 export class WebSocketEvent {
+
+  static $inject = ['AppConfig'];
+
   private _events: Subject<IWSEvent> = new Subject<IWSEvent>();
     private socket;
-    constructor() {
-      this.socket = io(AppConfig.websocketClient);
+    constructor(
+      private AppConfig: IXosAppConfig
+    ) {
+      this.socket = io(this.AppConfig.websocketClient);
       this.socket.on('event', (data: IWSEvent): void => {
           this._events.next(data);
         });

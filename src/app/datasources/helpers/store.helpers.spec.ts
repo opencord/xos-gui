@@ -21,7 +21,8 @@ describe('The StoreHelpers service', () => {
       .service('ConfigHelpers', ConfigHelpers) // NOTE evaluate mock
       .service('ModelRest', ModelRest) // NOTE evaluate mock
       .service('StoreHelpers', StoreHelpers)
-      .service('AuthService', AuthService);
+      .service('AuthService', AuthService)
+      .value('AppConfig', {});
 
     angular.mock.module('test');
   });

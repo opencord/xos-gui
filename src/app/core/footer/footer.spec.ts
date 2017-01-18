@@ -3,13 +3,18 @@
 import * as angular from 'angular';
 import 'angular-mocks';
 import {xosFooter} from './footer';
-import {StyleConfig} from '../../config/style.config';
+
+const MockStyleConfig = {
+  projectName: 'CORD'
+};
 
 describe('footer component', () => {
   beforeEach(() => {
     angular
       .module('xosFooter', ['app/core/footer/footer.html'])
-      .component('xosFooter', xosFooter);
+      .component('xosFooter', xosFooter)
+      .constant('StyleConfig', MockStyleConfig);
+
     angular.mock.module('xosFooter');
   });
 
@@ -17,6 +22,6 @@ describe('footer component', () => {
     const element = $compile('<xos-footer></xos-footer>')($rootScope);
     $rootScope.$digest();
     const footer = element.find('a');
-    expect(footer.html().trim()).toEqual(`${StyleConfig.projectName} Team`);
+    expect(footer.html().trim()).toEqual(`${MockStyleConfig.projectName} Team`);
   }));
 });
