@@ -90,7 +90,6 @@ module.exports = {
     ]
   },
   entry: {
-    config: `./${conf.path.src('app/config/style.config.ts')}`,
     app: `./${conf.path.src('index')}`,
     vendor: Object.keys(pkg.dependencies)
   },
