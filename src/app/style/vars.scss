@@ -1,0 +1,26 @@
+// COLORS
+
+//$gray_dark: darken($background-color, 2%);
+//$gray_med: #353741;
+//$gray_light: #3A3D45;
+
+$color-accent: #f6a821;
+$color-font: #949ba2;
+
+$background-dark-color: #24262d;
+$background-color: #2f323b;
+$background-med-color: darken($background-color, 2%);
+$background-light-color: #44464f;
+$navigation-color: $background-med-color;
+$border-color: lighten($background-color, 6%);
+$color-placeholder: darken($color-font, 14%);
+
+$color-primary: #0F83C9;
+$color-info: #56C0E0;
+$color-warning: #f7af3e;
+$color-danger: #DB524B;
+$color-success: #1bbf89;
+
+// SIZES
+$padding: 10px;
+$navigation-width: 200px;
