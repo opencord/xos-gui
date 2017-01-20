@@ -1,0 +1,20 @@
+@import './../../style/vars.scss';
+
+$side-panel-width: 400px;
+
+xos-side-panel {
+  .xos-side-panel {
+    width: $side-panel-width;
+    height: 100%;
+    position: fixed;
+    background: $background-dark-color;
+    z-index: 9999;
+    right: -$side-panel-width;
+    padding: $padding;
+    transition: all .5s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+
+    &.open {
+      right: 0;
+    }
+  }
+}

@@ -2,9 +2,10 @@ import './nav.scss';
 import {IXosNavigationService, IXosNavigationRoute} from '../services/navigation';
 import {IXosAuthService} from '../../datasources/rest/auth.rest';
 import {IXosStyleConfig} from '../../../index';
+import {IXosSidePanelService} from '../side-panel/side-panel.service';
 
 class NavCtrl {
-  static $inject = ['$scope', '$state', 'NavigationService', 'AuthService', 'StyleConfig'];
+  static $inject = ['$scope', '$state', 'NavigationService', 'AuthService', 'StyleConfig', 'XosSidePanel'];
   public routes: IXosNavigationRoute[];
   public navSelected: string;
   public appName: string;
@@ -15,7 +16,8 @@ class NavCtrl {
     private $state: angular.ui.IStateService,
     private navigationService: IXosNavigationService,
     private authService: IXosAuthService,
-    private StyleConfig: IXosStyleConfig
+    private StyleConfig: IXosStyleConfig,
+    private XosSidePanel: IXosSidePanelService
   ) {
     // NOTE we'll need to have:
     // - Base routes (defined from configuration based on BRAND)
@@ -54,6 +56,11 @@ class NavCtrl {
     else {
       return true;
     }
+  }
+
+  // NOTE remove me
+  togglePanel() {
+    this.XosSidePanel.injectComponent('xosAlert', {config: {type: 'danger'}, show: true}, 'Sample message');
   }
 
   logout() {
