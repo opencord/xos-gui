@@ -1,6 +1,7 @@
 <section class="content">
     <div class="container-fluid">
         <!--<h1>Dashboard</h1>-->
+        <div class="row" id="dashboard-component-container"></div>
         <div class="row">
             <div class="col-xs-4">
                 <div class="panel panel-filled">
@@ -9,7 +10,11 @@
                             {{vm.nodes}}
                             <!--<span class="slight"><i class="fa fa-play fa-rotate-270 text-warning"> </i> +20%</span>-->
                         </h2>
-                        <h4>Nodes</h4>
+                        <h4>
+                            <a ui-sref="xos.core.nodes">
+                                Nodes
+                            </a>
+                        </h4>
                         <!--<div class="small">% New Sessions</div>-->
                         <!--<div class="slight m-t-sm"><i class="fa fa-clock-o"> </i> Updated: <span class="c-white">10:22pm</span></div>-->
                     </div>
@@ -22,7 +27,11 @@
                         <h2 class="m-b-none">
                             {{vm.slices}}
                         </h2>
-                        <h4>Slices</h4>
+                        <h4>
+                            <a ui-sref="xos.core.slices">
+                                Slices
+                            </a>
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -33,7 +42,11 @@
                         <h2 class="m-b-none">
                             {{vm.instances}}
                         </h2>
-                        <h4>Instances</h4>
+                        <h4>
+                            <a ui-sref="xos.core.instances">
+                                Instances
+                            </a>
+                        </h4>
                     </div>
                 </div>
             </div>

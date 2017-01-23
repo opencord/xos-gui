@@ -3,9 +3,10 @@ import {IXosNavigationService, IXosNavigationRoute} from '../services/navigation
 import {IXosAuthService} from '../../datasources/rest/auth.rest';
 import {IXosStyleConfig} from '../../../index';
 import {IXosSidePanelService} from '../side-panel/side-panel.service';
+import {IXosComponentInjectorService} from '../services/helpers/component-injector.helpers';
 
 class NavCtrl {
-  static $inject = ['$scope', '$state', 'NavigationService', 'AuthService', 'StyleConfig', 'XosSidePanel'];
+  static $inject = ['$scope', '$state', 'NavigationService', 'AuthService', 'StyleConfig', 'XosSidePanel', 'XosComponentInjector'];
   public routes: IXosNavigationRoute[];
   public navSelected: string;
   public appName: string;
@@ -17,7 +18,8 @@ class NavCtrl {
     private navigationService: IXosNavigationService,
     private authService: IXosAuthService,
     private StyleConfig: IXosStyleConfig,
-    private XosSidePanel: IXosSidePanelService
+    private XosSidePanel: IXosSidePanelService,
+    private XosComponentInjector: IXosComponentInjectorService
   ) {
     // NOTE we'll need to have:
     // - Base routes (defined from configuration based on BRAND)
@@ -61,6 +63,9 @@ class NavCtrl {
   // NOTE remove me
   togglePanel() {
     this.XosSidePanel.injectComponent('xosAlert', {config: {type: 'danger'}, show: true}, 'Sample message');
+  }
+  addToDashboard() {
+    this.XosComponentInjector.injectComponent('#dashboard-component-container', 'xosAlert', {config: {type: 'danger'}, show: true}, 'Sample message', false);
   }
 
   logout() {
