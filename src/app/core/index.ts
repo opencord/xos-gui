@@ -18,6 +18,7 @@ import {xosValidation} from './validation/validation';
 import {ModelSetup} from './services/helpers/model-setup.helpers';
 import {xosSidePanel} from './side-panel/side-panel';
 import {XosSidePanel} from './side-panel/side-panel.service';
+import {XosComponentInjector} from './services/helpers/component-injector.helpers';
 
 export const xosCore = 'xosCore';
 
@@ -35,6 +36,7 @@ angular
   .service('ConfigHelpers', ConfigHelpers)
   .service('ModelSetup', ModelSetup)
   .service('XosSidePanel', XosSidePanel)
+  .service('XosComponentInjector', XosComponentInjector)
   .directive('xosLinkWrapper', xosLinkWrapper)
   .component('xosHeader', xosHeader)
   .component('xosFooter', xosFooter)

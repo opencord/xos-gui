@@ -32,7 +32,8 @@ describe('Nav component', () => {
       .service('NavigationService', NavigationService)
       .value('AuthService', AuthMock)
       .value('StyleConfig', {})
-      .value('XosSidePanel', {});
+      .value('XosSidePanel', {})
+      .value('XosComponentInjector', {});
     angular.mock.module('xosNav');
   });
 
