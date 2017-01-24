@@ -25,6 +25,7 @@ import {IXosPageTitleService} from './app/core/services/page-title';
 import {IXosAuthService} from './app/datasources/rest/auth.rest';
 import {IXosModelSetupService} from './app/core/services/helpers/model-setup.helpers';
 import {IXosNavigationRoute} from './app/core/services/navigation';
+import XosLogDecorator from './decorators';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -53,13 +54,15 @@ angular
     'ngResource',
     xosTemplate // template module
   ])
+  .config(XosLogDecorator)
   .config(routesConfig)
   .config(interceptorConfig)
   .factory('UserStatusInterceptor', userStatusInterceptor)
   .factory('CredentialsInterceptor', CredentialsInterceptor)
   .factory('NoHyperlinksInterceptor', NoHyperlinksInterceptor)
   .component('xos', main)
-  .run(function($rootScope: ng.IRootScopeService, $transitions: any, StyleConfig: IXosStyleConfig) {
+  .run(function($log: ng.ILogService, $rootScope: ng.IRootScopeService, $transitions: any, StyleConfig: IXosStyleConfig) {
+    $log.debug('test');
     $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
     $transitions.onSuccess({ to: '**' }, (transtion) => {
       if (transtion.$to().name === 'login') {
