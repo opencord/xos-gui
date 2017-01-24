@@ -53,8 +53,7 @@ export class ModelSetup {
             parent: 'xos.core'
           });
         });
-        console.log('xos.core.modelSetup');
-        this.$rootScope.$emit('xos.core.modelSetup', {done: true});
+
         d.resolve();
       })
       .catch(d.reject);

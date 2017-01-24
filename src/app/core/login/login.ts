@@ -4,11 +4,12 @@ import {IXosModelSetupService} from '../services/helpers/model-setup.helpers';
 import {IXosStyleConfig} from '../../../index';
 
 class LoginCtrl {
-  static $inject = ['AuthService', '$state', 'ModelSetup', 'StyleConfig'];
+  static $inject = ['$log', 'AuthService', '$state', 'ModelSetup', 'StyleConfig'];
   public loginStyle: any;
   public img: string;
   /** @ngInject */
   constructor(
+    private $log: ng.ILogService,
     private authService: AuthService,
     private $state: angular.ui.IStateService,
     private ModelSetup: IXosModelSetupService,
@@ -39,7 +40,7 @@ class LoginCtrl {
         this.$state.go('xos.dashboard');
       })
       .catch(e => {
-        console.error(e);
+        this.$log.error(e);
       });
   }
 
