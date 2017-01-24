@@ -1,6 +1,5 @@
 {
   "rules": {
-    "no-console": [true],
     "ban": [true,
       ["_", "extend"],
       ["_", "isNull"],
@@ -31,7 +30,9 @@
       "info",
       "time",
       "timeEnd",
-      "trace"
+      "trace",
+      "log",
+      "error"
     ],
     "no-construct": true,
     "no-constructor-vars": false,

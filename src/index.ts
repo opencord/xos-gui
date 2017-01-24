@@ -25,6 +25,7 @@ import {IXosPageTitleService} from './app/core/services/page-title';
 import {IXosAuthService} from './app/datasources/rest/auth.rest';
 import {IXosModelSetupService} from './app/core/services/helpers/model-setup.helpers';
 import {IXosNavigationRoute} from './app/core/services/navigation';
+import XosLogDecorator from './decorators';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -53,13 +54,14 @@ angular
     'ngResource',
     xosTemplate // template module
   ])
+  .config(XosLogDecorator)
   .config(routesConfig)
   .config(interceptorConfig)
   .factory('UserStatusInterceptor', userStatusInterceptor)
   .factory('CredentialsInterceptor', CredentialsInterceptor)
   .factory('NoHyperlinksInterceptor', NoHyperlinksInterceptor)
   .component('xos', main)
-  .run(function($rootScope: ng.IRootScopeService, $transitions: any, StyleConfig: IXosStyleConfig) {
+  .run(function($log: ng.ILogService, $rootScope: ng.IRootScopeService, $transitions: any, StyleConfig: IXosStyleConfig) {
     $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
     $transitions.onSuccess({ to: '**' }, (transtion) => {
       if (transtion.$to().name === 'login') {
@@ -71,6 +73,7 @@ angular
     });
   })
   .run((
+    $rootScope: ng.IRootScopeService,
     $transitions: any,
     $location: ng.ILocationService,
     $state: ng.ui.IStateService,
@@ -87,15 +90,29 @@ angular
       }
     });
 
+    // preserve debug=true query string parameter
+    $transitions.onStart({ to: '**' }, (transtion) => {
+      // save location.search so we can add it back after transition is done
+      this.locationSearch = $location.search();
+    });
+
+    $transitions.onSuccess({ to: '**' }, (transtion) => {
+      // restore all query string parameters back to $location.search
+      if (angular.isDefined(this.locationSearch.debug) && this.locationSearch.debug) {
+        $location.search({debug: 'true'});
+      }
+    });
+
     // save the last visited state before reload
-    const lastRoute = window.location.hash.replace('#', '');
+    const lastRoute = $location.path();
+    const lastQueryString = $location.search();
 
     // if the user is authenticated
     if (AuthService.getUser()) {
       ModelSetup.setup()
         .then(() => {
           // after setting up dynamic routes, redirect to previous state
-          $location.path(lastRoute);
+          $location.path(lastRoute).search(lastQueryString);
         });
     }
 

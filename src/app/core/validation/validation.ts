@@ -7,7 +7,6 @@ class ValidationCtrl {
   public config: any;
 
   $onInit() {
-    console.log('validation');
     this.config = {
       type: 'danger'
     };

@@ -48,10 +48,6 @@ class HeaderController {
       // tapToDismiss: false
     });
 
-    // this.$rootScope.$on('xos.core.modelSetup', () => {
-    //   this.states = _.uniqBy(this.states, 'state');
-    // });
-
     this.search = (query: string) => {
       return this.SearchService.search(query);
     };
@@ -61,7 +57,6 @@ class HeaderController {
       if (e.key === 'f') {
         $('.navbar-form input').focus();
       }
-      // console.log(this.SearchService.getStates());
     });
 
     // redirect to selected page

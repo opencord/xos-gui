@@ -11,9 +11,10 @@ export interface  IModelStoreService {
 }
 
 export class ModelStore {
-  static $inject = ['WebSocket', 'StoreHelpers', 'ModelRest'];
+  static $inject = ['$log', 'WebSocket', 'StoreHelpers', 'ModelRest'];
   private _collections: any; // NOTE contains a map of {model: BehaviourSubject}
   constructor(
+    private $log: ng.ILogService,
     private webSocket: IWSEventService,
     private storeHelpers: IStoreHelpersService,
     private ModelRest: IXosResourceService,
@@ -71,8 +72,9 @@ export class ModelStore {
       .then(
         res => {
           this._collections[model].next(res);
-        },
-        err => console.log(`Error retrieving ${model}`, err)
+        })
+      .catch(
+        err => this.$log.log(`Error retrieving ${model}`, err)
       );
   }
 }
