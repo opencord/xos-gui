@@ -105,7 +105,6 @@ describe('The ModelStore service', () => {
             }
           },
           err => {
-            console.log(err);
             done(err);
           }
         );
