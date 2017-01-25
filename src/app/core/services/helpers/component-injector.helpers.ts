@@ -50,7 +50,7 @@ export class XosComponentInjector implements IXosComponentInjectorService {
 
   private stringifyAttributes(attributes: any): string {
     return _.reduce(Object.keys(attributes), (string: string, a: string) => {
-      string += `${a}="${a}"`;
+      string += `${this.camelToSnakeCase(a)}="${a}"`;
       return string;
     }, '');
   }
