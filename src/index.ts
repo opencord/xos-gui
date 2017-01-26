@@ -113,6 +113,7 @@ angular
         .then(() => {
           // after setting up dynamic routes, redirect to previous state
           $location.path(lastRoute).search(lastQueryString);
+          $rootScope.$emit('xos.core.modelSetup');
         });
     }
 

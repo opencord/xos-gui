@@ -1,5 +1,6 @@
 .idea/
 .tmp/
+.gitreview
 docs/
 coverage/
 dist/
