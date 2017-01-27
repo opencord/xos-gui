@@ -10,7 +10,7 @@
           ng-repeat="route in vm.routes track by $index"
           ui-sref-active="active"
           ng-class="{'nav-container': route.children.length > 0}">
-        <a ng-if="route.state && !route.children" ui-sref="{{route.state}}" ng-click="vm.activateRoute(route)">
+        <a ng-if="route.state && !route.children" ui-sref="{{route.state}}({{route.params}})" ng-click="vm.activateRoute(route)">
           {{route.label}}
         </a>
         <a ng-if="route.state && route.children" ng-click="vm.activateRoute(route)">
@@ -18,7 +18,7 @@
         </a>
         <ul class="nav nav-second" uib-collapse="vm.isSelected(route.state, vm.navSelected)">
           <li ng-repeat="childRoute in route.children | orderBy:'label'" ui-sref-active="active">
-            <a ui-sref="{{childRoute.state}}"> {{childRoute.label}}</a>
+            <a ui-sref="{{childRoute.state}}({{childRoute.params}})"> {{childRoute.label}}</a>
           </li>
         </ul>
       </li>
