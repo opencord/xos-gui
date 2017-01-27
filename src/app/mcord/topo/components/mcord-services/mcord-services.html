@@ -1,5 +1,18 @@
-<div class="row">
-    <div class="col-xs-12">
-        <i class="pe pe-7s-lock text-accent"></i>
+<div class="row" ng-repeat="(k, v) in vm.services">
+    <div class="btn btn-warning" style="display: block; margin-bottom: 20px" ng-click="vm.isCollapsed[k] = !vm.isCollapsed[k]">
+        <h2>{{k}}</h2>
+    </div>
+    <div class="col-xs-4" ng-repeat="service in v" uib-collapse="vm.isCollapsed[k]">
+        <div class="panel panel-filled">
+            <div class="panel-heading">
+                <h3>
+                    <i class="pe {{service.icon}} text-accent"></i>
+                    {{service.name}}
+                </h3>
+            </div>
+            <div class="panel-body">
+                {{service.text}}
+            </div>
+        </div>
     </div>
 </div>

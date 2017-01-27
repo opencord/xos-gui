@@ -23,7 +23,7 @@ export interface IMcordLink {
 }
 
 export interface IMCordSlice {
-  nodes: IMCordNode[];
+  nodes: IMCordNode[] | IMCordRelatedNode[];
   links: IMcordLink[];
   extended?: {
     nodes: IMCordRelatedNode[];
@@ -170,6 +170,7 @@ export const MCordSlicesData: IMCordSlices = {
       {id: 52, name: 'BBU', type: 'ran-cu', 'model_id': 1, plane: 'data'},
       {id: 53, name: 'SGW', type: 'sgw', 'model_id': 1, plane: 'data'},
       {id: 54, name: 'PGW', type: 'pgw', 'model_id': 1, plane: 'data'},
+      // {id: 61, name: 'Connection less GW', type: 'mme', plane: 'data', relateTo: 52, relativePos: {x: controlPlaneNodeX, y: -controlPlaneNodeY * 2}},
     ],
     links: [
       {id: 60, source: 54, target: 1, plane: 'data'},
@@ -179,6 +180,8 @@ export const MCordSlicesData: IMCordSlices = {
       {id: 64, source: 510, target: 51, plane: 'data'},
       {id: 65, source: 511, target: 510, plane: 'data'},
       {id: 80, source: 512, target: 510, plane: 'data'},
+      // {id: 78, source: 52, target: 61, plane: 'data'},
+      // {id: 79, source: 61, target: 1, plane: 'data'},
     ],
     extended: {
       nodes: [

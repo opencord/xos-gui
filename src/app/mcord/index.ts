@@ -31,6 +31,10 @@ angular
         url: '/topology',
         template: '<mcord-topo></mcord-topo>'
       })
+      .state('xos.mcord.topodetail', {
+        url: '/topology/:sliceId?',
+        template: '<mcord-topo></mcord-topo>'
+      })
       .state('xos.mcord.ps', {
         url: '/public-safety',
         template: '<mcord-public-safety></mcord-public-safety>'
