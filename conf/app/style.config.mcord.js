@@ -32,8 +32,26 @@ angular.module('app')
         state: 'xos.mcord'
       },
       {
-        label: 'Topology',
+        label: 'Global Topology',
         state: 'xos.mcord.topo',
+        parent: 'xos.mcord'
+      },
+      {
+        label: 'Public Safety',
+        state: 'xos.mcord.topo',
+        params: {sliceId: 1},
+        parent: 'xos.mcord'
+      },
+      {
+        label: 'RAN Slicing',
+        state: 'xos.mcord.topo',
+        params: {sliceId: '2,3'},
+        parent: 'xos.mcord'
+      },
+      {
+        label: 'Connectionless GW',
+        state: 'xos.mcord.topo',
+        params: {sliceId: 4},
         parent: 'xos.mcord'
       },
     ]

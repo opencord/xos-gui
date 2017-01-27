@@ -6,8 +6,8 @@ import {IXosAppConfig} from '../../../../index';
 
 export interface IMCordTopoHelpersService {
   getLongestSlice(slices: IMCordSlices): number;
-  getPositionedNodes(slices: IMCordSlices, svgDimension: {width: number, heigth: number}, expandedSlice: string): IMCordD3Node[];
-  getLinks(slices: IMCordSlices, expandedSlice: string): IMcordD3Link[];
+  getPositionedNodes(slices: IMCordSlices, svgDimension: {width: number, heigth: number}, expandedSlice: string[]): IMCordD3Node[];
+  getLinks(slices: IMCordSlices, expandedSlice: string[]): IMcordD3Link[];
   updateLink(start: IMCordD3Node, end: IMCordD3Node, links: IMcordD3Link[]): void;
 }
 
@@ -90,11 +90,14 @@ export class MCordTopoHelpers implements IMCordTopoHelpersService {
     });
   }
 
-  public getPositionedNodes(slices: IMCordSlices, svgDimension: {width: number, heigth: number}, expandedSlice: string): IMCordD3Node[] {
+  public getPositionedNodes(slices: IMCordSlices, svgDimension: {width: number, heigth: number}, expandedSlice: string[]): IMCordD3Node[] {
     let nodes: IMCordD3Node[] = [];
     Object.keys(slices).forEach((s, j) => {
       const vPos = this.getSliceVPos(j + 1, Object.keys(slices).length, svgDimension.heigth);
-      _.forEach(slices[s].nodes, (n: IMCordD3Node, i) => {
+
+      // position base nodes
+      const baseNodes = _.filter(slices[s].nodes, n => !angular.isDefined(n.relateTo));
+      _.forEach(baseNodes, (n: IMCordD3Node, i) => {
         n.y = vPos;
         n.x = this.getNodeHPos(n, svgDimension.width);
         // n.x = this.getNodeHPos(i, slices[s].nodes.length, svgDimension.width);
@@ -104,6 +107,11 @@ export class MCordTopoHelpers implements IMCordTopoHelpersService {
         nodes.push(n);
       });
 
+      // postion related nodes
+      const relatedNodes = _.filter(slices[s].nodes, n => angular.isDefined(n.relateTo));
+      nodes = nodes.concat(this.getRelatedNodePosition(relatedNodes, slices));
+
+      // if is expanded, add expansion
       if (
         angular.isDefined(expandedSlice) &&
         angular.isDefined(slices[s].extended) &&

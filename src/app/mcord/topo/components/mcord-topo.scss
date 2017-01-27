@@ -4,9 +4,22 @@ mcord-topo{
   height: 100%;
   width: 100%;
   display: block;
+  position: relative;
+
+  .row.title {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    width: 100%;
+    z-index: 200;
+  }
+
   > svg {
     height: 100%;
     width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   /* Nodes */

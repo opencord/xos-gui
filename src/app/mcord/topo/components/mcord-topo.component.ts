@@ -23,8 +23,9 @@ export interface IMcordD3Link {
 }
 
 class MCordTopoCtrl {
-  static $inject = ['$log', '$element', 'MCordSlices', 'MCordTopoHelpers', 'MCordTopoForm'];
+  static $inject = ['$log', '$element', '$stateParams', '$location', 'MCordSlices', 'MCordTopoHelpers', 'MCordTopoForm'];
 
+  public expandedSlice: string[];
   private duration: number = 500;
   private svg;
   private nodes: IMCordD3Node[];
@@ -32,7 +33,6 @@ class MCordTopoCtrl {
   private nodeGroup;
   private linkGroup;
   private dragLine;
-  private expandedSlice: string;
   private dragStartNode;
   private dragEndNode;
   // private selectedLink;
@@ -41,6 +41,8 @@ class MCordTopoCtrl {
   constructor(
     private $log: ng.ILogService,
     private $element: ng.IRootElementService,
+    private $stateParams: ng.ui.IStateParamsService,
+    private $location: ng.ILocationService,
     private MCordSlices: IMcordSlicesService,
     private MCordTopoHelpers: IMCordTopoHelpersService,
     private MCordTopoForm: IMCordTopoFormService
@@ -48,17 +50,30 @@ class MCordTopoCtrl {
   }
 
   $onInit() {
-    this.$log.debug('MCord Topo Start');
+    this.$log.info('[MCordTopo] Start');
 
     // draw slices
     this.handleSvg(this.$element[0]);
-    this.showAllSlices();
+    if (!angular.isDefined(this.$stateParams['sliceId'])) {
+      this.showAllSlices();
+    }
+    else {
+      this.$log.debug('[MCordTopo] Displaying slice:', this.$stateParams['sliceId']);
+      this.expandedSlice = this.$stateParams['sliceId'].split(',');
+      this.viewSliceDetails(this.expandedSlice);
+    }
 
     const efficientResize = this.debounce(this.resize, 250);
 
     $(window).on('resize', () => {
       efficientResize();
     });
+  }
+
+  public returnToGlobal() {
+    delete this.expandedSlice;
+    this.$location.search({});
+    this.showAllSlices();
   }
 
   private renderSlices(slices) {
@@ -68,12 +83,14 @@ class MCordTopoCtrl {
     this.draw(this.nodes, this.links);
   }
 
-  private viewSliceDetails(sliceId: number) {
+  private viewSliceDetails(sliceIds: string[]) {
     this.MCordSlices.query()
       .then((slices: IMCordSlices) => {
         // keep only the given slice
         const currentSlice = {};
-        currentSlice[sliceId] = slices[sliceId];
+        sliceIds.forEach(id => {
+          currentSlice[id] = slices[id];
+        });
         // redraw charts
         this.renderSlices(currentSlice);
       });
@@ -131,6 +148,10 @@ class MCordTopoCtrl {
         this.MCordTopoHelpers.updateLink(this.dragStartNode, this.dragEndNode, this.links);
         this.resetDragInfo();
         // redraw
+        if (this.expandedSlice) {
+          this.viewSliceDetails(this.expandedSlice);
+          return;
+        }
         this.showAllSlices();
       });
   };
@@ -225,13 +246,9 @@ class MCordTopoCtrl {
     nodes.on('click', (n) => {
       // show slice details
       if (!angular.isDefined(this.expandedSlice) && angular.isDefined(n.sliceId)) {
-        this.expandedSlice = n.sliceId;
-        this.viewSliceDetails(n.sliceId);
-      }
-      // hide slice details
-      else {
-        delete this.expandedSlice;
-        this.showAllSlices();
+        this.expandedSlice = [n.sliceId];
+        this.viewSliceDetails([n.sliceId]);
+        this.$location.search({sliceId: n.sliceId});
       }
     });
 
@@ -414,9 +431,10 @@ class MCordTopoCtrl {
   };
 
   private resize() {
+    this.$log.info('[MCordTopo] Resize');
     this.handleSvg(this.$element[0]);
     if (this.expandedSlice) {
-      this.viewSliceDetails(parseInt(this.expandedSlice, 10));
+      this.viewSliceDetails(this.expandedSlice);
       return;
     }
     this.showAllSlices();

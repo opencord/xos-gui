@@ -28,7 +28,7 @@ angular
         template: '<slicing-topo></slicing-topo>'
       })
       .state('xos.mcord.topo', {
-        url: '/topology',
+        url: '/topology?sliceId',
         template: '<mcord-topo></mcord-topo>'
       })
       .state('xos.mcord.ps', {

@@ -53,7 +53,8 @@ angular
     'ui.router',
     'ngResource',
     xosTemplate, // template module
-    'mcord' // use dynamic modules instead
+    'mcord', // use dynamic modules instead
+    'ui.bootstrap'
   ])
   .config(XosLogDecorator)
   .config(routesConfig)
