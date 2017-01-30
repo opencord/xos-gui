@@ -15,6 +15,9 @@ export class SynchronizerStore {
   ) {
     this.webSocket.list()
       .filter((e: IWSEvent) => {
+        if (!e.msg || !e.msg.changed_fields) {
+          return false;
+        }
         return e.msg.changed_fields.indexOf('backend_status') > -1;
       })
       .subscribe(

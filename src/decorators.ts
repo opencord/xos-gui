@@ -31,7 +31,7 @@ export default function XosLogDecorator($provide: ng.auto.IProvideService) {
     $delegate.info = replacement(infoFn);
     $delegate.log = replacement(logFn);
     $delegate.warn = replacement(warnFn);
-    $delegate.error = replacement(errorFn); // note this will prevent errors to be printed
+    // $delegate.error = replacement(errorFn); // note this will prevent errors to be printed
     $delegate.debug = replacement(debugFn);
 
     return $delegate;

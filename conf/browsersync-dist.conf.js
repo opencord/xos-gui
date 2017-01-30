@@ -5,7 +5,10 @@ module.exports = function () {
     server: {
       baseDir: [
         conf.paths.dist
-      ]
+      ],
+      routes: {
+        "/spa": "./dist"
+      }
     },
     open: false
   };
