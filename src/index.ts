@@ -26,6 +26,7 @@ import {IXosAuthService} from './app/datasources/rest/auth.rest';
 import {IXosModelSetupService} from './app/core/services/helpers/model-setup.helpers';
 import {IXosNavigationRoute} from './app/core/services/navigation';
 import XosLogDecorator from './decorators';
+import {xosExtender} from './app/extender/index';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -50,6 +51,7 @@ angular
     xosCore,
     xosDataSources,
     xosViews,
+    xosExtender,
     'ui.router',
     'ngResource',
     xosTemplate // template module

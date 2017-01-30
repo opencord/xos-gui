@@ -7,7 +7,7 @@ export default function XosLogDecorator($provide: ng.auto.IProvideService) {
     let logFn = $delegate.log;
     let infoFn = $delegate.info;
     let warnFn = $delegate.warn;
-    let errorFn = $delegate.error;
+    // let errorFn = $delegate.error;
     let debugFn = $delegate.debug;
 
     // create the replacement function
@@ -31,7 +31,7 @@ export default function XosLogDecorator($provide: ng.auto.IProvideService) {
     $delegate.info = replacement(infoFn);
     $delegate.log = replacement(logFn);
     $delegate.warn = replacement(warnFn);
-    $delegate.error = replacement(errorFn); // note this will prevent errors to be printed
+    // $delegate.error = replacement(errorFn); // note this will prevent errors to be printed
     $delegate.debug = replacement(debugFn);
 
     return $delegate;
