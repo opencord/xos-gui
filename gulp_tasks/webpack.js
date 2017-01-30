@@ -20,6 +20,11 @@ gulp.task('webpack:dist', done => {
   webpackWrapper(false, webpackDistConf, done);
 });
 
+gulp.task('webpack:dist:watch', done => {
+  process.env.NODE_ENV = 'production';
+  webpackWrapper(true, webpackDistConf, done);
+});
+
 function webpackWrapper(watch, conf, done) {
   const webpackBundler = webpack(conf);
 

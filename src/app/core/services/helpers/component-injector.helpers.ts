@@ -46,6 +46,9 @@ export class XosComponentInjector implements IXosComponentInjectorService {
     });
   }
 
+  // FIXME
+  // component are correctly injected but not persisted,
+  // if I change route they go away
   public injectComponent(target: string | JQuery, componentName: string, attributes?: any, transclude?: string, clean?: boolean) {
     let targetEl;
     if (angular.isString(target)) {
