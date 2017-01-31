@@ -2,22 +2,58 @@ import * as $ from 'jquery';
 import * as _ from 'lodash';
 
 export interface IXosComponentInjectorService {
+  injectedComponents: IXosInjectedComponent[];
   injectComponent(target: string | JQuery, componentName: string, attributes?: any, transclude?: string, clean?: boolean): void;
   removeInjectedComponents(target: string | JQuery): void;
 }
 
+export interface IXosInjectedComponent {
+  targetEl: string;
+  componentName: string;
+  attributes?: any;
+  transclude?: string;
+  clean?: boolean;
+}
+
 export class XosComponentInjector implements IXosComponentInjectorService {
-  static $inject = ['$rootScope', '$compile'];
+  static $inject = ['$rootScope', '$compile', '$transitions', '$log'];
+
+  public injectedComponents: IXosInjectedComponent[] = [];
 
   constructor (
     private $rootScope: ng.IRootScopeService,
-    private $compile: ng.ICompileService
+    private $compile: ng.ICompileService,
+    private $transitions: any,
+    private $log: ng.ILogService
   ) {
+    $transitions.onFinish({ to: '**' }, (transtion) => {
+      // wait for route transition to complete
+      transtion.promise.then(t => {
+        _.forEach(this.injectedComponents, (component: IXosInjectedComponent) => {
+          const container = $(component.targetEl);
+          // if we have the container, re-attach the component
+          if (container.length > 0) {
+            this.injectComponent(
+              container,
+              component.componentName,
+              component.attributes,
+              component.transclude,
+              component.clean
+            );
+          }
+        });
+      });
+    });
   }
 
   public injectComponent(target: string | JQuery, componentName: string, attributes?: any, transclude?: string, clean?: boolean) {
     let targetEl;
     if (angular.isString(target)) {
+
+      if (target.indexOf('#') === -1) {
+        this.$log.warn(`[XosComponentInjector] Target element should be identified by an ID, you passed: ${target}`);
+      }
+
       targetEl = $(target);
     }
     else {
@@ -41,11 +77,37 @@ export class XosComponentInjector implements IXosComponentInjectorService {
     const element = this.$compile(componentTag)(scope);
 
     targetEl.append(element);
+
+    // store a reference for the element
+    this.storeInjectedComponent({
+      targetEl: angular.isString(target) ? target : '#' + targetEl.attr('id'),
+      componentName: componentName,
+      attributes: attributes,
+      transclude: transclude,
+      clean: clean,
+    });
   }
 
   public removeInjectedComponents(target: string | JQuery) {
     const targetEl = $(target);
     targetEl.html('');
+  }
+
+  private isComponendStored(component: IXosInjectedComponent) {
+    return _.find(this.injectedComponents, (c: IXosInjectedComponent) => {
+      return c.targetEl === component.targetEl
+        && c.componentName === component.componentName
+        && _.isEqual(c.attributes, component.attributes)
+        && c.transclude === component.transclude
+        && c.clean === component.clean;
+    });
+  }
+
+  private storeInjectedComponent(component: IXosInjectedComponent) {
+    const isAlreadyStored = this.isComponendStored(component);
+    if (!isAlreadyStored) {
+      this.injectedComponents.push(component);
+    }
   }
 
   private stringifyAttributes(attributes: any): string {
