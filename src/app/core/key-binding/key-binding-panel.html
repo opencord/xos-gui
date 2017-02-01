@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Active Key Bindings</h3>
+    </div>
+</div>
+<div class="row" ng-repeat="(k, v) in vm.bindings">
+    <div class="col-xs-12" ng-if="v.length > 0">
+        <h5>{{k | capitalize}}</h5>
+    </div>
+    <div class="col-xs-12" ng-repeat="binding in v" ng-if="binding.description">
+        <div class="row">
+            <div class="col-xs-5">
+                <code class="text-center">
+                    <span ng-repeat="m in binding.modifiers">
+                        {{m}} +
+                    </span>
+                    {{binding.key}}
+                </code>
+            </div>
+            <div class="col-xs-7">
+                <p>{{binding.description}}</p>
+            </div>
+        </div>
+    </div>
+</div>

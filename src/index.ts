@@ -27,6 +27,7 @@ import {IXosModelSetupService} from './app/core/services/helpers/model-setup.hel
 import {IXosNavigationRoute} from './app/core/services/navigation';
 import XosLogDecorator from './decorators';
 import {xosExtender} from './app/extender/index';
+import {IXosKeyboardShortcutService} from './app/core/services/keyboard-shortcut';
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -81,6 +82,7 @@ angular
     $state: ng.ui.IStateService,
     ModelSetup: IXosModelSetupService,
     AuthService: IXosAuthService,
+    XosKeyboardShortcut: IXosKeyboardShortcutService,
     toastr: ng.toastr.IToastrService,
     PageTitle: IXosPageTitleService
   ) => {
@@ -118,6 +120,9 @@ angular
           $rootScope.$emit('xos.core.modelSetup');
         });
     }
+
+    // register keyboard shortcut
+    XosKeyboardShortcut.setup();
 
   });
 

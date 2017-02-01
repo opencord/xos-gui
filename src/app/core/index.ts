@@ -19,6 +19,8 @@ import {ModelSetup} from './services/helpers/model-setup.helpers';
 import {xosSidePanel} from './side-panel/side-panel';
 import {XosSidePanel} from './side-panel/side-panel.service';
 import {XosComponentInjector} from './services/helpers/component-injector.helpers';
+import {XosKeyboardShortcut} from './services/keyboard-shortcut';
+import {xosKeyBindingPanel} from './key-binding/key-binding-panel';
 
 export const xosCore = 'xosCore';
 
@@ -36,6 +38,7 @@ angular
   .service('ConfigHelpers', ConfigHelpers)
   .service('ModelSetup', ModelSetup)
   .service('XosSidePanel', XosSidePanel)
+  .service('XosKeyboardShortcut', XosKeyboardShortcut)
   .service('XosComponentInjector', XosComponentInjector)
   .directive('xosLinkWrapper', xosLinkWrapper)
   .component('xosHeader', xosHeader)
@@ -47,4 +50,5 @@ angular
   .component('xosField', xosField)
   .component('xosAlert', xosAlert)
   .component('xosValidation', xosValidation)
-  .component('xosSidePanel', xosSidePanel);
+  .component('xosSidePanel', xosSidePanel)
+  .component('xosKeyBindingPanel', xosKeyBindingPanel);
