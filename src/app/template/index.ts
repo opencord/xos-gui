@@ -11,6 +11,7 @@ import 'angular-toastr/dist/angular-toastr.min.css';
 import '../style/style.scss';
 import '../style/stroke-icons/style.css';
 import '../style/pe-icons/pe-icon-7-stroke.css';
+import {capitalize} from './filters/capitalize';
 
 
 (function () {
@@ -28,6 +29,7 @@ import '../style/pe-icons/pe-icon-7-stroke.css';
   ])
     .directive('minimalizaMenu', minimalizaMenu)
     // .directive('sparkline', sparkline)
-    .directive('panelTools', panelTools);
+    .directive('panelTools', panelTools)
+    .filter('capitalize', capitalize);
 })();
 

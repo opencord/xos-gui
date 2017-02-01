@@ -7,13 +7,14 @@ import {IStateService} from 'angular-ui-router';
 import * as $ from 'jquery';
 import {IXosStyleConfig} from '../../../index';
 import {IXosSearchService, IXosSearchResult} from '../../datasources/helpers/search.service';
+import {IXosKeyboardShortcutService} from '../services/keyboard-shortcut';
 
 export interface INotification extends IWSEvent {
   viewed?: boolean;
 }
 
 class HeaderController {
-  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService', 'StyleConfig', 'SearchService'];
+  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService', 'StyleConfig', 'SearchService', 'XosKeyboardShortcut'];
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
   public version: string;
@@ -33,7 +34,8 @@ class HeaderController {
     private toastrConfig: ng.toastr.IToastrConfig,
     private NavigationService: IXosNavigationService,
     private StyleConfig: IXosStyleConfig,
-    private SearchService: IXosSearchService
+    private SearchService: IXosSearchService,
+    private XosKeyboardShortcut: IXosKeyboardShortcutService
   ) {
     this.version = require('../../../../package.json').version;
     angular.extend(this.toastrConfig, {
@@ -53,11 +55,13 @@ class HeaderController {
     };
 
     // listen for keypress
-    $(document).on('keyup', (e) => {
-      if (e.key === 'f') {
+    this.XosKeyboardShortcut.registerKeyBinding({
+      key: 'f',
+      description: 'Select search box',
+      cb: () => {
         $('.navbar-form input').focus();
-      }
-    });
+      },
+    }, 'global');
 
     // redirect to selected page
     this.routeSelected = (item: IXosSearchResult) => {

@@ -42,6 +42,10 @@ const infoNotification = {
   }
 };
 
+const MockXosKeyboardShortcut = {
+  registerKeyBinding: jasmine.createSpy('registerKeyBinding')
+};
+
 describe('header component', () => {
   beforeEach(() => {
     angular
@@ -52,6 +56,7 @@ describe('header component', () => {
       .value('toastrConfig', MockToastrConfig)
       .value('AuthService', MockAuth)
       .value('NavigationService', {})
+      .value('XosKeyboardShortcut', MockXosKeyboardShortcut)
       .value('StyleConfig', {
         logo: 'cord-logo.png',
       })
@@ -75,6 +80,17 @@ describe('header component', () => {
     const header = $('a.navbar-brand img', element).attr('src');
     // webpack convert img to base64, how to test?
     expect(header.trim()).not.toBeNull();
+  });
+
+  it('should register a keyboard shortcut', () => {
+    expect(MockXosKeyboardShortcut.registerKeyBinding).toHaveBeenCalled();
+    // expect(MockXosKeyboardShortcut.registerKeyBinding).toHaveBeenCalledWith({
+    //   key: 'f',
+    //   description: 'Select search box',
+    //   cb: () => {
+    //     $('.navbar-form input').focus();
+    //   },
+    // }, 'global');
   });
 
   it('should print user email', () => {

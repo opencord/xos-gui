@@ -16,7 +16,7 @@ export interface IXosInjectedComponent {
 }
 
 export class XosComponentInjector implements IXosComponentInjectorService {
-  static $inject = ['$rootScope', '$compile', '$transitions', '$log'];
+  static $inject = ['$rootScope', '$compile', '$transitions', '$log', '$timeout'];
 
   public injectedComponents: IXosInjectedComponent[] = [];
 
@@ -24,7 +24,8 @@ export class XosComponentInjector implements IXosComponentInjectorService {
     private $rootScope: ng.IRootScopeService,
     private $compile: ng.ICompileService,
     private $transitions: any,
-    private $log: ng.ILogService
+    private $log: ng.ILogService,
+    private $timeout: ng.ITimeoutService
   ) {
     $transitions.onFinish({ to: '**' }, (transtion) => {
       // wait for route transition to complete
@@ -78,6 +79,10 @@ export class XosComponentInjector implements IXosComponentInjectorService {
 
     const componentTag = `<${componentTagName} ${attr}>${transclude || ''}</${componentTagName}>`;
     const element = this.$compile(componentTag)(scope);
+
+    this.$timeout(function() {
+      scope.$apply();
+    });
 
     targetEl.append(element);
 

@@ -5,18 +5,25 @@
 /* tslint:disable */
 
 import * as $ from 'jquery';
+import {IXosKeyboardShortcutService} from '../../core/services/keyboard-shortcut';
 
 /**
  * minimalizaSidebar - Directive for minimalize sidebar
  */
-export function minimalizaMenu($rootScope) {
+export function minimalizaMenu($rootScope, XosKeyboardShortcut: IXosKeyboardShortcutService) {
   return {
     restrict: 'EA',
     template: '<div class="left-nav-toggle"><a href ng-click="minimalize()"><i class="stroke-hamburgermenu"></i> </a>',
     controller: function ($scope, $element) {
       $scope.minimalize = function () {
         $("body").toggleClass("nav-toggle");
-      }
+      };
+
+      XosKeyboardShortcut.registerKeyBinding({
+        key: 'n',
+        description: 'Toggle Navigation',
+        cb: $scope.minimalize,
+      }, 'global');
     }
   };
 }
