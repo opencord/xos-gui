@@ -22,7 +22,7 @@
     "babel-eslint": "^6.0.2",
     "babel-loader": "^6.2.0",
     "babel-plugin-istanbul": "^2.0.1",
-    "base-href-webpack-plugin": "^1.0.0",
+    "base-href-webpack-plugin": "1.0.0",
     "browser-sync": "^2.9.11",
     "browser-sync-spa": "^1.0.3",
     "copy-webpack-plugin": "^4.0.1",
