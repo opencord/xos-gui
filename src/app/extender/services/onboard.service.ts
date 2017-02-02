@@ -1,4 +1,4 @@
-import {IWSEventService} from '../../datasources/websocket/global';
+import {IWSEventService, IWSEvent} from '../../datasources/websocket/global';
 
 export interface IXosOnboarder {
 
@@ -16,17 +16,25 @@ export class XosOnboarder implements IXosOnboarder {
   ) {
     this.$log.info('[XosOnboarder] Setup');
     this.webSocket.list()
-      .filter((e) => {
-        this.$log.log(e);
-        // TODO define event format
-        return e.msg['files'].length > 0;
+      .filter((e: IWSEvent) => {
+        this.$log.log(e.model, e.msg.changed_fields, e.msg.object);
+
+        if (e.model === 'XOSComponent' && e.msg.object.extra) {
+          e.msg.object.extra = JSON.parse(e.msg.object.extra);
+          return true;
+        }
+        return false;
       })
       .subscribe(
         (event) => {
-          this.loadFile(event.msg['files'])
-            .then((res) => {
-              this.$log.info(`[XosOnboarder] All files loaded for app: ${event.msg['app']}`);
-            });
+          this.$timeout(() => {
+            // NOTE we need the timeout because the event is triggered when the model is created,
+            // XOS take around 15s to boot it
+            this.loadFile(event.msg.object.extra)
+              .then((res) => {
+                this.$log.info(`[XosOnboarder] All files loaded for app: ${event.msg.object.name}`);
+              });
+          }, 20 * 1000);
         }
       );
   }
