@@ -21,7 +21,7 @@ export default function XosLogDecorator($provide: ng.auto.IProvideService) {
         let now     = new Date();
 
         // Prepend timestamp
-        args[0] = `[${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}] ${args[0]}`;
+        args.unshift(`[${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}]`);
 
         // Call the original with the output prepended with formatted timestamp
         fn.apply(null, args);

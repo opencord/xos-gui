@@ -1,4 +1,4 @@
-import {IModelStoreService} from '../../datasources/stores/model.store';
+import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {IXosAuthService} from '../../datasources/rest/auth.rest';
 class DashboardController {
   static $inject = ['$scope', '$state', 'ModelStore', 'AuthService'];
@@ -10,7 +10,7 @@ class DashboardController {
   constructor(
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
-    private store: IModelStoreService,
+    private store: IXosModelStoreService,
     private auth: IXosAuthService
   ) {
 
