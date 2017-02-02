@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 import 'angular-mocks';
 import 'angular-resource';
-import {IModelStoreService, ModelStore} from './model.store';
+import {IXosModelStoreService, ModelStore} from './model.store';
 import {Subject} from 'rxjs';
 import {IWSEvent} from '../websocket/global';
 import {StoreHelpers} from '../helpers/store.helpers';
@@ -9,7 +9,7 @@ import {ModelRest} from '../rest/model.rest';
 import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
 import {AuthService} from '../rest/auth.rest';
 
-let service: IModelStoreService;
+let service: IXosModelStoreService;
 let httpBackend: ng.IHttpBackendService;
 let $scope;
 let WebSocket;
@@ -55,7 +55,7 @@ describe('The ModelStore service', () => {
   });
 
   beforeEach(angular.mock.inject((
-    ModelStore: IModelStoreService,
+    ModelStore: IXosModelStoreService,
     $httpBackend: ng.IHttpBackendService,
     _$rootScope_: ng.IRootScopeService,
     _WebSocket_: any
