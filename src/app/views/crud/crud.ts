@@ -1,5 +1,5 @@
 import {IXosTableCfg} from '../../core/table/table';
-import {IModelStoreService} from '../../datasources/stores/model.store';
+import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 import * as _ from 'lodash';
 import {IXosFormConfig} from '../../core/form/form';
@@ -30,7 +30,7 @@ class CrudController {
     private $scope: angular.IScope,
     private $state: angular.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
-    private store: IModelStoreService,
+    private store: IXosModelStoreService,
     private ConfigHelpers: IXosConfigHelpersService,
     private ModelRest: IXosResourceService,
     private StoreHelpers: IStoreHelpersService

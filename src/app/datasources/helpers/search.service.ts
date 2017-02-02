@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {IXosNavigationService} from '../../core/services/navigation';
 import {IXosState} from '../../../index';
-import {IModelStoreService} from '../stores/model.store';
+import {IXosModelStoreService} from '../stores/model.store';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 
 export interface IXosSearchResult {
@@ -21,7 +21,7 @@ export class SearchService {
   constructor (
     private $rootScope: ng.IScope,
     private NavigationService: IXosNavigationService,
-    private ModelStore: IModelStoreService,
+    private ModelStore: IXosModelStoreService,
     private ConfigHelpers: IXosConfigHelpersService
   ) {
     this.$rootScope.$on('xos.core.modelSetup', () => {

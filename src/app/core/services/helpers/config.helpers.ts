@@ -4,7 +4,7 @@ import {IXosTableColumn, IXosTableCfg} from '../../table/table';
 import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosFormConfig, IXosFormInput} from '../../form/form';
 import {IXosAuthService} from '../../../datasources/rest/auth.rest';
-import {IModelStoreService} from '../../../datasources/stores/model.store';
+import {IXosModelStoreService} from '../../../datasources/stores/model.store';
 import {IXosState} from '../../../../index';
 
 export interface IXosModelDefsField {
@@ -59,7 +59,7 @@ export class ConfigHelpers {
     private $state: ng.ui.IStateService,
     private toastr: ng.toastr.IToastrService,
     private AuthService: IXosAuthService,
-    private ModelStore: IModelStoreService
+    private ModelStore: IXosModelStoreService
   ) {
     pluralize.addIrregularRule('xos', 'xoses');
     pluralize.addPluralRule(/slice$/i, 'slices');

@@ -5,12 +5,12 @@ import {IWSEvent, IWSEventService} from '../websocket/global';
 import {IXosResourceService} from '../rest/model.rest';
 import {IStoreHelpersService} from '../helpers/store.helpers';
 
-export interface  IModelStoreService {
+export interface  IXosModelStoreService {
   query(model: string): Observable<any>;
   search(modelName: string): any[];
 }
 
-export class ModelStore {
+export class ModelStore implements IXosModelStoreService {
   static $inject = ['$log', 'WebSocket', 'StoreHelpers', 'ModelRest'];
   private _collections: any; // NOTE contains a map of {model: BehaviourSubject}
   constructor(
@@ -22,7 +22,7 @@ export class ModelStore {
     this._collections = {};
   }
 
-  public query(model: string) {
+  public query(model: string): Observable<any> {
     // if there isn't already an observable for that item
     if (!this._collections[model]) {
       this._collections[model] = new BehaviorSubject([]); // NOTE maybe this can be created when we get response from the resource

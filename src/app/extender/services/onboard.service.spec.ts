@@ -5,7 +5,7 @@ import {Subject} from 'rxjs';
 import {XosOnboarder, IXosOnboarder} from './onboard.service';
 import {IWSEventService} from '../../datasources/websocket/global';
 
-let service, $ocLazyLoad;
+let service, $ocLazyLoad, $timeout;
 
 const subject = new Subject();
 
@@ -32,6 +32,16 @@ const MockLoad = {
   }
 };
 
+const MockModelStore = {
+  query: () => {
+    return {
+      subscribe: () => {
+        return;
+      }
+    };
+  }
+};
+
 describe('The XosOnboarder service', () => {
 
   beforeEach(() => {
@@ -40,6 +50,7 @@ describe('The XosOnboarder service', () => {
       .module('XosOnboarder', [])
       .value('WebSocket', MockWs)
       .value('$ocLazyLoad', MockLoad)
+      .value('ModelStore', MockModelStore)
       .service('XosOnboarder', XosOnboarder);
 
     angular.mock.module('XosOnboarder');
@@ -47,21 +58,28 @@ describe('The XosOnboarder service', () => {
 
   beforeEach(angular.mock.inject((
     XosOnboarder: IXosOnboarder,
-    _$ocLazyLoad_: any
+    _$ocLazyLoad_: any,
+    _$timeout_: ng.ITimeoutService
   ) => {
     $ocLazyLoad = _$ocLazyLoad_;
     spyOn($ocLazyLoad, 'load').and.callThrough();
     service = XosOnboarder;
+    $timeout = _$timeout_;
   }));
 
   describe('when receive an event', () => {
     it('should use $ocLazyLoad to add modules to the app', () => {
       subject.next({
+        model: 'XOSComponent',
         msg: {
           app: 'sample',
-          files: ['vendor.js', 'app.js']
+          object: {
+            extra: '["vendor.js", "app.js"]',
+            name: 'sample app'
+          }
         }
       });
+      $timeout.flush();
       expect($ocLazyLoad.load).toHaveBeenCalledWith('vendor.js');
       expect($ocLazyLoad.load).toHaveBeenCalledWith('app.js');
     });
