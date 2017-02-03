@@ -33,7 +33,7 @@ export interface IXosConfigHelpersService {
   stateWithParamsForJs(name: string, model: any): any;
 }
 
-export class ConfigHelpers {
+export class ConfigHelpers implements IXosConfigHelpersService{
   static $inject = ['$state', 'toastr', 'AuthService', 'ModelStore'];
 
   excluded_fields = [
@@ -96,6 +96,9 @@ export class ConfigHelpers {
       columns: this.modelFieldsToColumnsCfg(model.fields, model.name),
       filter: 'fulltext',
       order: {field: 'id', reverse: false},
+      pagination: {
+        pageSize: 10
+      },
       actions: [
         {
           label: 'delete',

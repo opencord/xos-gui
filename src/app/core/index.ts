@@ -21,6 +21,7 @@ import {XosSidePanel} from './side-panel/side-panel.service';
 import {XosComponentInjector} from './services/helpers/component-injector.helpers';
 import {XosKeyboardShortcut} from './services/keyboard-shortcut';
 import {xosKeyBindingPanel} from './key-binding/key-binding-panel';
+import {xosPagination} from './pagination/pagination';
 
 export const xosCore = 'xosCore';
 
@@ -45,10 +46,21 @@ angular
   .component('xosFooter', xosFooter)
   .component('xosNav', xosNav)
   .component('xosLogin', xosLogin)
+  .component('xosPagination', xosPagination)
   .component('xosTable', xosTable)
   .component('xosForm', xosForm)
   .component('xosField', xosField)
   .component('xosAlert', xosAlert)
   .component('xosValidation', xosValidation)
   .component('xosSidePanel', xosSidePanel)
-  .component('xosKeyBindingPanel', xosKeyBindingPanel);
+  .component('xosKeyBindingPanel', xosKeyBindingPanel)
+  // TODO move and test me
+  .filter('pagination', function(){
+    return function(input: any[], start: any) {
+      if (!input || !angular.isArray(input)) {
+        return input;
+      }
+      start = parseInt(start, 10);
+      return input.slice(start);
+    };
+  });;
