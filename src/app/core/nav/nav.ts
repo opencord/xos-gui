@@ -11,6 +11,7 @@ class NavCtrl {
   public navSelected: string;
   public appName: string;
   public payoff: string;
+  public baseUrl: string;
 
   constructor(
     private $scope: ng.IScope,
@@ -31,6 +32,7 @@ class NavCtrl {
     });
     this.appName = this.StyleConfig.projectName;
     this.payoff = this.StyleConfig.payoff;
+    this.baseUrl = window.location.hostname;
   }
 
   activateRoute(route: IXosNavigationRoute) {
