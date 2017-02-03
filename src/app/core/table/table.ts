@@ -28,6 +28,9 @@ interface IXosTableCgfOrder {
 
 export interface IXosTableCfg {
   columns: any[];
+  pagination?: {
+    pageSize: number;
+  };
   order?: IXosTableCgfOrder;
   filter?: string;
   actions?: any[]; // TODO create interface
@@ -41,6 +44,7 @@ class TableCtrl {
   public reverse: boolean;
   public classes: string;
   private config: IXosTableCfg;
+  private currentPage: number;
 
 
   $onInit() {
@@ -94,9 +98,17 @@ class TableCtrl {
       });
     }
 
+    if (this.config.pagination) {
+      this.currentPage = 0;
+    }
+
     this.columns = this.config.columns;
 
   }
+
+  public goToPage = (n) => {
+    this.currentPage = n;
+  };
 }
 
 export const xosTable: angular.IComponentOptions = {
