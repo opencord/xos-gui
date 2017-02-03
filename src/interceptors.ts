@@ -12,7 +12,7 @@ export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourc
 export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService) {
 
   const checkLogin = (res) => {
-    if (res.status === 401 || res.status === -1) {
+    if (res.status === 401) {
       $cookies.remove('xoscsrftoken', {path: '/'});
       $cookies.remove('xossessionid', {path: '/'});
       $cookies.remove('xosuser', {path: '/'});

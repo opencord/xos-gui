@@ -1,0 +1,131 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="view-header">
+            <div class="pull-right text-right" style="line-height: 14px">
+                <a class="btn btn-default"
+                   ng-show="vm.selectedSlice && !vm.showStats"
+                   ng-click="vm.showStats = true">
+                    <i class="glyphicon glyphicon-transfer"></i>
+                </a>
+                <a class="btn btn-default"
+                   ng-show="vm.selectedSlice && vm.showStats"
+                   ng-click="vm.showStats = false">
+                    <i class="glyphicon glyphicon-transfer"></i>
+                </a>
+            </div>
+            <div class="header-icon">
+                <i class="pe page-header-icon pe-7s-id"></i>
+            </div>
+            <div class="header-title">
+                <h3>Monitoring Dashboard</h3>
+                <small>Hardware analitycs</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OLD Dashboard-->
+
+<div class="row" ng-show="vm.loader">
+    <div class="col-xs-12">
+        <div class="loader">Loading</div>
+    </div>
+</div>
+
+<section ng-hide="vm.loader" ng-class="{animate: !vm.loader}">
+    <div class="row">
+        <div class="col-sm-3 service-list">
+            <h4>XOS Service: </h4>
+            <uib-accordion close-others="true">
+                <div uib-accordion-group
+                        ng-repeat="service in vm.services | orderBy:'-service'"
+                        is-open="vm.accordion.open[service.service]">
+                    <uib-accordion-heading>{{service.service}}</uib-accordion-heading>
+                    <h5>Slices:</h5>
+                    <a ng-repeat="slice in service.slices"
+                       ng-class="{active: slice.slice === vm.selectedSlice}"
+                       ng-click="vm.loadSliceMeter(slice, service.service)"
+                       class="list-group-item" >
+                        {{slice.slice}} <i class="glyphicon glyphicon-chevron-right pull-right"></i>
+                    </a>
+                </div>
+            </uib-accordion>
+        </div>
+        <section class="side-container col-sm-9">
+            <div class="row">
+                <!-- STATS -->
+                <article ng-hide="!vm.showStats" class="stats animate-slide-left">
+                    <div class="col-xs-12">
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <h4>Stats</h4>
+                            </div>
+                            <div class="list-group-item">
+                                <pre>{{vm.selectedTenant | json}}</pre>
+                                <pre>{{vm.selectedSlice | json}}</pre>
+                                <ceilometer-stats ng-if="vm.selectedSlice" name="vm.selectedSlice" tenant="vm.selectedTenant"></ceilometer-stats>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <!-- METERS -->
+                <article ng-hide="vm.showStats" class="meters animate-slide-left">
+                    <div class="alert alert-danger" ng-show="vm.ceilometerError">
+                        {{vm.ceilometerError}}
+                    </div>
+                    <div class="col-sm-4 animate-slide-left" ng-hide="!vm.selectedSlice">
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <h4>Resources</h4>
+                            </div>
+                            <a
+                               ng-click="vm.selectMeters(meters, resource)"
+                               class="list-group-item"
+                               ng-repeat="(resource, meters) in vm.selectedResources"
+                               ng-class="{active: resource === vm.selectedResource}">
+                                {{resource}} <i class="glyphicon glyphicon-chevron-right pull-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 animate-slide-left" ng-hide="!vm.selectedMeters">
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <h4>Meters</h4>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label>Name:</label>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <label>Unit:</label>
+                                    </div>
+                                    <div class="col-xs-3"></div>
+                                </div>
+                                <div class="row" ng-repeat="meter in vm.selectedMeters" style="margin-bottom: 10px;">
+                                    <div class="col-xs-6">
+                                        {{meter.name}}
+                                    </div>
+                                    <div class="col-xs-3">
+                                        {{meter.unit}}
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <!-- tenant: meter.resource_id -->
+                                        <a ui-sref="xos.xosMonitoringDashboard.samples({name: meter.name, tenant: meter.resource_id})" class="btn btn-accent">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+</section>
+<section ng-if="!vm.loader && vm.error">
+    <div class="alert alert-danger">
+        {{vm.error}}
+    </div>
+</section>
