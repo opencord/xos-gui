@@ -1,8 +1,6 @@
 // COLORS
 
-//$gray_dark: darken($background-color, 2%);
-//$gray_med: #353741;
-//$gray_light: #3A3D45;
+@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
 
 $color-accent: #f6a821;
 $color-font: #949ba2;
@@ -24,3 +22,8 @@ $color-success: #1bbf89;
 // SIZES
 $padding: 10px;
 $navigation-width: 200px;
+
+// RADIUS
+$border-radius-base: 0;
+
+$brand-primary: $color-accent;
