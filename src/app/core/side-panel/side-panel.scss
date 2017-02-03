@@ -12,6 +12,7 @@ xos-side-panel {
     right: -$side-panel-width;
     padding: $padding;
     transition: all .5s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    overflow-y: scroll;
 
     &.open {
       right: 0;

@@ -1,0 +1,43 @@
+<div class="row title">
+    <div class="col-xs-12">
+        <div class="view-header">
+            <div class="pull-right text-right" style="line-height: 14px">
+                <a ng-show="vm.expandedSlice" ng-click="vm.returnToGlobal()" class="btn btn-default">Back</a>
+            </div>
+            <div class="header-icon">
+                <i class="pe page-header-icon pe-7s-share"></i>
+            </div>
+            <div class="header-title">
+                <h3 ng-show="!vm.expandedSlice">MCORD Service Graph</h3>
+                <h3 ng-show="vm.expandedSlice == 1">Public Safety</h3>
+                <h3 ng-show="vm.expandedSlice.indexOf('4') == 0 || vm.expandedSlice.indexOf('3') == 0">RAN Slicing</h3>
+                <h3 ng-show="vm.expandedSlice == 2">Connectionless Gateway</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<section style="position: absolute; bottom: 0; width: 100%">-->
+    <!--<hr>-->
+    <!--<div class="row legend">-->
+        <!--<div class="col-xs-2">-->
+            <!--<div class="logic text-center">-->
+                <!--<h4>Logical Item</h4>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="col-xs-2">-->
+            <!--<div class="physical text-center">-->
+                <!--<h4>Physical Device</h4>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="col-xs-2">-->
+            <!--<div class="ran text-center">-->
+                <!--<h4>RAN Side</h4>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="col-xs-2">-->
+            <!--<div class="core text-center">-->
+                <!--<h4>Mobile Core</h4>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</section>-->
