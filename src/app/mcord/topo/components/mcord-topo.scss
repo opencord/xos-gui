@@ -1,0 +1,105 @@
+@import './../../../style/vars';
+
+mcord-topo{
+  height: 100%;
+  width: 100%;
+  display: block;
+  position: relative;
+
+  .row.title {
+    position: absolute;
+    top: 0;
+    left: 15px;
+    width: 100%;
+    z-index: 200;
+  }
+
+  > svg {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  /* Nodes */
+  .node {
+    stroke: $color-accent;
+    fill: $background-dark-color;
+  }
+
+  .node,
+  .node + text {
+    cursor: pointer;
+  }
+
+  text {
+    pointer-events: none;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;
+    fill: #fff;
+  }
+
+  .node.control {
+    stroke-dasharray: 5;
+    stroke: lighten($color-accent, 40);
+  }
+
+  /* Icons */
+  .node ~ .icon {
+    stroke: $color-accent;
+    fill: $color-accent;
+  }
+
+  .node.control ~ .icon {
+    stroke: lighten($color-accent, 40);
+    fill: lighten($color-accent, 40);
+  }
+
+  /* Links */
+  .link {
+    stroke: darken($color-accent, 10);
+    stroke-width: 2px;
+    cursor: pointer;
+    transition: all .5s;
+  }
+
+  .link.control {
+    stroke-dasharray: 5;
+    stroke: lighten($color-accent, 40);
+  }
+
+  .link.highlight {
+    //stroke-width: 4px;
+    animation: highlightLinks 1s linear;
+    animation-iteration-count: infinite;
+    &.joseph {
+      stroke: green;
+    }
+
+    &.girish {
+      stroke: blue;
+    }
+  }
+
+  /*drag line*/
+  .dragline {
+    stroke-dasharray: 5;
+    stroke: darken($color-accent, 10);
+    stroke-width: 2px;
+  }
+
+  .dragline.hidden {
+    stroke-width: 0;
+  }
+}
+
+@keyframes highlightLinks {
+  0%   {stroke-width: 2px;}
+  25%  {stroke-width: 10px;}
+  50%  {stroke-width: 1px;}
+  75%  {stroke-width: 4px;}
+  100% {stroke-width: 2px;}
+}
