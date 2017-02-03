@@ -16,6 +16,7 @@ export interface IXosInjectedComponent {
 }
 
 export class XosComponentInjector implements IXosComponentInjectorService {
+
   static $inject = ['$rootScope', '$compile', '$transitions', '$log', '$timeout'];
 
   public injectedComponents: IXosInjectedComponent[] = [];
