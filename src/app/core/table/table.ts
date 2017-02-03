@@ -19,6 +19,7 @@ export interface IXosTableColumn {
   type?: string; // understand why enum does not work
   formatter?(item: any): string;
   link?(item: any): string;
+  hover?(item: any): string;
 }
 
 interface IXosTableCgfOrder {
@@ -28,6 +29,9 @@ interface IXosTableCgfOrder {
 
 export interface IXosTableCfg {
   columns: any[];
+  pagination?: {
+    pageSize: number;
+  };
   order?: IXosTableCgfOrder;
   filter?: string;
   actions?: any[]; // TODO create interface
@@ -41,6 +45,7 @@ class TableCtrl {
   public reverse: boolean;
   public classes: string;
   private config: IXosTableCfg;
+  private currentPage: number;
 
 
   $onInit() {
@@ -94,9 +99,28 @@ class TableCtrl {
       });
     }
 
+    // if an hover property is passed,
+    // it should be a function
+    let hoverColumns = _.filter(this.config.columns, col => angular.isDefined(col.hover));
+    if (angular.isArray(hoverColumns) && hoverColumns.length > 0) {
+      _.forEach(hoverColumns, (col) => {
+        if (!angular.isFunction(col.hover)) {
+          throw new Error('[xosTable] The hover property should be a function.');
+        }
+      });
+    }
+
+    if (this.config.pagination) {
+      this.currentPage = 0;
+    }
+
     this.columns = this.config.columns;
 
   }
+
+  public goToPage = (n) => {
+    this.currentPage = n;
+  };
 }
 
 export const xosTable: angular.IComponentOptions = {

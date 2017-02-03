@@ -33,7 +33,7 @@ export interface IXosConfigHelpersService {
   stateWithParamsForJs(name: string, model: any): any;
 }
 
-export class ConfigHelpers {
+export class ConfigHelpers implements IXosConfigHelpersService {
   static $inject = ['$state', 'toastr', 'AuthService', 'ModelStore'];
 
   excluded_fields = [
@@ -96,6 +96,9 @@ export class ConfigHelpers {
       columns: this.modelFieldsToColumnsCfg(model.fields, model.name),
       filter: 'fulltext',
       order: {field: 'id', reverse: false},
+      pagination: {
+        pageSize: 10
+      },
       actions: [
         {
           label: 'delete',
@@ -135,24 +138,23 @@ export class ConfigHelpers {
 
       if (f.name === 'id' || f.name === 'name') {
         col.link = item => this.stateWithParams(modelName, item);
-        // NOTE can we find a better method to generalize the route?
-        // col.link = item => `#/core${baseUrl.replace(':id?', item.id)}`;
       }
 
       // if the field identify a relation, create a link
       if (f.relation && f.relation.type === 'many_to_one') {
-        // TODO read the related model name and replace the value, use the xosTable format method?
         col.type = 'custom';
         col.formatter = item => {
           this.populateRelated(item, item[f.name], f);
           return item[f.name];
         };
         col.link = item => this.stateWithParams(f.relation.model, item);
-        // col.link = item => `#${this.urlFromCoreModel(f.relation.model)}/${item[f.name]}`;
       }
 
       if (f.name === 'backend_status') {
         col.type = 'icon';
+        col.hover = (item) => {
+          return item[f.name];
+        };
         col.formatter = (item) => {
           if (item.backend_status.indexOf('1') > -1) {
             return 'check';

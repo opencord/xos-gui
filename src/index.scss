@@ -1,3 +1,9 @@
+@import './app/style/vars';
+@import '../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+@import './app/style/style.scss';
+@import './app/style/stroke-icons/style.css';
+@import './app/style/pe-icons/pe-icon-7-stroke.css';
+
 html, body.blank {
   height: 100%;
   min-height: 100%;
@@ -5,4 +11,27 @@ html, body.blank {
 
 .content > div {
   opacity: 1 !important;
+}
+
+// BOOTSTRAP OVERRIDES
+// TODO Clean app/style/style.scss
+
+// Alternate styles
+//
+// Generate contextual modifier classes for colorizing the alert.
+
+.alert-success {
+  @include alert-variant($background-dark-color, $alert-success-text, $alert-success-text);
+}
+
+.alert-info {
+  @include alert-variant($background-dark-color, $alert-info-border, $alert-info-border);
+}
+
+.alert-warning {
+  @include alert-variant($background-dark-color, $alert-warning-border, $alert-warning-border);
+}
+
+.alert-danger {
+  @include alert-variant($background-dark-color, $alert-danger-text, $alert-danger-border);
 }

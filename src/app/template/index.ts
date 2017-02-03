@@ -6,11 +6,10 @@ export const xosTemplate = 'xosTemplate';
 import 'angular-ui-bootstrap';
 import 'angular-animate';
 import 'angular-toastr';
-import 'bootstrap/dist/css/bootstrap.css';
 import 'angular-toastr/dist/angular-toastr.min.css';
-import '../style/style.scss';
-import '../style/stroke-icons/style.css';
-import '../style/pe-icons/pe-icon-7-stroke.css';
+// import '../style/style.scss';
+// import '../style/stroke-icons/style.css';
+// import '../style/pe-icons/pe-icon-7-stroke.css';
 import {capitalize} from './filters/capitalize';
 
 

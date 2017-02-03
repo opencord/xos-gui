@@ -48,7 +48,7 @@
             </tr>
         </tbody>
         <tbody>
-        <tr ng-repeat="item in vm.data | filter:vm.query | orderBy:vm.orderBy:vm.reverse track by $index">
+        <tr ng-repeat="item in vm.data | filter:vm.query | orderBy:vm.orderBy:vm.reverse | pagination:vm.currentPage * vm.config.pagination.pageSize | limitTo: (vm.config.pagination.pageSize || vm.data.length) track by $index">
             <td ng-repeat="col in vm.columns" xos-link-wrapper>
                 <span ng-if="!col.type || col.type === 'text'">{{item[col.prop]}}</span>
                 <span ng-if="col.type === 'boolean'">
@@ -77,7 +77,12 @@
                 <span ng-if="col.type === 'icon'">
                     <i class="fa fa-{{col.formatter(item)}}">
                     </i>
-                  </span>
+                </span>
+                <div class="xos-table-hover" ng-if="col.hover">
+                    <div class="alert alert-info">
+                        {{col.hover(item)}}
+                    </div>
+                </div>
             </td>
             <td ng-if="vm.config.actions">
                 <a href=""
@@ -92,6 +97,12 @@
         </tr>
         </tbody>
     </table>
+    <xos-pagination
+            ng-if="vm.config.pagination"
+            page-size="vm.config.pagination.pageSize"
+            total-elements="vm.data.length"
+            change="vm.goToPage">
+    </xos-pagination>
     </div>
 <!--</div>-->
 <!--<div ng-show="(vm.data.length == 0 || !vm.data) && vm.loader == false">-->
