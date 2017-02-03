@@ -28,6 +28,8 @@ import {IXosNavigationRoute} from './app/core/services/navigation';
 import XosLogDecorator from './decorators';
 import {xosExtender} from './app/extender/index';
 import {IXosKeyboardShortcutService} from './app/core/services/keyboard-shortcut';
+import './app/monitoring/index';
+
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -55,7 +57,10 @@ angular
     xosExtender,
     'ui.router',
     'ngResource',
-    xosTemplate // template module
+    xosTemplate, // template module
+    'xosMonitoringDashboard',
+    'mcord', // use dynamic modules instead
+    'ui.bootstrap'
   ])
   .config(XosLogDecorator)
   .config(routesConfig)
@@ -66,6 +71,7 @@ angular
   .component('xos', main)
   .run(function($log: ng.ILogService, $rootScope: ng.IRootScopeService, $transitions: any, StyleConfig: IXosStyleConfig) {
     $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
+    $log.debug('App Start');
     $transitions.onSuccess({ to: '**' }, (transtion) => {
       if (transtion.$to().name === 'login') {
         $rootScope['class'] = 'blank';
@@ -126,3 +132,5 @@ angular
 
   });
 
+// IMPORT MCORD MODULE
+import './app/mcord/index';

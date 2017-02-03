@@ -1,0 +1,38 @@
+@import '../../../style/vars';
+
+xos-monitoring-dashboard {
+
+ .panel {
+   background: $background-light-color;
+   border: 1px solid $background-dark-color;
+
+   .panel-heading + .panel-collapse > .panel-body{
+     border-top: 1px solid $background-dark-color;
+   }
+
+ }
+ .list-group-item {
+   background: $background-color;
+   color: $gray-light;
+   border-color: $gray-base;
+
+   &:nth-child(3) {
+     border-top-left-radius: $border-radius-base;
+     border-top-right-radius: $border-radius-base;
+   }
+
+   &:last-child {
+     border-bottom-left-radius: $border-radius-base;
+     border-bottom-right-radius: $border-radius-base;
+   }
+
+   &:hover,
+   &.active,
+   &.active,
+   &.active:focus {
+     background: $background-color;
+     border-color: $gray-base;
+     color: $gray-light;
+   }
+ }
+}
