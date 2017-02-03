@@ -1,0 +1,91 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h4>Service Traffic Differentiation</h4>
+    </div>
+    <div class="col-xs-12">
+        <table class="table table-bordered">
+            <!-- Public Safety -->
+            <tr>
+                <th>Service</th>
+                <th>Network Cookie</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    Public Safety
+                </td>
+                <td>
+                    Xpose
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-danger"
+                       ng-show="!vm.xposeEnabled"
+                       ng-click="vm.toggleXpose()"
+                    >
+                        <i class="fa fa-remove"></i>
+                    </a>
+                    <a class="btn btn-success"
+                       ng-show="vm.xposeEnabled"
+                       ng-click="vm.toggleXpose()"
+                    >
+                        <i class="fa fa-check"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    911++
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-danger">
+                        <i class="fa fa-remove"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    311++
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-danger">
+                        <i class="fa fa-remove"></i>
+                    </a>
+                </td>
+            </tr>
+            <!-- VoIP -->
+            <tr>
+                <td rowspan="2">
+                    VoIP
+                </td>
+                <td>
+                    Skype
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-danger">
+                        <i class="fa fa-remove"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    GoToMeeting
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-danger">
+                        <i class="fa fa-remove"></i>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-12">
+        <h4>Public Safety Upstream/Downstream</h4>
+        <mcord-public-safety enabled="vm.xposeEnabled" probs="ps"></mcord-public-safety>
+        <!--<a ui-sref="xos.mcord.ps" class="btn btn-default">View Details</a>-->
+    </div>
+    <div class="col-xs-12">
+        <h4>VoIP Upstream/Downstream</h4>
+        <mcord-public-safety probs="voip"></mcord-public-safety>
+        <!--<a ui-sref="xos.mcord.ps" class="btn btn-default">View Details</a>-->
+    </div>
+</div>

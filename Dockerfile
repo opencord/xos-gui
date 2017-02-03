@@ -1,5 +1,5 @@
 # To build use: docker build -t xosproject/xos-gui .
-# To run use: docker run -p 80:80 -d xosproject/xos-gui
+# To run use: docker run -p 4000:4000 --volumes-from gui-extensions-store -d xosproject/xos-gui
 
 FROM nginx
 
