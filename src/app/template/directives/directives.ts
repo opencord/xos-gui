@@ -10,13 +10,16 @@ import {IXosKeyboardShortcutService} from '../../core/services/keyboard-shortcut
 /**
  * minimalizaSidebar - Directive for minimalize sidebar
  */
+
 export function minimalizaMenu($rootScope, XosKeyboardShortcut: IXosKeyboardShortcutService) {
   return {
     restrict: 'EA',
     template: '<div class="left-nav-toggle"><a href ng-click="minimalize()"><i class="stroke-hamburgermenu"></i> </a>',
     controller: function ($scope, $element) {
+
       $scope.minimalize = function () {
         $("body").toggleClass("nav-toggle");
+        $rootScope.$emit('ui.nav.toggle');
       };
 
       XosKeyboardShortcut.registerKeyBinding({

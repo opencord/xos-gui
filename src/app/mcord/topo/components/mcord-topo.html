@@ -1,0 +1,18 @@
+<div class="row title">
+    <div class="col-xs-12">
+        <div class="view-header">
+            <div class="pull-right text-right" style="line-height: 14px">
+                <a ng-show="vm.expandedSlice" ng-click="vm.returnToGlobal()" class="btn btn-default">Back</a>
+            </div>
+            <div class="header-icon">
+                <i class="pe page-header-icon pe-7s-share"></i>
+            </div>
+            <div class="header-title">
+                <h3 ng-show="!vm.expandedSlice">MCORD Service Graph</h3>
+                <h3 ng-show="vm.expandedSlice == 1">Public Safety</h3>
+                <h3 ng-show="vm.expandedSlice.indexOf('4') == 0 || vm.expandedSlice.indexOf('3') == 0">RAN Slicing</h3>
+                <h3 ng-show="vm.expandedSlice == 2">Connectionless Gateway</h3>
+            </div>
+        </div>
+    </div>
+</div>
