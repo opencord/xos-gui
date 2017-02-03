@@ -1,0 +1,52 @@
+<div class="row title">
+    <div class="col-xs-12">
+        <div class="view-header">
+            <div class="pull-right text-right" style="line-height: 14px">
+                <a ng-show="vm.expandedSlice" ng-click="vm.returnToGlobal()" class="btn btn-default">Back</a>
+            </div>
+            <div class="header-icon">
+                <i class="pe page-header-icon pe-7s-share"></i>
+            </div>
+            <div class="header-title">
+                <h3>
+                    MCORD Service Graph<span ng-show="vm.expandedSlice">: </span>
+                    <span ng-show="vm.expandedSlice == 1">Public Safety</span>
+                    <span ng-show="vm.expandedSlice.indexOf('4') == 0 || vm.expandedSlice.indexOf('3') == 0">End to End Slicing</span>
+                    <span ng-show="vm.expandedSlice == 2">Connectionless Gateway</span>
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+<section style="position: absolute; bottom: -20px; width: 100%">
+    <hr>
+    <div class="row legend">
+        <div class="col-xs-1">
+            <div class="slice"></div> Network Slices
+        </div>
+        <div class="col-xs-1">
+            <div class="ran"></div> RAN Network
+        </div>
+        <div class="col-xs-1">
+            <div class="core"></div> Core Network
+        </div>
+        <div class="col-xs-1 col-xs-offset-2">
+            <div class="data"></div> Data Plane
+        </div>
+        <div class="col-xs-1">
+            <div class="control"></div> Control Plane
+        </div>
+        <div class="col-xs-1 col-xs-offset-3">
+            <div class="logic">
+                <i class="icon"></i>
+                Logic services
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <div class="physical">
+                <i class="icon"></i>
+                Physical devices
+            </div>
+        </div>
+    </div>
+</section>
