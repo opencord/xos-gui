@@ -28,6 +28,8 @@ import {IXosNavigationRoute} from './app/core/services/navigation';
 import XosLogDecorator from './decorators';
 import {xosExtender} from './app/extender/index';
 import {IXosKeyboardShortcutService} from './app/core/services/keyboard-shortcut';
+import './app/monitoring/index';
+
 
 export interface IXosState extends angular.ui.IState {
   data: IXosCrudData;
@@ -55,7 +57,9 @@ angular
     xosExtender,
     'ui.router',
     'ngResource',
-    xosTemplate // template module
+    xosTemplate, // template module
+    'xosMonitoringDashboard',
+    'ui.bootstrap'
   ])
   .config(XosLogDecorator)
   .config(routesConfig)
