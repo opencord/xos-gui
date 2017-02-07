@@ -18,10 +18,11 @@ export interface IXosNavigationService {
 }
 
 export class NavigationService {
-  static $inject = ['StyleConfig'];
+  static $inject = ['$log', 'StyleConfig'];
   private routes: IXosNavigationRoute[];
 
   constructor(
+    private $log: ng.ILogService,
     private StyleConfig: IXosStyleConfig
   ) {
     const defaultRoutes = [
@@ -49,6 +50,18 @@ export class NavigationService {
   add(route: IXosNavigationRoute) {
     if (angular.isDefined(route.state) && angular.isDefined(route.url)) {
       throw new Error('[XosNavigation] You can\'t provide both state and url');
+    }
+
+    const routeExist = _.findIndex(this.routes, (r: IXosNavigationRoute) => {
+      if (r.label === route.label && r.state === route.state && r.parent === route.parent) {
+        return true;
+      }
+      return false;
+    }) > -1;
+
+    if (routeExist) {
+      this.$log.warn(`[XosNavigation] Route with label: ${route.label}, state: ${route.state} and parent: ${route.parent} already exist`);
+      return;
     }
 
 
