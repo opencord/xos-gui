@@ -23,6 +23,7 @@ export class ModelStore implements IXosModelStoreService {
   }
 
   public query(model: string): Observable<any> {
+    console.log(model);
     // if there isn't already an observable for that item
     if (!this._collections[model]) {
       this._collections[model] = new BehaviorSubject([]); // NOTE maybe this can be created when we get response from the resource
