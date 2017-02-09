@@ -34,11 +34,7 @@ const MockLoad = {
 
 const MockModelStore = {
   query: () => {
-    return {
-      subscribe: () => {
-        return;
-      }
-    };
+    return subject.asObservable();
   }
 };
 
@@ -69,17 +65,12 @@ describe('The XosOnboarder service', () => {
 
   describe('when receive an event', () => {
     it('should use $ocLazyLoad to add modules to the app', () => {
-      subject.next({
-        model: 'XOSComponent',
-        msg: {
-          app: 'sample',
-          object: {
-            extra: '["vendor.js", "app.js"]',
-            name: 'sample app'
-          }
+      subject.next([
+        {
+          files: 'vendor.js,app.js',
+          name: 'sample app'
         }
-      });
-      $timeout.flush();
+      ]);
       expect($ocLazyLoad.load).toHaveBeenCalledWith('vendor.js');
       expect($ocLazyLoad.load).toHaveBeenCalledWith('app.js');
     });
