@@ -8,7 +8,7 @@ angular.module('app')
     routes: [
         {
             label: 'Slices',
-            state: 'xos.core.slices'
+            state: 'xos.core.slice'
         }
     ]
 });

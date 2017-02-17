@@ -28,10 +28,7 @@ import {IXosNavigationRoute} from './app/core/services/navigation';
 import XosLogDecorator from './decorators';
 import {xosExtender} from './app/extender/index';
 import {IXosKeyboardShortcutService} from './app/core/services/keyboard-shortcut';
-
-export interface IXosState extends angular.ui.IState {
-  data: IXosCrudData;
-};
+import {IXosModelDiscovererService} from './app/datasources/helpers/model-discoverer.service';
 
 export interface IXosAppConfig {
   apiEndpoint: string;
@@ -78,9 +75,11 @@ angular
   .run((
     $rootScope: ng.IRootScopeService,
     $transitions: any,
+    $log: ng.ILogService,
     $location: ng.ILocationService,
     $state: ng.ui.IStateService,
-    ModelSetup: IXosModelSetupService,
+    ModelSetup: IXosModelSetupService, // I'll be old
+    XosModelDiscoverer: IXosModelDiscovererService,
     AuthService: IXosAuthService,
     XosKeyboardShortcut: IXosKeyboardShortcutService,
     toastr: ng.toastr.IToastrService,
@@ -89,7 +88,7 @@ angular
 
     // check the user login
     $transitions.onSuccess({ to: '**' }, (transtion) => {
-      if (!AuthService.getUser()) {
+      if (!AuthService.isAuthenticated()) {
         $state.go('login');
       }
     });
@@ -112,9 +111,17 @@ angular
     const lastQueryString = $location.search();
 
     // if the user is authenticated
-    if (AuthService.getUser()) {
-      ModelSetup.setup()
-        .then(() => {
+    if (AuthService.isAuthenticated()) {
+      // ModelSetup.setup()
+      XosModelDiscoverer.discover()
+        .then((res) => {
+          if (res) {
+            $log.info('[XOS] All models loaded');
+          }
+          else {
+            $log.info('[XOS] Failed to load some models, moving on.');
+          }
+
           // after setting up dynamic routes, redirect to previous state
           $location.path(lastRoute).search(lastQueryString);
           $rootScope.$emit('xos.core.modelSetup');
