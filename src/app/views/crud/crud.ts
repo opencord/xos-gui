@@ -2,23 +2,38 @@ import {IXosTableCfg} from '../../core/table/table';
 import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 import * as _ from 'lodash';
-import {IXosFormConfig} from '../../core/form/form';
+import {IXosFormCfg} from '../../core/form/form';
 import {IXosResourceService} from '../../datasources/rest/model.rest';
 import {IStoreHelpersService} from '../../datasources/helpers/store.helpers';
+import {IXosModelDiscovererService} from '../../datasources/helpers/model-discoverer.service';
+
 export interface IXosCrudData {
   model: string;
-  related: string[];
+  related: IXosModelRelation[];
   xosTableCfg: IXosTableCfg;
-  xosFormCfg: IXosFormConfig;
+  xosFormCfg: IXosFormCfg;
+}
+
+export interface IXosModelRelation {
+  model: string;
+  type: string;
 }
 
 class CrudController {
-  static $inject = ['$scope', '$state', '$stateParams', 'ModelStore', 'ConfigHelpers', 'ModelRest', 'StoreHelpers'];
+  static $inject = [
+    '$scope',
+    '$state',
+    '$stateParams',
+    'XosModelStore',
+    'ConfigHelpers',
+    'ModelRest',
+    'StoreHelpers',
+    'XosModelDiscoverer'
+  ];
 
-  public data: IXosCrudData;
+  public data: {model: string};
   public tableCfg: IXosTableCfg;
   public formCfg: any;
-  public stateName: string;
   public baseUrl: string;
   public list: boolean;
   public title: string;
@@ -33,19 +48,23 @@ class CrudController {
     private store: IXosModelStoreService,
     private ConfigHelpers: IXosConfigHelpersService,
     private ModelRest: IXosResourceService,
-    private StoreHelpers: IStoreHelpersService
+    private StoreHelpers: IStoreHelpersService,
+    private XosModelDiscovererService: IXosModelDiscovererService
   ) {
     this.data = this.$state.current.data;
-    this.tableCfg = this.data.xosTableCfg;
+    this.model = this.XosModelDiscovererService.get(this.data.model);
     this.title = this.ConfigHelpers.pluralize(this.data.model);
 
     this.list = true;
-    this.stateName = $state.current.name;
-    this.baseUrl = '#/core' + $state.current.url.toString().replace(':id?', '');
+
+    // TODO get the proper URL from model discoverer
+    this.baseUrl = '#/' + this.model.clientUrl.replace(':id?', '');
+
 
     this.related = $state.current.data.related;
 
-    this.formCfg = $state.current.data.xosFormCfg;
+    this.tableCfg = this.model.tableCfg;
+    this.formCfg = this.model.formCfg;
 
     this.store.query(this.data.model)
       .subscribe(
@@ -70,6 +89,7 @@ class CrudController {
       // if it is the create page
       if ($stateParams['id'] === 'add') {
         // generate a resource for an empty model
+        // TODO get the proper URL from model discoverer
         const endpoint = this.StoreHelpers.urlFromCoreModel(this.data.model);
         const resource = this.ModelRest.getResource(endpoint);
         this.model = new resource({});
@@ -77,9 +97,9 @@ class CrudController {
     }
   }
 
-  public getRelatedItem(relation: string, item: any): number {
-    if (item && angular.isDefined(item[relation.toLowerCase()])) {
-      return item[relation.toLowerCase()];
+  public getRelatedItem(relation: IXosModelRelation, item: any): number {
+    if (item && angular.isDefined(item[`${relation.model.toLowerCase()}_id`])) {
+      return item[`${relation.model.toLowerCase()}_id`];
     }
     return 0;
   }

@@ -1,8 +1,7 @@
-import {ModeldefsService, IModeldef} from '../../../datasources/rest/modeldefs.rest';
+import {XosModeldefsService, IXosModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosConfigHelpersService} from './config.helpers';
-import {IRuntimeStatesService} from '../runtime-states';
-import {NavigationService} from '../navigation';
-import {IXosState} from '../../../../index';
+import {IXosRuntimeStatesService, IXosState} from '../runtime-states';
+import {IXosNavigationService} from '../navigation';
 import * as _ from 'lodash';
 import IPromise = angular.IPromise;
 
@@ -11,15 +10,15 @@ export interface IXosModelSetupService {
 }
 
 export class ModelSetup {
-  static $inject = ['$rootScope', '$q', 'ModelDefs', 'ConfigHelpers', 'RuntimeStates', 'NavigationService'];
+  static $inject = ['$rootScope', '$q', 'XosModelDefs', 'ConfigHelpers', 'XosRuntimeStates', 'XosNavigationService'];
 
   constructor(
     private $rootScope: ng.IScope,
     private $q: ng.IQService,
-    private ModelDefs: ModeldefsService,
+    private ModelDefs: XosModeldefsService,
     private ConfigHelpers: IXosConfigHelpersService,
-    private RuntimeStates: IRuntimeStatesService,
-    private NavigationService: NavigationService
+    private RuntimeStates: IXosRuntimeStatesService,
+    private NavigationService: IXosNavigationService
   ) {
 
   }
@@ -27,8 +26,8 @@ export class ModelSetup {
   public setup(): IPromise<null> {
     const d = this.$q.defer();
     this.ModelDefs.get()
-      .then((models: IModeldef[]) => {
-        _.forEach(models, (m: IModeldef) => {
+      .then((models: IXosModeldef[]) => {
+        _.forEach(models, (m: IXosModeldef) => {
           const stateUrl = `/${this.ConfigHelpers.pluralize(m.name.toLowerCase())}/:id?`;
           const stateName = `xos.core.${this.ConfigHelpers.pluralize(m.name.toLowerCase())}`;
           const state: IXosState = {
@@ -40,9 +39,9 @@ export class ModelSetup {
             },
             data: {
               model: m.name,
-              related: m.relations,
-              xosTableCfg: this.ConfigHelpers.modelToTableCfg(m, stateUrl),
-              xosFormCfg: this.ConfigHelpers.modelToFormCfg(m)
+              // related: m.relations,
+              // xosTableCfg: this.ConfigHelpers.modelToTableCfg(m, stateUrl),
+              // xosFormCfg: this.ConfigHelpers.modelToFormCfg(m)
             }
           };
 
