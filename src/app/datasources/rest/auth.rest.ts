@@ -37,8 +37,9 @@ export class AuthService {
 
   public login(data: IAuthRequestData): Promise<any> {
     const d = this.$q.defer();
-    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/login/`, data)
+    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/login`, data)
       .then((res: IAuthResponseData) => {
+        console.log(res);
         this.$cookies.put('xoscsrftoken', res.data.xoscsrftoken, {path: '/'});
         this.$cookies.put('xossessionid', res.data.xossessionid, {path: '/'});
         this.$cookies.put('xosuser', res.data.user, {path: '/'});
@@ -53,7 +54,7 @@ export class AuthService {
 
   public logout(): Promise<any> {
     const d = this.$q.defer();
-    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/logout/`, {
+    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/logout`, {
       xoscsrftoken: this.$cookies.get('xoscsrftoken'),
       xossessionid: this.$cookies.get('xossessionid')
     })
