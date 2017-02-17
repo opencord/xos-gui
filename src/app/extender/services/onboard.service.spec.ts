@@ -50,7 +50,7 @@ describe('The XosOnboarder service', () => {
       .module('XosOnboarder', [])
       .value('WebSocket', MockWs)
       .value('$ocLazyLoad', MockLoad)
-      .value('ModelStore', MockModelStore)
+      .value('XosModelStore', MockModelStore)
       .service('XosOnboarder', XosOnboarder);
 
     angular.mock.module('XosOnboarder');

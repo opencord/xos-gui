@@ -6,16 +6,13 @@ export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourc
   $httpProvider.interceptors.push('UserStatusInterceptor');
   $httpProvider.interceptors.push('CredentialsInterceptor');
   $httpProvider.interceptors.push('NoHyperlinksInterceptor');
-  $resourceProvider.defaults.stripTrailingSlashes = false;
 }
 
 export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService) {
 
   const checkLogin = (res) => {
     if (res.status === 401 || res.status === -1) {
-      $cookies.remove('xoscsrftoken', {path: '/'});
-      $cookies.remove('xossessionid', {path: '/'});
-      $cookies.remove('xosuser', {path: '/'});
+      $cookies.remove('sessionid', {path: '/'});
       $state.go('login');
     }
     return res;
@@ -30,12 +27,11 @@ export function userStatusInterceptor($state: angular.ui.IStateService, $cookies
 export function CredentialsInterceptor($cookies: angular.cookies.ICookiesService) {
   return {
     request: (req) => {
-      if (!$cookies.get('xoscsrftoken') || !$cookies.get('xossessionid')) {
+      if (!$cookies.get('sessionid')) {
         return req;
       }
-      // req.headers['X-CSRFToken'] = $cookies.get('xoscsrftoken');
-      req.headers['x-csrftoken'] = $cookies.get('xoscsrftoken');
-      req.headers['x-sessionid'] = $cookies.get('xossessionid');
+      req.headers['x-sessionid'] = $cookies.get('sessionid');
+      req.headers['x-xossession'] = $cookies.get('sessionid');
       return req;
     }
   };
@@ -44,15 +40,26 @@ export function CredentialsInterceptor($cookies: angular.cookies.ICookiesService
 export function NoHyperlinksInterceptor() {
   return {
     request: (req) => {
-      if (
-        req.url.indexOf('.html') === -1
-        // && req.url.indexOf('login') === -1
-        // && req.url.indexOf('logout') === -1
-      ) {
-        // NOTE this may fail if there are already query params
-        req.url += '?no_hyperlinks=1';
+      if (req.url.indexOf('.html') === -1) {
+        // NOTE  force content type to be JSON
+        req.headers['Content-Type'] = 'application/json';
       }
       return req;
+    },
+    response: (res) => {
+      try {
+        // NOTE convert res.data from string to JSON
+        res.data = JSON.parse(res.data);
+        try {
+          // NOTE chameleon return everything inside an "items" field
+          res.data = res.data.items;
+        } catch (_e) {
+          res.data = res.data;
+        }
+      } catch (e) {
+        res.data = res.data;
+      }
+      return res;
     }
   };
 }

@@ -8,7 +8,7 @@ export interface IXosOnboarder {
 }
 
 export class XosOnboarder implements IXosOnboarder {
-  static $inject = ['$timeout', '$log', '$q', 'WebSocket', '$ocLazyLoad', 'ModelStore'];
+  static $inject = ['$timeout', '$log', '$q', 'WebSocket', '$ocLazyLoad', 'XosModelStore'];
 
   constructor(
     private $timeout: ng.ITimeoutService,
@@ -16,7 +16,7 @@ export class XosOnboarder implements IXosOnboarder {
     private $q: ng.IQService,
     private webSocket: IWSEventService,
     private $ocLazyLoad: any, // TODO add definition
-    private ModelStore: IXosModelStoreService
+    private XosModelStore: IXosModelStoreService
   ) {
     this.$log.info('[XosOnboarder] Setup');
 
@@ -45,7 +45,7 @@ export class XosOnboarder implements IXosOnboarder {
 
     // Load previously onboarded app (containers are already running, so we don't need to wait)
     let componentsLoaded = false;
-    const ComponentObservable: Observable<any> = this.ModelStore.query('XOSComponent');
+    const ComponentObservable: Observable<any> = this.XosModelStore.query('XOSComponent');
     ComponentObservable.subscribe(
         (component) => {
           if (componentsLoaded) {

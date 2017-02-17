@@ -3,47 +3,60 @@ import 'angular-mocks';
 import 'angular-ui-router';
 
 import {IXosConfigHelpersService, ConfigHelpers, IXosModelDefsField} from './config.helpers';
-import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
+import {IXosModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosTableCfg} from '../../table/table';
-import {IXosFormInput, IXosFormConfig} from '../../form/form';
+import {IXosFormInput, IXosFormCfg} from '../../form/form';
 import {BehaviorSubject} from 'rxjs';
 
 let service: IXosConfigHelpersService;
 
-const model: IModeldef = {
+const model: IXosModeldef = {
   name: 'Test',
+  app: 'test',
   fields: [
     {
       type: 'number',
       name: 'id',
-      validators: {}
+      validators: []
     },
     {
       type: 'string',
       name: 'name',
-      validators: {
-        required: true
-      }
+      validators: [
+        {
+          bool_value: true,
+          name: 'required'
+        }
+      ]
     },
     {
       type: 'string',
       name: 'something',
-      validators: {
-        maxlength: 30
-      }
+      validators: [
+        {
+          int_value: 30,
+          name: 'maxlength'
+        }
+      ]
     },
     {
       type: 'number',
       name: 'else',
-      validators: {
-        min: 20,
-        max: 40
-      }
+      validators: [
+        {
+          int_value: 20,
+          name: 'min'
+        },
+        {
+          int_value: 40,
+          name: 'max'
+        }
+      ]
     },
     {
       type: 'date',
       name: 'updated',
-      validators: {}
+      validators: []
     },
   ]
 };
@@ -59,7 +72,7 @@ describe('The ConfigHelpers service', () => {
           return {id: 1};
         }
       })
-      .value('ModelStore', {
+      .value('XosModelStore', {
 
       })
       .value('$state', {
@@ -131,11 +144,6 @@ describe('The ConfigHelpers service', () => {
   });
 
   describe('the navigation methods', () => {
-    describe('urlFromCoreModels', () => {
-      it('should return the URL for a given model', () => {
-        expect(service.urlFromCoreModel('Test')).toBe('/core/tests');
-      });
-    });
     describe('stateFromCoreModels', () => {
 
       let state: ng.ui.IStateService;
@@ -156,7 +164,7 @@ describe('The ConfigHelpers service', () => {
 
   describe('the modelFieldsToColumnsCfg method', () => {
     it('should return an array of columns', () => {
-      const cols = service.modelFieldsToColumnsCfg(model.fields, 'testUrl/:id?');
+      const cols = service.modelFieldsToColumnsCfg({fields: model.fields, name: 'testUrl', app: 'test'});
       expect(cols[0].label).toBe('Id');
       expect(cols[0].prop).toBe('id');
       expect(cols[0].link).toBeDefined();
@@ -214,7 +222,7 @@ describe('The ConfigHelpers service', () => {
 
   describe('the modelToFormCfg method', () => {
     it('should return a form config', () => {
-      const config: IXosFormConfig = service.modelToFormCfg(model);
+      const config: IXosFormCfg = service.modelToFormCfg(model);
       expect(config.formName).toBe('TestForm');
       expect(config.actions.length).toBe(1);
       expect(config.actions[0].label).toBe('Save');

@@ -14,7 +14,7 @@ export interface INotification extends IWSEvent {
 }
 
 class HeaderController {
-  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'NavigationService', 'StyleConfig', 'SearchService', 'XosKeyboardShortcut'];
+  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'XosNavigationService', 'StyleConfig', 'SearchService', 'XosKeyboardShortcut'];
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
   public version: string;

@@ -3,9 +3,9 @@ import 'angular-mocks';
 import 'angular-resource';
 import 'angular-cookies';
 import {xosDataSources} from '../index';
-import {IModeldefsService} from './modeldefs.rest';
+import {IXosModeldefsService} from './modeldefs.rest';
 
-let service: IModeldefsService;
+let service: IXosModeldefsService;
 let httpBackend: ng.IHttpBackendService;
 let $scope;
 
@@ -14,7 +14,7 @@ const MockAppCfg = {
   websocketClient: 'http://xos-test:3000'
 };
 
-describe('The ModelDefs service', () => {
+describe('The XosModelDefs service', () => {
 
   beforeEach(angular.mock.module(xosDataSources));
 
@@ -26,14 +26,13 @@ describe('The ModelDefs service', () => {
     angular.mock.module(xosDataSources);
   });
 
-
   beforeEach(angular.mock.inject((
-    ModelDefs: IModeldefsService,
+    XosModelDefs: IXosModeldefsService,
     $httpBackend: ng.IHttpBackendService,
     _$resource_: ng.resource.IResourceService,
     _$rootScope_: ng.IRootScopeService
   ) => {
-    service = ModelDefs;
+    service = XosModelDefs;
     httpBackend = $httpBackend;
     $scope = _$rootScope_;
   }));

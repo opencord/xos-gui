@@ -16,7 +16,15 @@ export class ModelRest implements IXosResourceService {
 
   public getResource(url: string): ng.resource.IResourceClass<ng.resource.IResource<any>> {
     const resource: angular.resource.IResourceClass<any> = this.$resource(`${this.AppConfig.apiEndpoint}${url}/:id/`, {id: '@id'}, {
-      update: { method: 'PUT' }
+      update: { method: 'PUT' },
+      query: {
+        method: 'GET',
+        isArray: true,
+        transformResponse: (res) => {
+          // FIXME chameleon return everything inside "items"
+          return res.items ? res.items : res;
+        }
+      }
     });
 
     resource.prototype.$save = function() {

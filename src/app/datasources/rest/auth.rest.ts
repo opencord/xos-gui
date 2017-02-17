@@ -7,9 +7,9 @@ export interface IAuthRequestData {
 
 export interface IAuthResponseData extends IHttpPromiseCallbackArg<any> {
   data: {
-    user: string;
-    xoscsrftoken: string;
-    xossessionid: string;
+    // user: string;
+    // xoscsrftoken: string;
+    sessionid: string;
   };
 }
 
@@ -37,12 +37,12 @@ export class AuthService {
 
   public login(data: IAuthRequestData): Promise<any> {
     const d = this.$q.defer();
-    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/login/`, data)
+    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/login`, data)
       .then((res: IAuthResponseData) => {
-        this.$cookies.put('xoscsrftoken', res.data.xoscsrftoken, {path: '/'});
-        this.$cookies.put('xossessionid', res.data.xossessionid, {path: '/'});
-        this.$cookies.put('xosuser', res.data.user, {path: '/'});
-        res.data.user = JSON.parse(res.data.user);
+        // this.$cookies.put('xoscsrftoken', res.data.xoscsrftoken, {path: '/'});
+        this.$cookies.put('sessionid', res.data.sessionid, {path: '/'});
+        // this.$cookies.put('xosuser', res.data.user, {path: '/'});
+        // res.data.user = JSON.parse(res.data.user);
         d.resolve(res.data);
       })
       .catch(e => {
@@ -53,9 +53,9 @@ export class AuthService {
 
   public logout(): Promise<any> {
     const d = this.$q.defer();
-    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/logout/`, {
-      xoscsrftoken: this.$cookies.get('xoscsrftoken'),
-      xossessionid: this.$cookies.get('xossessionid')
+    this.$http.post(`${this.AppConfig.apiEndpoint}/utility/logout`, {
+      // xoscsrftoken: this.$cookies.get('xoscsrftoken'),
+      // sessionid: this.$cookies.get('sessionid')
     })
       .then(() => {
         this.clearUser();
@@ -68,9 +68,9 @@ export class AuthService {
   }
 
   public clearUser(): void {
-    this.$cookies.remove('xoscsrftoken', {path: '/'});
-    this.$cookies.remove('xossessionid', {path: '/'});
-    this.$cookies.remove('xosuser', {path: '/'});
+    // this.$cookies.remove('xoscsrftoken', {path: '/'});
+    this.$cookies.remove('sessionid', {path: '/'});
+    // this.$cookies.remove('xosuser', {path: '/'});
   }
 
   public getUser(): IXosUser {
@@ -82,8 +82,8 @@ export class AuthService {
   }
 
   public isAuthenticated(): boolean {
-    const token = this.$cookies.get('xoscsrftoken');
-    const session = this.$cookies.get('xossessionid');
-    return angular.isDefined(token) && angular.isDefined(session);
+    // const token = this.$cookies.get('xoscsrftoken');
+    const session = this.$cookies.get('sessionid');
+    return angular.isDefined(session);
   }
 }

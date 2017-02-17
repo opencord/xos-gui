@@ -44,7 +44,7 @@ export interface IXosFormInput {
   options?: IXosFormInputOptions[];
 }
 
-export interface IXosFormConfig {
+export interface IXosFormCfg {
   exclude?: string[];
   actions: IXosFormAction[];
   feedback?: IXosFeedback;

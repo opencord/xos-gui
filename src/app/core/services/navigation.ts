@@ -17,7 +17,9 @@ export interface IXosNavigationService {
   add(route: IXosNavigationRoute): void;
 }
 
-export class NavigationService {
+// TODO support 3rd level to group service model under "Services"
+
+export class IXosNavigationService {
   static $inject = ['$log', 'StyleConfig'];
   private routes: IXosNavigationRoute[];
 
@@ -34,6 +36,10 @@ export class NavigationService {
         label: 'Core',
         state: 'xos.core'
       },
+      // {
+      //   label: 'Service',
+      //   state: 'xos.services'
+      // },
     ];
     // adding configuration defined routes
     // this.routes = StyleConfig.routes.concat(defaultRoutes).reverse();
@@ -64,16 +70,20 @@ export class NavigationService {
       return;
     }
 
-
     if (angular.isDefined(route.parent)) {
       // route parent should be a state for now
       const parentRoute = _.find(this.routes, {state: route.parent});
-
-      if (angular.isArray(parentRoute.children)) {
-        parentRoute.children.push(route);
+      if (angular.isDefined(parentRoute)) {
+        if (angular.isArray(parentRoute.children)) {
+          parentRoute.children.push(route);
+        }
+        else {
+          parentRoute.children = [route];
+        }
       }
       else {
-        parentRoute.children = [route];
+        this.$log.warn(`[XosNavigation] Parent State (${route.parent}) for state: ${route.state} does not exists`);
+        return;
       }
     }
     else {

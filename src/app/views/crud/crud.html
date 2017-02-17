@@ -26,11 +26,11 @@
         </div>
         <div class="col-lg-8 text-right">
             <div class="btn-group">
-                <a ng-if="vm.list" ng-repeat="r in vm.related" href="#/core/{{r.toLowerCase()}}s/" class="btn btn-default">
-                    {{r}}
+                <a ng-if="vm.list" ng-repeat="r in vm.related" href="#/core/{{r.model.toLowerCase()}}s/" class="btn btn-default">
+                    {{r.model}}
                 </a>
-                <a ng-if="!vm.list && vm.getRelatedItem(r, vm.model)" ng-repeat="r in vm.related" href="#/core/{{r.toLowerCase()}}s/{{vm.getRelatedItem(r, vm.model)}}" class="btn btn-default">
-                    {{r}}
+                <a ng-if="!vm.list && vm.getRelatedItem(r, vm.model)" ng-repeat="r in vm.related" href="#/core/{{r.model.toLowerCase()}}s/{{vm.getRelatedItem(r, vm.model)}}" class="btn btn-default">
+                    {{r.model}}
                 </a>
             </div>
         </div>

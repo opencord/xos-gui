@@ -1,17 +1,35 @@
 import {IXosModelDefsField} from '../../core/services/helpers/config.helpers';
 import {IXosAppConfig} from '../../../index';
 
-export interface IModeldef {
-  fields: IXosModelDefsField[];
-  relations?: string[];
+// Models interfaces
+export interface IXosModelDefsField {
   name: string;
+  type: string;
+  validators?: any;
+  hint?: string;
+  relation?: {
+    model: string;
+    type: string;
+  };
 }
 
-export interface IModeldefsService {
-  get(): Promise<IModeldef[]>;
+export interface IXosModelDefsRelation {
+  model: string; // model name
+  type: string; // relation type
 }
 
-export class ModeldefsService {
+export interface IXosModeldef {
+  fields: IXosModelDefsField[];
+  relations?: IXosModelDefsRelation[];
+  name: string;
+  app: string;
+}
+
+export interface IXosModeldefsService {
+  get(): Promise<IXosModeldef[]>;
+}
+
+export class XosModeldefsService implements IXosModeldefsService {
 
   static $inject = ['$http', '$q', 'AppConfig'];
 
@@ -24,9 +42,9 @@ export class ModeldefsService {
 
   public get(): Promise<any> {
     const d = this.$q.defer();
-    this.$http.get(`${this.AppConfig.apiEndpoint}/utility/modeldefs/`)
-      .then((res) => {
-        d.resolve(res.data);
+    this.$http.get(`${this.AppConfig.apiEndpoint}/modeldefs`)
+      .then((res: any) => {
+        d.resolve(res.data.items);
       })
       .catch(e => {
         d.reject(e);

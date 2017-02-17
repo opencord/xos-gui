@@ -8,15 +8,15 @@ angular.module('app')
     routes: [
         {
             label: 'Slices',
-            state: 'xos.core.slices'
+            state: 'xos.core.slice'
         },
         {
             label: 'Instances',
-            state: 'xos.core.instances'
+            state: 'xos.core.instance'
         },
         {
             label: 'Nodes',
-            state: 'xos.core.nodes'
+            state: 'xos.core.node'
         }
     ]
 });

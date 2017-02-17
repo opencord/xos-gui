@@ -1,18 +1,19 @@
 import {AuthService} from '../../datasources/rest/auth.rest';
 import './login.scss';
-import {IXosModelSetupService} from '../services/helpers/model-setup.helpers';
+
 import {IXosStyleConfig} from '../../../index';
+import {IXosModelDiscovererService} from '../../datasources/helpers/model-discoverer.service';
 
 class LoginCtrl {
-  static $inject = ['$log', 'AuthService', '$state', 'ModelSetup', 'StyleConfig'];
+  static $inject = ['$log', 'AuthService', '$state', 'XosModelDiscoverer', 'StyleConfig'];
   public loginStyle: any;
   public img: string;
-  /** @ngInject */
+
   constructor(
     private $log: ng.ILogService,
     private authService: AuthService,
     private $state: angular.ui.IStateService,
-    private ModelSetup: IXosModelSetupService,
+    private XosModelDiscoverer: IXosModelDiscovererService,
     private StyleConfig: IXosStyleConfig
   ) {
 
@@ -34,7 +35,7 @@ class LoginCtrl {
     })
       .then(res => {
         // after login set up models
-        return this.ModelSetup.setup();
+        return this.XosModelDiscoverer.discover();
       })
       .then(() => {
         this.$state.go('xos.dashboard');

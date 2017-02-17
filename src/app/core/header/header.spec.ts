@@ -55,7 +55,7 @@ describe('header component', () => {
       .value('toastr', MockToastr)
       .value('toastrConfig', MockToastrConfig)
       .value('AuthService', MockAuth)
-      .value('NavigationService', {})
+      .value('XosNavigationService', {})
       .value('XosKeyboardShortcut', MockXosKeyboardShortcut)
       .value('StyleConfig', {
         logo: 'cord-logo.png',

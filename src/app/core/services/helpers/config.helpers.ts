@@ -1,16 +1,22 @@
 import * as _ from 'lodash';
 import * as pluralize from 'pluralize';
 import {IXosTableColumn, IXosTableCfg} from '../../table/table';
-import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
-import {IXosFormConfig, IXosFormInput} from '../../form/form';
+import {IXosModeldef} from '../../../datasources/rest/modeldefs.rest';
+import {IXosFormCfg, IXosFormInput, IXosFormInputValidator} from '../../form/form';
 import {IXosAuthService} from '../../../datasources/rest/auth.rest';
 import {IXosModelStoreService} from '../../../datasources/stores/model.store';
-import {IXosState} from '../../../../index';
+import {IXosState} from '../runtime-states';
+
+export interface IXosModelDefsFieldValidators {
+  name: string;
+  bool_value?: boolean;
+  int_value?: number;
+}
 
 export interface IXosModelDefsField {
   name: string;
   type: string;
-  validators?: any;
+  validators?: IXosModelDefsFieldValidators[];
   hint?: string;
   relation?: {
     model: string;
@@ -20,23 +26,26 @@ export interface IXosModelDefsField {
 
 export interface IXosConfigHelpersService {
   excluded_fields: string[];
-  modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[]; // TODO use a proper interface
-  modelToTableCfg(model: IModeldef, modelName: string): IXosTableCfg;
+  modelFieldsToColumnsCfg(model: IXosModeldef): IXosTableColumn[];
+  modelToTableCfg(model: IXosModeldef, modelName: string): IXosTableCfg;
   modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[];
-  modelToFormCfg(model: IModeldef): IXosFormConfig;
+  modelToFormCfg(model: IXosModeldef): IXosFormCfg;
   pluralize(string: string, quantity?: number, count?: boolean): string;
   toLabel(string: string, pluralize?: boolean): string;
   toLabels(string: string[], pluralize?: boolean): string[];
-  urlFromCoreModel(model: string): string;
   stateFromCoreModel(name: string): string;
   stateWithParams(name: string, model: any): string;
   stateWithParamsForJs(name: string, model: any): any;
 }
 
 export class ConfigHelpers implements IXosConfigHelpersService {
-  static $inject = ['$state', 'toastr', 'AuthService', 'ModelStore'];
+  static $inject = [
+    '$state',
+    'toastr',
+    'AuthService',
+    'XosModelStore'];
 
-  excluded_fields = [
+  public excluded_fields = [
     'created',
     'updated',
     'enacted',
@@ -59,11 +68,15 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     private $state: ng.ui.IStateService,
     private toastr: ng.toastr.IToastrService,
     private AuthService: IXosAuthService,
-    private ModelStore: IXosModelStoreService
+    private XosModelStore: IXosModelStoreService
   ) {
     pluralize.addIrregularRule('xos', 'xoses');
     pluralize.addPluralRule(/slice$/i, 'slices');
     pluralize.addSingularRule(/slice$/i, 'slice');
+    pluralize.addPluralRule(/library$/i, 'librarys');
+    pluralize.addPluralRule(/imagedeployments/i, 'imagedeploymentses');
+    pluralize.addPluralRule(/controllerimages/i, 'controllerimageses');
+
   }
 
   public pluralize(string: string, quantity?: number, count?: boolean): string {
@@ -91,9 +104,9 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     return this.capitalizeFirst(string);
   }
 
-  public modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg {
+  public modelToTableCfg(model: IXosModeldef, baseUrl: string): IXosTableCfg {
     const cfg = {
-      columns: this.modelFieldsToColumnsCfg(model.fields, model.name),
+      columns: this.modelFieldsToColumnsCfg(model),
       filter: 'fulltext',
       order: {field: 'id', reverse: false},
       pagination: {
@@ -125,10 +138,11 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     return cfg;
   }
 
-  public modelFieldsToColumnsCfg(fields: IXosModelDefsField[], modelName: string): IXosTableColumn[] {
-
+  public modelFieldsToColumnsCfg(model: IXosModeldef): IXosTableColumn[] {
+    const fields: IXosModelDefsField[] = model.fields;
+    const modelName: string = model.name;
     const columns =  _.map(fields, (f) => {
-      if (this.excluded_fields.indexOf(f.name) > -1) {
+      if (!angular.isDefined(f) || this.excluded_fields.indexOf(f.name) > -1) {
         return;
       }
       const col: IXosTableColumn =  {
@@ -147,7 +161,9 @@ export class ConfigHelpers implements IXosConfigHelpersService {
           this.populateRelated(item, item[f.name], f);
           return item[f.name];
         };
-        col.link = item => this.stateWithParams(f.relation.model, item);
+        col.link = item => {
+          return this.stateWithParams(f.relation.model, item);
+        };
       }
 
       if (f.name === 'backend_status') {
@@ -175,11 +191,6 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     return columns;
   };
 
-  public urlFromCoreModel(name: string): string {
-
-    return `/core/${this.pluralize(name.toLowerCase())}`;
-  }
-
   public stateFromCoreModel(name: string): string {
     const state: ng.ui.IState = _.find(this.$state.get(), (s: IXosState) => {
       if (s.data) {
@@ -187,7 +198,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       }
       return false;
     });
-    return state.name;
+    return state ? state.name : null;
   }
 
   public stateWithParams(name: string, model: any): string {
@@ -204,32 +215,27 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   public modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[] {
 
     return _.map(fields, (f: IXosModelDefsField) => {
-      if (f.relation) {
-        const input: IXosFormInput = {
-          name: f.name,
-          label: this.toLabel(f.name),
-          type: 'select',
-          validators: f.validators,
-          hint: f.hint
-        };
-        this.populateSelectField(f, input);
-        return input;
-      }
-
-      return {
+      const input: IXosFormInput = {
         name: f.name,
         label: this.toLabel(f.name),
         type: f.type,
-        validators: f.validators
+        validators: this.formatValidators(f.validators),
+        hint: f.hint
       };
+      if (f.relation) {
+        input.type = 'select';
+        this.populateSelectField(f, input);
+        return input;
+      }
+      return input;
     })
       .filter(f => this.excluded_fields.indexOf(f.name) === -1);
   }
 
-  public modelToFormCfg(model: IModeldef): IXosFormConfig {
-    const formCfg: IXosFormConfig = {
+  public modelToFormCfg(model: IXosModeldef): IXosFormCfg {
+    const formCfg: IXosFormCfg = {
       formName: `${model.name}Form`,
-      exclude: ['backend_status', 'creator'],
+      exclude: ['backend_status', 'creator', 'id'],
       actions: [{
         label: 'Save',
         class: 'success',
@@ -258,12 +264,19 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       delete item.networks;
 
       // adding userId as creator
-      item.creator = this.AuthService.getUser().id;
+      // item.creator = this.AuthService.getUser().id;
+
+      // remove field added by xosTable
+      _.forEach(Object.keys(item), prop => {
+        if (prop.indexOf('-formatted') > -1) {
+          delete item[prop];
+        }
+      });
 
       item.$save()
         .then((res) => {
           if (res.status === 403 || res.status === 405 || res.status === 500) {
-            // TODO understand why 405 does not go directly in catch (it may be realted to ng-rest-gw)
+            // TODO understand why 405 does not go directly in catch (it may be related to ng-rest-gw)
             throw new Error();
           }
           formCfg.feedback = {
@@ -281,6 +294,15 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     };
 
     return formCfg;
+  }
+
+  private formatValidators(validators: IXosModelDefsFieldValidators[]): IXosFormInputValidator {
+    // convert validators as expressed from modelDefs,
+    // to the object required by xosForm
+    return _.reduce(validators, (formValidators: IXosFormInputValidator, v: IXosModelDefsFieldValidators) => {
+      formValidators[v.name] = v.bool_value ? v.bool_value : v.int_value;
+      return formValidators;
+    }, {});
   }
 
   private fromCamelCase(string: string): string {
@@ -304,12 +326,20 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     if (!fk || angular.isUndefined(fk) || fk === null) {
       return;
     }
-    this.ModelStore.query(field.relation.model)
+    this.XosModelStore.query(field.relation.model)
       .subscribe(res => {
         if (angular.isDefined(res) && angular.isDefined(fk)) {
           let ri = _.find(res, {id: fk});
           if (angular.isDefined(ri)) {
-            item[`${field.name}-formatted`] = angular.isDefined(ri.name) ? ri.name : ri.humanReadableName;
+            if (angular.isDefined(ri.name)) {
+              item[`${field.name}-formatted`] = ri.name;
+            }
+            else if (angular.isDefined(ri.humanReadableName)) {
+              item[`${field.name}-formatted`] = ri.humanReadableName;
+            }
+            else {
+              item[`${field.name}-formatted`] = ri.id;
+            }
           }
         }
       });
@@ -317,10 +347,14 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
   // augment a select field with related model informations
   private populateSelectField(field: IXosModelDefsField, input: IXosFormInput): void {
-    this.ModelStore.query(field.relation.model)
+    this.XosModelStore.query(field.relation.model)
       .subscribe(res => {
         input.options = _.map(res, item => {
-          return {id: item.id, label: item.humanReadableName ? item.humanReadableName : item.name};
+          let opt = {id: item.id, label: item.humanReadableName ? item.humanReadableName : item.name};
+          if (!angular.isDefined(item.humanReadableName) && !angular.isDefined(item.name)) {
+            opt.label = item.id;
+          }
+          return opt;
         });
       });
   }

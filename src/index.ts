@@ -20,18 +20,13 @@ import {
   interceptorConfig, userStatusInterceptor, CredentialsInterceptor,
   NoHyperlinksInterceptor
 } from './interceptors';
-import {IXosCrudData} from './app/views/crud/crud';
 import {IXosPageTitleService} from './app/core/services/page-title';
 import {IXosAuthService} from './app/datasources/rest/auth.rest';
-import {IXosModelSetupService} from './app/core/services/helpers/model-setup.helpers';
 import {IXosNavigationRoute} from './app/core/services/navigation';
 import XosLogDecorator from './decorators';
 import {xosExtender} from './app/extender/index';
 import {IXosKeyboardShortcutService} from './app/core/services/keyboard-shortcut';
-
-export interface IXosState extends angular.ui.IState {
-  data: IXosCrudData;
-};
+import {IXosModelDiscovererService} from './app/datasources/helpers/model-discoverer.service';
 
 export interface IXosAppConfig {
   apiEndpoint: string;
@@ -78,9 +73,10 @@ angular
   .run((
     $rootScope: ng.IRootScopeService,
     $transitions: any,
+    $log: ng.ILogService,
     $location: ng.ILocationService,
     $state: ng.ui.IStateService,
-    ModelSetup: IXosModelSetupService,
+    XosModelDiscoverer: IXosModelDiscovererService,
     AuthService: IXosAuthService,
     XosKeyboardShortcut: IXosKeyboardShortcutService,
     toastr: ng.toastr.IToastrService,
@@ -89,7 +85,7 @@ angular
 
     // check the user login
     $transitions.onSuccess({ to: '**' }, (transtion) => {
-      if (!AuthService.getUser()) {
+      if (!AuthService.isAuthenticated()) {
         $state.go('login');
       }
     });
@@ -112,9 +108,17 @@ angular
     const lastQueryString = $location.search();
 
     // if the user is authenticated
-    if (AuthService.getUser()) {
-      ModelSetup.setup()
-        .then(() => {
+    if (AuthService.isAuthenticated()) {
+      // ModelSetup.setup()
+      XosModelDiscoverer.discover()
+        .then((res) => {
+          if (res) {
+            $log.info('[XOS] All models loaded');
+          }
+          else {
+            $log.info('[XOS] Failed to load some models, moving on.');
+          }
+
           // after setting up dynamic routes, redirect to previous state
           $location.path(lastRoute).search(lastQueryString);
           $rootScope.$emit('xos.core.modelSetup');
@@ -123,6 +127,22 @@ angular
 
     // register keyboard shortcut
     XosKeyboardShortcut.setup();
+
+    XosKeyboardShortcut.registerKeyBinding({
+      key: 'd',
+      // modifiers: ['Command'],
+      cb: () => {
+        if (window.localStorage.getItem('debug') === 'true') {
+          $log.info(`[XosKeyboardShortcut] Disabling debug`);
+          window.localStorage.setItem('debug', 'false');
+        }
+        else {
+          window.localStorage.setItem('debug', 'true');
+          $log.info(`[XosKeyboardShortcut] Enabling debug`);
+        }
+      },
+      description: 'Toggle debug messages in browser console'
+    }, 'global');
 
   });
 

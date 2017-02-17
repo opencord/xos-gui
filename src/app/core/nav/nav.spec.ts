@@ -29,7 +29,7 @@ describe('Nav component', () => {
     angular
       .module('xosNav', ['app/core/nav/nav.html', 'ui.router'])
       .component('xosNav', xosNav)
-      .service('NavigationService', NavigationService)
+      .service('XosNavigationService', NavigationService)
       .value('AuthService', AuthMock)
       .value('StyleConfig', {})
       .value('XosSidePanel', {})

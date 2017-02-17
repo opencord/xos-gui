@@ -35,10 +35,10 @@ describe('The Navigation service', () => {
   });
 
   beforeEach(angular.mock.inject((
-    NavigationService: IXosNavigationService,
+    XosNavigationService: IXosNavigationService,
     _$log_: ng.ILogService
   ) => {
-    service = NavigationService;
+    service = XosNavigationService;
     $log = _$log_;
     spyOn($log, 'warn');
     defaultRoutes = [
