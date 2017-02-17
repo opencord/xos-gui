@@ -24,9 +24,9 @@ export class ModeldefsService {
 
   public get(): Promise<any> {
     const d = this.$q.defer();
-    this.$http.get(`${this.AppConfig.apiEndpoint}/utility/modeldefs/`)
-      .then((res) => {
-        d.resolve(res.data);
+    this.$http.get(`${this.AppConfig.apiEndpoint}/modeldefs`)
+      .then((res: any) => {
+        d.resolve(res.data.items);
       })
       .catch(e => {
         d.reject(e);
