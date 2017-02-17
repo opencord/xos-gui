@@ -37,6 +37,7 @@ class LoginCtrl {
         return this.ModelSetup.setup();
       })
       .then(() => {
+        console.log('go to dashboard');
         this.$state.go('xos.dashboard');
       })
       .catch(e => {
