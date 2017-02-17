@@ -1,9 +1,14 @@
-import {IXosState} from '../../../index';
-export interface IRuntimeStatesService {
+export interface IXosState extends angular.ui.IState {
+  data: {
+    model: string
+  };
+};
+
+export interface IXosRuntimeStatesService {
   addState(name: string, state: ng.ui.IState): void;
 }
 
-export function RuntimeStates($stateProvider: ng.ui.IStateProvider): ng.IServiceProvider {
+export function XosRuntimeStates($stateProvider: ng.ui.IStateProvider): ng.IServiceProvider {
   this.$get = function($state: ng.ui.IStateService) {
     return {
       addState: function(name: string, state: IXosState) {
