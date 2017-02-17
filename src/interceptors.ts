@@ -5,8 +5,8 @@
 export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourceProvider: angular.resource.IResourceServiceProvider) {
   $httpProvider.interceptors.push('UserStatusInterceptor');
   $httpProvider.interceptors.push('CredentialsInterceptor');
-  $httpProvider.interceptors.push('NoHyperlinksInterceptor');
-  $resourceProvider.defaults.stripTrailingSlashes = false;
+  // $httpProvider.interceptors.push('NoHyperlinksInterceptor');
+  // $resourceProvider.defaults.stripTrailingSlashes = false;
 }
 
 export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService) {
