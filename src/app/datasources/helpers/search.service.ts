@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 import {IXosNavigationService} from '../../core/services/navigation';
-import {IXosState} from '../../../index';
 import {IXosModelStoreService} from '../stores/model.store';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
+import {IXosState} from '../../core/services/runtime-states';
 
 export interface IXosSearchResult {
   label: string;
@@ -15,13 +15,13 @@ export interface IXosSearchService {
 }
 
 export class SearchService {
-  static $inject = ['$rootScope', 'NavigationService', 'ModelStore', 'ConfigHelpers'];
+  static $inject = ['$rootScope', 'XosNavigationService', 'XosModelStore', 'ConfigHelpers'];
   private states: IXosState[];
 
   constructor (
     private $rootScope: ng.IScope,
     private NavigationService: IXosNavigationService,
-    private ModelStore: IXosModelStoreService,
+    private XosModelStore: IXosModelStoreService,
     private ConfigHelpers: IXosConfigHelpersService
   ) {
     this.$rootScope.$on('xos.core.modelSetup', () => {
@@ -50,7 +50,7 @@ export class SearchService {
       return r;
     });
 
-    const models = _.map(this.ModelStore.search(query), m => {
+    const models = _.map(this.XosModelStore.search(query), m => {
       return {
         label: m.humanReadableName ? m.humanReadableName : m.name,
         state: this.ConfigHelpers.stateWithParamsForJs(m.modelName, m),

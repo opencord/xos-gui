@@ -2,16 +2,16 @@ import * as angular from 'angular';
 import 'angular-mocks';
 import 'angular-ui-router';
 import {xosCore} from '../index';
-import {IRuntimeStatesService} from './runtime-states';
+import {IXosRuntimeStatesService} from './runtime-states';
 
-let service: IRuntimeStatesService, $state: ng.ui.IStateService;
+let service: IXosRuntimeStatesService, $state: ng.ui.IStateService;
 
 describe('The Navigation service', () => {
 
   beforeEach(angular.mock.module(xosCore));
 
   beforeEach(angular.mock.inject((
-    RuntimeStates: IRuntimeStatesService,
+    RuntimeStates: IXosRuntimeStatesService,
     _$state_: ng.ui.IStateService
   ) => {
     service = RuntimeStates;

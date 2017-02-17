@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 import 'angular-mocks';
 import 'angular-resource';
-import {IXosModelStoreService, ModelStore} from './model.store';
+import {IXosModelStoreService, XosModelStore} from './model.store';
 import {Subject} from 'rxjs';
 import {IWSEvent} from '../websocket/global';
 import {StoreHelpers} from '../helpers/store.helpers';
@@ -46,7 +46,7 @@ describe('The ModelStore service', () => {
       .service('WebSocket', MockWs)
       .service('StoreHelpers', StoreHelpers) // TODO mock
       .service('ModelRest', ModelRest) // TODO mock
-      .service('ModelStore', ModelStore)
+      .service('XosModelStore', XosModelStore)
       .service('ConfigHelpers', ConfigHelpers) // TODO mock
       .service('AuthService', AuthService)
       .constant('AppConfig', MockAppCfg);

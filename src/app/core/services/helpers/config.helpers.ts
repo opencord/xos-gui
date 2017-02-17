@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
 import * as pluralize from 'pluralize';
 import {IXosTableColumn, IXosTableCfg} from '../../table/table';
-import {IModeldef} from '../../../datasources/rest/modeldefs.rest';
-import {IXosFormConfig, IXosFormInput} from '../../form/form';
+import {IXosModeldef} from '../../../datasources/rest/modeldefs.rest';
+import {IXosFormCfg, IXosFormInput} from '../../form/form';
 import {IXosAuthService} from '../../../datasources/rest/auth.rest';
 import {IXosModelStoreService} from '../../../datasources/stores/model.store';
-import {IXosState} from '../../../../index';
+import {IXosState} from '../runtime-states';
 
 export interface IXosModelDefsField {
   name: string;
@@ -20,21 +20,24 @@ export interface IXosModelDefsField {
 
 export interface IXosConfigHelpersService {
   excluded_fields: string[];
-  modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[]; // TODO use a proper interface
-  modelToTableCfg(model: IModeldef, modelName: string): IXosTableCfg;
+  modelFieldsToColumnsCfg(model: IXosModeldef): IXosTableColumn[];
+  modelToTableCfg(model: IXosModeldef, modelName: string): IXosTableCfg;
   modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[];
-  modelToFormCfg(model: IModeldef): IXosFormConfig;
+  modelToFormCfg(model: IXosModeldef): IXosFormCfg;
   pluralize(string: string, quantity?: number, count?: boolean): string;
   toLabel(string: string, pluralize?: boolean): string;
   toLabels(string: string[], pluralize?: boolean): string[];
-  urlFromCoreModel(model: string): string;
   stateFromCoreModel(name: string): string;
   stateWithParams(name: string, model: any): string;
   stateWithParamsForJs(name: string, model: any): any;
 }
 
 export class ConfigHelpers implements IXosConfigHelpersService {
-  static $inject = ['$state', 'toastr', 'AuthService', 'ModelStore'];
+  static $inject = [
+    '$state',
+    'toastr',
+    'AuthService',
+    'XosModelStore'];
 
   excluded_fields = [
     'created',
@@ -59,7 +62,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     private $state: ng.ui.IStateService,
     private toastr: ng.toastr.IToastrService,
     private AuthService: IXosAuthService,
-    private ModelStore: IXosModelStoreService
+    private XosModelStore: IXosModelStoreService
   ) {
     pluralize.addIrregularRule('xos', 'xoses');
     pluralize.addPluralRule(/slice$/i, 'slices');
@@ -91,9 +94,9 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     return this.capitalizeFirst(string);
   }
 
-  public modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg {
+  public modelToTableCfg(model: IXosModeldef, baseUrl: string): IXosTableCfg {
     const cfg = {
-      columns: this.modelFieldsToColumnsCfg(model.fields, model.name),
+      columns: this.modelFieldsToColumnsCfg(model),
       filter: 'fulltext',
       order: {field: 'id', reverse: false},
       pagination: {
@@ -125,10 +128,11 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     return cfg;
   }
 
-  public modelFieldsToColumnsCfg(fields: IXosModelDefsField[], modelName: string): IXosTableColumn[] {
-
+  public modelFieldsToColumnsCfg(model: IXosModeldef): IXosTableColumn[] {
+    const fields: IXosModelDefsField[] = model.fields;
+    const modelName: string = model.name;
     const columns =  _.map(fields, (f) => {
-      if (this.excluded_fields.indexOf(f.name) > -1) {
+      if (!angular.isDefined(f) || this.excluded_fields.indexOf(f.name) > -1) {
         return;
       }
       const col: IXosTableColumn =  {
@@ -174,11 +178,6 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
     return columns;
   };
-
-  public urlFromCoreModel(name: string): string {
-
-    return `/core/${this.pluralize(name.toLowerCase())}`;
-  }
 
   public stateFromCoreModel(name: string): string {
     const state: ng.ui.IState = _.find(this.$state.get(), (s: IXosState) => {
@@ -226,8 +225,8 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       .filter(f => this.excluded_fields.indexOf(f.name) === -1);
   }
 
-  public modelToFormCfg(model: IModeldef): IXosFormConfig {
-    const formCfg: IXosFormConfig = {
+  public modelToFormCfg(model: IXosModeldef): IXosFormCfg {
+    const formCfg: IXosFormCfg = {
       formName: `${model.name}Form`,
       exclude: ['backend_status', 'creator'],
       actions: [{
@@ -263,7 +262,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       item.$save()
         .then((res) => {
           if (res.status === 403 || res.status === 405 || res.status === 500) {
-            // TODO understand why 405 does not go directly in catch (it may be realted to ng-rest-gw)
+            // TODO understand why 405 does not go directly in catch (it may be related to ng-rest-gw)
             throw new Error();
           }
           formCfg.feedback = {
@@ -304,7 +303,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     if (!fk || angular.isUndefined(fk) || fk === null) {
       return;
     }
-    this.ModelStore.query(field.relation.model)
+    this.XosModelStore.query(field.relation.model)
       .subscribe(res => {
         if (angular.isDefined(res) && angular.isDefined(fk)) {
           let ri = _.find(res, {id: fk});
@@ -317,7 +316,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
   // augment a select field with related model informations
   private populateSelectField(field: IXosModelDefsField, input: IXosFormInput): void {
-    this.ModelStore.query(field.relation.model)
+    this.XosModelStore.query(field.relation.model)
       .subscribe(res => {
         input.options = _.map(res, item => {
           return {id: item.id, label: item.humanReadableName ? item.humanReadableName : item.name};

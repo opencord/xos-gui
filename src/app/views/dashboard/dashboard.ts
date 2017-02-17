@@ -1,7 +1,7 @@
 import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {IXosAuthService} from '../../datasources/rest/auth.rest';
 class DashboardController {
-  static $inject = ['$scope', '$state', 'ModelStore', 'AuthService'];
+  static $inject = ['$scope', '$state', 'XosModelStore', 'AuthService'];
 
   public nodes: number;
   public slices: number;
