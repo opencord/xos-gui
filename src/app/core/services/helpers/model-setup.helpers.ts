@@ -28,6 +28,9 @@ export class ModelSetup {
     const d = this.$q.defer();
     this.ModelDefs.get()
       .then((models: IModeldef[]) => {
+
+        // TODO add services base state (eg: xos.service.vrouter)
+
         _.forEach(models, (m: IModeldef) => {
           const stateUrl = `/${this.ConfigHelpers.pluralize(m.name.toLowerCase())}/:id?`;
           const stateName = `xos.core.${this.ConfigHelpers.pluralize(m.name.toLowerCase())}`;

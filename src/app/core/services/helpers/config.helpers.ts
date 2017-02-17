@@ -20,14 +20,13 @@ export interface IXosModelDefsField {
 
 export interface IXosConfigHelpersService {
   excluded_fields: string[];
-  modelFieldsToColumnsCfg(fields: IXosModelDefsField[], baseUrl: string): IXosTableColumn[]; // TODO use a proper interface
+  modelFieldsToColumnsCfg(model: IModeldef): IXosTableColumn[];
   modelToTableCfg(model: IModeldef, modelName: string): IXosTableCfg;
   modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[];
   modelToFormCfg(model: IModeldef): IXosFormConfig;
   pluralize(string: string, quantity?: number, count?: boolean): string;
   toLabel(string: string, pluralize?: boolean): string;
   toLabels(string: string[], pluralize?: boolean): string[];
-  urlFromCoreModel(model: string): string;
   stateFromCoreModel(name: string): string;
   stateWithParams(name: string, model: any): string;
   stateWithParamsForJs(name: string, model: any): any;
@@ -93,7 +92,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
   public modelToTableCfg(model: IModeldef, baseUrl: string): IXosTableCfg {
     const cfg = {
-      columns: this.modelFieldsToColumnsCfg(model.fields, model.name),
+      columns: this.modelFieldsToColumnsCfg(model),
       filter: 'fulltext',
       order: {field: 'id', reverse: false},
       pagination: {
@@ -125,10 +124,11 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     return cfg;
   }
 
-  public modelFieldsToColumnsCfg(fields: IXosModelDefsField[], modelName: string): IXosTableColumn[] {
-
+  public modelFieldsToColumnsCfg(model: IModeldef): IXosTableColumn[] {
+    const fields: IXosModelDefsField[] = model.fields;
+    const modelName: string = model.name;
     const columns =  _.map(fields, (f) => {
-      if (this.excluded_fields.indexOf(f.name) > -1) {
+      if (!angular.isDefined(f) || this.excluded_fields.indexOf(f.name) > -1) {
         return;
       }
       const col: IXosTableColumn =  {
@@ -174,11 +174,6 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
     return columns;
   };
-
-  public urlFromCoreModel(name: string): string {
-
-    return `/core/${this.pluralize(name.toLowerCase())}`;
-  }
 
   public stateFromCoreModel(name: string): string {
     const state: ng.ui.IState = _.find(this.$state.get(), (s: IXosState) => {
@@ -263,7 +258,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       item.$save()
         .then((res) => {
           if (res.status === 403 || res.status === 405 || res.status === 500) {
-            // TODO understand why 405 does not go directly in catch (it may be realted to ng-rest-gw)
+            // TODO understand why 405 does not go directly in catch (it may be related to ng-rest-gw)
             throw new Error();
           }
           formCfg.feedback = {

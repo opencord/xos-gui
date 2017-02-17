@@ -5,11 +5,17 @@ import * as _ from 'lodash';
 import {IXosFormConfig} from '../../core/form/form';
 import {IXosResourceService} from '../../datasources/rest/model.rest';
 import {IStoreHelpersService} from '../../datasources/helpers/store.helpers';
+
 export interface IXosCrudData {
   model: string;
   related: string[];
   xosTableCfg: IXosTableCfg;
   xosFormCfg: IXosFormConfig;
+}
+
+export interface IXosModelRelation {
+  model: string;
+  type: string;
 }
 
 class CrudController {
@@ -77,9 +83,9 @@ class CrudController {
     }
   }
 
-  public getRelatedItem(relation: string, item: any): number {
-    if (item && angular.isDefined(item[relation.toLowerCase()])) {
-      return item[relation.toLowerCase()];
+  public getRelatedItem(relation: IXosModelRelation, item: any): number {
+    if (item && angular.isDefined(item[`${relation.model.toLowerCase()}_id`])) {
+      return item[`${relation.model.toLowerCase()}_id`];
     }
     return 0;
   }

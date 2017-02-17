@@ -131,11 +131,6 @@ describe('The ConfigHelpers service', () => {
   });
 
   describe('the navigation methods', () => {
-    describe('urlFromCoreModels', () => {
-      it('should return the URL for a given model', () => {
-        expect(service.urlFromCoreModel('Test')).toBe('/core/tests');
-      });
-    });
     describe('stateFromCoreModels', () => {
 
       let state: ng.ui.IStateService;
@@ -156,7 +151,7 @@ describe('The ConfigHelpers service', () => {
 
   describe('the modelFieldsToColumnsCfg method', () => {
     it('should return an array of columns', () => {
-      const cols = service.modelFieldsToColumnsCfg(model.fields, 'testUrl/:id?');
+      const cols = service.modelFieldsToColumnsCfg({fields: model.fields, name: 'testUrl'});
       expect(cols[0].label).toBe('Id');
       expect(cols[0].prop).toBe('id');
       expect(cols[0].link).toBeDefined();

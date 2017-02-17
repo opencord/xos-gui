@@ -89,7 +89,7 @@ angular
 
     // check the user login
     $transitions.onSuccess({ to: '**' }, (transtion) => {
-      if (!AuthService.getUser()) {
+      if (!AuthService.isAuthenticated()) {
         $state.go('login');
       }
     });
@@ -112,7 +112,7 @@ angular
     const lastQueryString = $location.search();
 
     // if the user is authenticated
-    if (AuthService.getUser()) {
+    if (AuthService.isAuthenticated()) {
       ModelSetup.setup()
         .then(() => {
           // after setting up dynamic routes, redirect to previous state
