@@ -6,7 +6,7 @@ import {IXosSidePanelService} from '../side-panel/side-panel.service';
 import {IXosComponentInjectorService} from '../services/helpers/component-injector.helpers';
 
 class NavCtrl {
-  static $inject = ['$scope', '$state', 'NavigationService', 'AuthService', 'StyleConfig', 'XosSidePanel', 'XosComponentInjector'];
+  static $inject = ['$scope', '$state', 'XosNavigationService', 'AuthService', 'StyleConfig', 'XosSidePanel', 'XosComponentInjector'];
   public routes: IXosNavigationRoute[];
   public navSelected: string;
   public appName: string;

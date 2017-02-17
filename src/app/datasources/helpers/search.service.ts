@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 import {IXosNavigationService} from '../../core/services/navigation';
-import {IXosState} from '../../../index';
 import {IXosModelStoreService} from '../stores/model.store';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
+import {IXosState} from '../../core/services/runtime-states';
 
 export interface IXosSearchResult {
   label: string;
@@ -15,16 +15,18 @@ export interface IXosSearchService {
 }
 
 export class SearchService {
-  static $inject = ['$rootScope', 'NavigationService', 'ModelStore', 'ConfigHelpers'];
+  static $inject = ['$rootScope', '$log', 'XosNavigationService', 'XosModelStore', 'ConfigHelpers'];
   private states: IXosState[];
 
   constructor (
     private $rootScope: ng.IScope,
+    private $log: ng.ILogService,
     private NavigationService: IXosNavigationService,
-    private ModelStore: IXosModelStoreService,
+    private XosModelStore: IXosModelStoreService,
     private ConfigHelpers: IXosConfigHelpersService
   ) {
     this.$rootScope.$on('xos.core.modelSetup', () => {
+      this.$log.info(`[XosSearchService] Loading views`);
       this.states = this.NavigationService.query().reduce((list, state) => {
         // if it does not have child (otherwise it is abstract)
         if (!state.children || state.children.length === 0) {
@@ -39,18 +41,21 @@ export class SearchService {
         return list;
       }, []);
       this.states = _.uniqBy(this.states, 'state');
+      this.$log.debug(`[XosSearchService] Views Loaded: `, this.states);
     });
   }
 
   public search(query: string): IXosSearchResult[] {
+    this.$log.info(`[XosSearchService] Searching for: ${query}`);
     const routes: IXosSearchResult[] = _.filter(this.states, s => {
       return s.label.toLowerCase().indexOf(query) > -1;
     }).map(r => {
       r.type = 'View';
       return r;
     });
-
-    const models = _.map(this.ModelStore.search(query), m => {
+    // TODO XosModelStore.search throws an error,
+    // probably there is something wrong saved in the cache!!
+    const models = _.map(this.XosModelStore.search(query), m => {
       return {
         label: m.humanReadableName ? m.humanReadableName : m.name,
         state: this.ConfigHelpers.stateWithParamsForJs(m.modelName, m),

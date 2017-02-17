@@ -4,8 +4,8 @@ import {xosNav} from './nav/nav';
 import routesConfig from './routes';
 import {xosLogin} from './login/login';
 import {xosTable} from './table/table';
-import {RuntimeStates} from './services/runtime-states';
-import {NavigationService} from './services/navigation';
+import {XosRuntimeStates} from './services/runtime-states';
+import {IXosNavigationService} from './services/navigation';
 import {PageTitle} from './services/page-title';
 import {ConfigHelpers} from './services/helpers/config.helpers';
 import {xosLinkWrapper} from './link-wrapper/link-wrapper';
@@ -15,7 +15,6 @@ import {xosField} from './field/field';
 import 'angular-toastr';
 import {xosAlert} from './alert/alert';
 import {xosValidation} from './validation/validation';
-import {ModelSetup} from './services/helpers/model-setup.helpers';
 import {xosSidePanel} from './side-panel/side-panel';
 import {XosSidePanel} from './side-panel/side-panel.service';
 import {XosComponentInjector} from './services/helpers/component-injector.helpers';
@@ -33,12 +32,11 @@ angular
     'ui.bootstrap.typeahead'
   ])
   .config(routesConfig)
-  .provider('RuntimeStates', RuntimeStates)
-  .service('NavigationService', NavigationService)
+  .provider('XosRuntimeStates', XosRuntimeStates)
+  .service('XosNavigationService', IXosNavigationService)
   .service('PageTitle', PageTitle)
   .service('XosFormHelpers', XosFormHelpers)
   .service('ConfigHelpers', ConfigHelpers)
-  .service('ModelSetup', ModelSetup)
   .service('XosSidePanel', XosSidePanel)
   .service('XosKeyboardShortcut', XosKeyboardShortcut)
   .service('XosComponentInjector', XosComponentInjector)
