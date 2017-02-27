@@ -1,19 +1,17 @@
 /// <reference path="../typings/index.d.ts" />
 
-// TODO handle backend failure
-
 export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourceProvider: angular.resource.IResourceServiceProvider) {
   $httpProvider.interceptors.push('UserStatusInterceptor');
   $httpProvider.interceptors.push('CredentialsInterceptor');
   $httpProvider.interceptors.push('NoHyperlinksInterceptor');
 }
 
-export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService) {
-
+export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService, $q: ng.IQService) {
   const checkLogin = (res) => {
     if (res.status === 401 || res.status === -1) {
       $cookies.remove('sessionid', {path: '/'});
       $state.go('login');
+      return $q.reject(res);
     }
     return res;
   };
