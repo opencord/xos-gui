@@ -8,12 +8,13 @@ export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourc
   $httpProvider.interceptors.push('NoHyperlinksInterceptor');
 }
 
-export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService) {
-
+export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService, $q: ng.IQService) {
+  // NOTE this interceptor can cause everything to go in .then
   const checkLogin = (res) => {
     if (res.status === 401 || res.status === -1) {
       $cookies.remove('sessionid', {path: '/'});
       $state.go('login');
+      return $q.reject(res);
     }
     return res;
   };
