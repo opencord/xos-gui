@@ -7,8 +7,11 @@ export interface IAuthRequestData {
 
 export interface IAuthResponseData extends IHttpPromiseCallbackArg<any> {
   data: {
+<<<<<<< HEAD
     // user: string;
     // xoscsrftoken: string;
+=======
+>>>>>>> 1ba7b1b... Login errors
     sessionid: string;
   };
 }
@@ -39,10 +42,10 @@ export class AuthService {
     const d = this.$q.defer();
     this.$http.post(`${this.AppConfig.apiEndpoint}/utility/login`, data)
       .then((res: IAuthResponseData) => {
-        // this.$cookies.put('xoscsrftoken', res.data.xoscsrftoken, {path: '/'});
+        if (res.status >= 400) {
+          return d.reject(res.data);
+        }
         this.$cookies.put('sessionid', res.data.sessionid, {path: '/'});
-        // this.$cookies.put('xosuser', res.data.user, {path: '/'});
-        // res.data.user = JSON.parse(res.data.user);
         d.resolve(res.data);
       })
       .catch(e => {

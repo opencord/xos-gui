@@ -32,6 +32,7 @@
             <input type="password" ng-model="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control">
             <!--<span class="help-block small">Your strong password</span>-->
           </div>
+          <xos-alert config="{type: 'danger'}" show="vm.showErrorMsg">{{vm.errorMsg}}</xos-alert>
           <div>
             <button ng-click="vm.login(username, password)" class="btn btn-accent">Login</button>
             <!--<a class="btn btn-default" href="register.html">Register</a>-->

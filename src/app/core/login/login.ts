@@ -8,7 +8,8 @@ class LoginCtrl {
   static $inject = ['$log', 'AuthService', '$state', 'XosModelDiscoverer', 'StyleConfig'];
   public loginStyle: any;
   public img: string;
-
+  public showErrorMsg: boolean = false;
+  public errorMsg: string;
   constructor(
     private $log: ng.ILogService,
     private authService: AuthService,
@@ -34,6 +35,7 @@ class LoginCtrl {
       password: password
     })
       .then(res => {
+        this.showErrorMsg = false;
         // after login set up models
         return this.XosModelDiscoverer.discover();
       })
@@ -41,7 +43,9 @@ class LoginCtrl {
         this.$state.go('xos.dashboard');
       })
       .catch(e => {
-        this.$log.error(e);
+        this.$log.error(`[XosLogin] Error during login.`);
+        this.errorMsg = `Something went wrong, please try again.`;
+        this.showErrorMsg = true;
       });
   }
 
