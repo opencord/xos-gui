@@ -62,6 +62,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
 
         const pArray = [];
         _.forEach(modelsDef, (model: IXosModeldef) => {
+          this.$log.debug(`[XosModelDiscovererService] Loading: ${model.name}`);
           let p = this.cacheModelEntries(model)
             .then(model => {
               return this.addState(model);
@@ -167,15 +168,20 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
       },
       component: 'xosCrud',
     };
-    this.XosRuntimeStates.addState(
-      this.stateNameFromModel(model),
-      state
-    );
 
-    // extend model
-    model.clientUrl = `${this.serviceNameFromAppName(model.app)}${clientUrl}`;
+    try {
+      this.XosRuntimeStates.addState(
+        this.stateNameFromModel(model),
+        state
+      );
 
-    d.resolve(model);
+      // extend model
+      model.clientUrl = `${this.serviceNameFromAppName(model.app)}${clientUrl}`;
+
+      d.resolve(model);
+    } catch (e) {
+      d.reject(e);
+    }
     return d.promise;
   }
 
@@ -186,13 +192,17 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
 
     const parentState: string = this.getParentStateFromModel(model);
 
-    this.XosNavigationService.add({
-      label: this.ConfigHelpers.pluralize(model.name),
-      state: stateName,
-      parent: parentState
-    });
+    try {
+      this.XosNavigationService.add({
+        label: this.ConfigHelpers.pluralize(model.name),
+        state: stateName,
+        parent: parentState
+      });
+      d.resolve(model);
+    } catch (e) {
+      d.reject(e);
+    }
 
-    d.resolve(model);
 
     return d.promise;
   }

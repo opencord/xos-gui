@@ -1,18 +1,5 @@
 const conf = require('./gulp.conf');
-const httpProxy = require('http-proxy');
-
-// TODO move the proxy config in a separate file and share with browsersync.dist.js
-
-const proxy = httpProxy.createProxyServer({
-  target: 'http://xos.dev:9101'
-});
-
-proxy.on('error', function(error, req, res) {
-  res.writeHead(500, {
-    'Content-Type': 'text/plain'
-  });
-  console.error('[Proxy]', error);
-});
+const proxy = require('./proxy');
 
 module.exports = function () {
   return {

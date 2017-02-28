@@ -1,5 +1,5 @@
 angular.module('app')
   .constant('AppConfig', {
-    apiEndpoint: '/spa/api',
+    apiEndpoint: '/xosapi/v1',
     websocketClient: '/'
   });
