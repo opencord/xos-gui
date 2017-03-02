@@ -23,9 +23,6 @@ export class XosModelStore implements IXosModelStoreService {
   }
 
   public query(modelName: string, apiUrl: string): Observable<any> {
-    if (modelName === 'XOSGuiExtension') {
-      this.$log.log(performance.now(), `QUERY Model ${modelName}` );
-    }
     // if there isn't already an observable for that item
     // create a new one and .next() is called by this.loadInitialData once data are received
     if (!this._collections[modelName]) {
