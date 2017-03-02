@@ -8,12 +8,16 @@ export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourc
 
 export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService, $q: ng.IQService) {
   const checkLogin = (res) => {
-    if (res.status === 401 || res.status === -1) {
-      $cookies.remove('sessionid', {path: '/'});
-      $state.go('login');
-      return $q.reject(res);
+    switch (res.status) {
+      case -1:
+      case 401:
+      case 500:
+        $cookies.remove('sessionid', {path: '/'});
+        $state.go('login');
+        return $q.reject(res);
+      default:
+        return res;
     }
-    return res;
   };
 
   return {

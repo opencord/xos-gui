@@ -24,9 +24,14 @@ export class XosModelStore implements IXosModelStoreService {
 
   public query(modelName: string, apiUrl: string): Observable<any> {
     // if there isn't already an observable for that item
+    // create a new one and .next() is called by this.loadInitialData once data are received
     if (!this._collections[modelName]) {
       this._collections[modelName] = new BehaviorSubject([]); // NOTE maybe this can be created when we get response from the resource
       this.loadInitialData(modelName, apiUrl);
+    }
+    // else manually trigger the next with the last know value to trigger the subscribe method of who's requestiong this data
+    else {
+      this._collections[modelName].next(this._collections[modelName].value);
     }
 
     this.webSocket.list()
@@ -76,7 +81,7 @@ export class XosModelStore implements IXosModelStoreService {
   }
 
   private loadInitialData(model: string, apiUrl?: string) {
-    // TODO provide alway the apiUrl togheter with the query() params
+    // TODO provide always the apiUrl togheter with the query() params
     if (!angular.isDefined(apiUrl)) {
       // NOTE check what is the correct pattern to pluralize this
       apiUrl = this.storeHelpers.urlFromCoreModel(model);
@@ -87,10 +92,8 @@ export class XosModelStore implements IXosModelStoreService {
           this._collections[model].next(res);
         })
       .catch(
-        // TODO understand how to send an error to an observable
         err => {
           this._collections[model].error(err);
-          // this.$log.log(`Error retrieving ${model}`, err);
         }
       );
   }
