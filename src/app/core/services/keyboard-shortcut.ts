@@ -75,7 +75,7 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
 
     $transitions.onStart({ to: '**' }, (transtion) => {
       // delete view keys before that a new view is loaded
-        this.$log.info(`[XosKeyboardShortcut] Deleting view keys`);
+        this.$log.debug(`[XosKeyboardShortcut] Deleting view keys`);
         this.keyMapping.view = [];
     });
   }
@@ -125,7 +125,7 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
   public registerKeyBinding(binding: IXosKeyboardShortcutBinding, target: string = 'view'): void {
     // NOTE check for already taken binding (by key)
     // NOTE check target is either 'view' or 'global'
-    this.$log.info(`[XosKeyboardShortcut] Registering binding for key: ${binding.key}`);
+    this.$log.debug(`[XosKeyboardShortcut] Registering binding for key: ${binding.key}`);
     if (!_.find(this.keyMapping[target], {key: binding.key})) {
       this.keyMapping[target].push(binding);
     }
