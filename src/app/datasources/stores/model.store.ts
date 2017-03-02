@@ -23,6 +23,9 @@ export class XosModelStore implements IXosModelStoreService {
   }
 
   public query(modelName: string, apiUrl: string): Observable<any> {
+    if (modelName === 'XOSGuiExtension') {
+      this.$log.log(performance.now(), `QUERY Model ${modelName}` );
+    }
     // if there isn't already an observable for that item
     // create a new one and .next() is called by this.loadInitialData once data are received
     if (!this._collections[modelName]) {
@@ -31,6 +34,9 @@ export class XosModelStore implements IXosModelStoreService {
     }
     // else manually trigger the next with the last know value to trigger the subscribe method of who's requestiong this data
     else {
+      if (modelName === 'XOSGuiExtension') {
+        this.$log.log(performance.now(), `NEXT called for Model ${modelName} and val:`, this._collections[modelName].value);
+      }
       this._collections[modelName].next(this._collections[modelName].value);
     }
 
@@ -40,7 +46,7 @@ export class XosModelStore implements IXosModelStoreService {
         (event: IWSEvent) => {
           this.storeHelpers.updateCollection(event, this._collections[modelName]);
         },
-        err => console.error
+        err => this.$log.error
       );
 
     return this._collections[modelName].asObservable();
@@ -89,6 +95,9 @@ export class XosModelStore implements IXosModelStoreService {
     this.ModelRest.getResource(apiUrl).query().$promise
       .then(
         res => {
+          if (model === 'XOSGuiExtension') {
+            this.$log.log(performance.now(), `NEXT called for Model ${model} in loadInitialData and val: `, res);
+          }
           this._collections[model].next(res);
         })
       .catch(

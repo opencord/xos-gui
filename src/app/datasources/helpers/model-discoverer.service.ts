@@ -30,6 +30,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
   static $inject = [
     '$log',
     '$q',
+    '$timeout',
     'XosModelDefs',
     'ConfigHelpers',
     'XosRuntimeStates',
@@ -44,6 +45,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
   constructor (
     private $log: ng.ILogService,
     private $q: ng.IQService,
+    private $timeout: ng.ITimeoutService,
     private XosModelDefs: IXosModeldefsService,
     private ConfigHelpers: IXosConfigHelpersService,
     private XosRuntimeStates: IXosRuntimeStatesService,
@@ -220,16 +222,11 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
   private cacheModelEntries(model: IXosModel): ng.IPromise<IXosModel> {
     const d = this.$q.defer();
 
-    let populated = false;
     const apiUrl = this.getApiUrlFromModel(model);
     this.XosModelStore.query(model.name, apiUrl)
       .subscribe(
         () => {
-          // skipping the first response as the observable gets created as an empty array
-          if (populated) {
-            return d.resolve(model);
-          }
-          populated = true;
+          return d.resolve(model);
         },
         err => {
           return d.reject(err);
