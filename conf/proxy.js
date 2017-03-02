@@ -1,7 +1,7 @@
 const httpProxy = require('http-proxy');
 
 const proxy = httpProxy.createProxyServer({
-  target: 'http://xos.dev:9101'
+  target: 'http://192.168.46.100:9101'
 });
 
 proxy.on('error', function(error, req, res) {

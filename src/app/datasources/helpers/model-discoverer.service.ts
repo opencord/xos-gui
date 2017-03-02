@@ -34,10 +34,12 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     'ConfigHelpers',
     'XosRuntimeStates',
     'XosNavigationService',
-    'XosModelStore'
+    'XosModelStore',
+    'ngProgressFactory'
   ];
   private xosModels: IXosModel[] = []; // list of augmented model definitions;
   private xosServices: string[] = []; // list of loaded services
+  private progressBar;
 
   constructor (
     private $log: ng.ILogService,
@@ -46,8 +48,11 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     private ConfigHelpers: IXosConfigHelpersService,
     private XosRuntimeStates: IXosRuntimeStatesService,
     private XosNavigationService: IXosNavigationService,
-    private XosModelStore: IXosModelStoreService
+    private XosModelStore: IXosModelStoreService,
+    private ngProgressFactory: any // check for type defs
   ) {
+    this.progressBar = this.ngProgressFactory.createInstance();
+    this.progressBar.setColor('#f6a821');
   }
 
   public get(modelName: string): IXosModel|null {
@@ -56,7 +61,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
 
   public discover() {
     const d = this.$q.defer();
-
+    this.progressBar.start();
     this.XosModelDefs.get()
       .then((modelsDef: IXosModeldef[]) => {
 
@@ -81,23 +86,28 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
             })
             .then(model => {
               this.$log.debug(`[XosModelDiscovererService] Model ${model.name} stored`);
-              return this.$q.resolve();
+              return this.$q.resolve('true');
             })
             .catch(err => {
               this.$log.error(`[XosModelDiscovererService] Model ${model.name} NOT stored`);
-              // NOTE why this does not resolve?????
-              // return this.$q.resolve();
-              return this.$q.reject();
+              return this.$q.resolve('false');
             });
             pArray.push(p);
         });
         this.$q.all(pArray)
-          .then(() => {
+          .then((res) => {
+            // the Model Loader promise won't ever be reject, in case it will be resolve with value false,
+            // that's because we want to wait anyway for all the models to be loaded
+            if (res.indexOf('false') > -1) {
+              d.resolve(false);
+            }
             d.resolve(true);
-            this.$log.info('[XosModelDiscovererService] All models loaded!');
           })
           .catch(() => {
             d.resolve(false);
+          })
+          .finally(() => {
+            this.progressBar.complete();
           });
       });
     return d.promise;
@@ -210,19 +220,19 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
   private cacheModelEntries(model: IXosModel): ng.IPromise<IXosModel> {
     const d = this.$q.defer();
 
-    let called = false;
+    let populated = false;
     const apiUrl = this.getApiUrlFromModel(model);
     this.XosModelStore.query(model.name, apiUrl)
       .subscribe(
         () => {
           // skipping the first response as the observable gets created as an empty array
-          if (called) {
+          if (populated) {
             return d.resolve(model);
           }
-          called = true;
+          populated = true;
         },
         err => {
-          d.reject(err);
+          return d.reject(err);
         }
       );
 

@@ -6,6 +6,7 @@ import * as angular from 'angular';
 import 'angular-ui-router';
 import 'angular-resource';
 import 'angular-cookies';
+import '../node_modules/ngprogress/build/ngProgress';
 import routesConfig from './routes';
 
 import {main} from './app/main';
@@ -48,9 +49,10 @@ angular
     xosDataSources,
     xosViews,
     xosExtender,
+    xosTemplate, // template module
     'ui.router',
     'ngResource',
-    xosTemplate // template module
+    'ngProgress'
   ])
   .config(XosLogDecorator)
   .config(routesConfig)
@@ -121,6 +123,8 @@ angular
 
           // after setting up dynamic routes, redirect to previous state
           $location.path(lastRoute).search(lastQueryString);
+        })
+        .finally(() => {
           $rootScope.$emit('xos.core.modelSetup');
         });
     }

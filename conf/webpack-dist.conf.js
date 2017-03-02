@@ -91,7 +91,8 @@ module.exports = {
   },
   entry: {
     app: `./${conf.path.src('index')}`,
-    vendor: Object.keys(pkg.dependencies)
+    vendor: Object.keys(pkg.dependencies),
+    loader: `./${conf.path.src('/app/style/imports/loader.scss')}`
   },
   ts: {
     configFileName: 'tsconfig.json'
