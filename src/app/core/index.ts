@@ -22,6 +22,7 @@ import {XosKeyboardShortcut} from './services/keyboard-shortcut';
 import {xosKeyBindingPanel} from './key-binding/key-binding-panel';
 import {xosPagination} from './pagination/pagination';
 import {PaginationFilter} from './pagination/pagination.filter';
+import {XosDebouncer} from './services/helpers/debounce.helper';
 
 export const xosCore = 'xosCore';
 
@@ -40,6 +41,7 @@ angular
   .service('XosSidePanel', XosSidePanel)
   .service('XosKeyboardShortcut', XosKeyboardShortcut)
   .service('XosComponentInjector', XosComponentInjector)
+  .service('XosDebouncer', XosDebouncer)
   .directive('xosLinkWrapper', xosLinkWrapper)
   .component('xosHeader', xosHeader)
   .component('xosFooter', xosFooter)

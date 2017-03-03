@@ -41,7 +41,6 @@ export class SearchService {
         return list;
       }, []);
       this.states = _.uniqBy(this.states, 'state');
-      this.$log.debug(`[XosSearchService] Views Loaded: `, this.states);
     });
   }
 
