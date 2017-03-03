@@ -41,12 +41,11 @@ export class SearchService {
         return list;
       }, []);
       this.states = _.uniqBy(this.states, 'state');
-      this.$log.debug(`[XosSearchService] Views Loaded: `, this.states);
     });
   }
 
   public search(query: string): IXosSearchResult[] {
-    this.$log.info(`[XosSearchService] Searching for: ${query}`);
+    this.$log.debug(`[XosSearchService] Searching for: ${query}`);
     const routes: IXosSearchResult[] = _.filter(this.states, s => {
       return s.label.toLowerCase().indexOf(query) > -1;
     }).map(r => {

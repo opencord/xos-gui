@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs/Rx';
 import {IWSEvent, IWSEventService} from '../websocket/global';
 import {IXosResourceService} from '../rest/model.rest';
 import {IStoreHelpersService} from '../helpers/store.helpers';
+import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
 
 export interface  IXosModelStoreService {
   query(model: string, apiUrl?: string): Observable<any>;
@@ -11,15 +12,18 @@ export interface  IXosModelStoreService {
 }
 
 export class XosModelStore implements IXosModelStoreService {
-  static $inject = ['$log', 'WebSocket', 'StoreHelpers', 'ModelRest'];
+  static $inject = ['$log', 'WebSocket', 'StoreHelpers', 'ModelRest', 'XosDebouncer'];
   private _collections: any; // NOTE contains a map of {model: BehaviourSubject}
+  private efficientNext: any; // NOTE debounce next
   constructor(
     private $log: ng.ILogService,
     private webSocket: IWSEventService,
     private storeHelpers: IStoreHelpersService,
     private ModelRest: IXosResourceService,
+    private XosDebouncer: IXosDebouncer
   ) {
     this._collections = {};
+    this.efficientNext = this.XosDebouncer.debounce(this.next, 500, false);
   }
 
   public query(modelName: string, apiUrl: string): Observable<any> {
@@ -31,7 +35,7 @@ export class XosModelStore implements IXosModelStoreService {
     }
     // else manually trigger the next with the last know value to trigger the subscribe method of who's requestiong this data
     else {
-      this._collections[modelName].next(this._collections[modelName].value);
+      this.efficientNext(this._collections[modelName]);
     }
 
     this.webSocket.list()
@@ -78,6 +82,10 @@ export class XosModelStore implements IXosModelStoreService {
 
   public get(model: string, id: number) {
     // TODO implement a get method
+  }
+
+  private next(subject: BehaviorSubject<any>): void {
+    subject.next(subject.value);
   }
 
   private loadInitialData(model: string, apiUrl?: string) {
