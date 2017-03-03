@@ -118,21 +118,25 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     });
   }
 
+  private getNodeIndexById(id: number, nodes: IXosServiceModel[]) {
+    return _.findIndex(nodes, {id: id});
+  }
+
   private graphDataToCoarseGraph(data: IXosCoarseGraphData) {
 
+    // TODO find how to bind source/target by node ID and not by position in array (ask Simon?)
     const links: IXosServiceGraphLink[] = _.chain(data.tenants)
       .filter((t: IXosTenantModel) => t.kind === 'coarse')
       .map((t: IXosTenantModel) => {
         return {
           id: t.id,
-          source: t.provider_service_id,
-          target: t.subscriber_service_id,
+          source: this.getNodeIndexById(t.provider_service_id, data.services),
+          target: this.getNodeIndexById(t.subscriber_service_id, data.services),
           model: t
         };
       })
       .value();
 
-    // NOTE show all services anyway or find only the node that have links pointing to it
     const nodes: IXosServiceGraphNode[] = _.map(data.services, (s: IXosServiceModel) => {
       return {
         id: s.id,
@@ -141,7 +145,6 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       };
     });
 
-    // TODO call next on this.d3CoarseGraph
     this.d3CoarseGraph.next({
       nodes: nodes,
       links: links
