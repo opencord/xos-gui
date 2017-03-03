@@ -23,7 +23,7 @@ export class XosModelStore implements IXosModelStoreService {
     private XosDebouncer: IXosDebouncer
   ) {
     this._collections = {};
-    this.efficientNext = this.XosDebouncer.debounce(this.next, 500, false);
+    this.efficientNext = this.XosDebouncer.debounce(this.next, 500, this, false);
   }
 
   public query(modelName: string, apiUrl: string): Observable<any> {

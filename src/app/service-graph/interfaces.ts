@@ -30,6 +30,11 @@ export interface IXosTenantModel {
   subscribed_tenants_ids: number[];
 }
 
+export interface IXosCoarseGraphData {
+  services: IXosServiceModel[];
+  tenants: IXosTenantModel[];
+}
+
 export interface IXosServiceGraphNodeBadge {
   type: 'info'|'success'|'warning'|'danger';
   text: string;
@@ -37,18 +42,20 @@ export interface IXosServiceGraphNodeBadge {
 
 export interface IXosServiceGraphNode {
   id: number;
-  x: number;
-  y: number;
-  px: number;
-  py: number;
   label: string;
-  badge: IXosServiceGraphNodeBadge;
+  x?: number;
+  y?: number;
+  px?: number;
+  py?: number;
+  badge?: IXosServiceGraphNodeBadge;
+  model: IXosServiceModel;
 }
 
 export interface IXosServiceGraphLink {
   id: number;
   source: number;
   target: number;
+  model: IXosTenantModel;
 }
 
 export interface IXosServiceGraph {

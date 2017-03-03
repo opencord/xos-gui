@@ -22,7 +22,7 @@ describe('The XosDebouncer service', () => {
 
   it('should call a function only after it has not been called for 500ms', (done) => {
     const spy = jasmine.createSpy('fn');
-    const efficientSpy = service.debounce(spy, 500, false);
+    const efficientSpy = service.debounce(spy, 500, this, false);
     /* tslint:disable */
     efficientSpy();
     efficientSpy();
