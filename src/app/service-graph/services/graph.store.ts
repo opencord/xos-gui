@@ -9,6 +9,7 @@ import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
 export interface IXosServiceGraphStore {
   get(): Observable<IXosServiceGraph>;
   getCoarse(): Observable<IXosServiceGraph>;
+  getGraphData(): Observable<IXosCoarseGraphData>;
   dispose(): void;
 }
 
@@ -104,6 +105,10 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     return this.d3CoarseGraph.asObservable();
   }
 
+  public getGraphData() {
+    return this.graphData.asObservable();
+  }
+
   private combineData(data: any, type: 'services'|'tenants') {
     switch (type) {
       case 'services':
@@ -117,10 +122,12 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
   }
 
   private _handleData(services: IXosServiceModel[], tenants: IXosTenantModel[]) {
-    this.graphData.next({
-      services: this.services,
-      tenants: this.tenants
-    });
+    if (services.length > 0 || tenants.length > 0) {
+      this.graphData.next({
+        services: this.services,
+        tenants: this.tenants
+      });
+    }
   }
 
   private getCoarseNodeIndexById(id: number, nodes: IXosServiceModel[]) {
