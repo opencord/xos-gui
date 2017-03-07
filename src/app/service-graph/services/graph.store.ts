@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {Observable, BehaviorSubject} from 'rxjs';
+import {Observable, BehaviorSubject, Subscription} from 'rxjs';
 import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {
   IXosServiceGraph, IXosServiceModel, IXosTenantModel, IXosCoarseGraphData,
@@ -9,6 +9,7 @@ import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
 export interface IXosServiceGraphStore {
   get(): Observable<IXosServiceGraph>;
   getCoarse(): Observable<IXosServiceGraph>;
+  dispose(): void;
 }
 
 export class XosServiceGraphStore implements IXosServiceGraphStore {
@@ -36,8 +37,8 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
   private handleData;
 
   // datastore
-  private ServiceObservable: Observable<any>;
-  private TenantObservable: Observable<any>;
+  private ServiceSubscription: Subscription;
+  private TenantSubscription: Subscription;
 
   constructor (
     private $log: ng.ILogService,
@@ -50,27 +51,25 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     // we want to have a quiet period of 500ms from the last event before doing anything
     this.handleData = this.XosDebouncer.debounce(this._handleData, 500, this, false);
 
-    this.ServiceObservable = this.XosModelStore.query('Service', '/core/services');
-    this.TenantObservable = this.XosModelStore.query('Tenant', '/core/tenants');
 
     // observe models and populate graphData
-    this.ServiceObservable
+    this.ServiceSubscription = this.XosModelStore.query('Service', '/core/services')
       .subscribe(
         (res) => {
           this.combineData(res, 'services');
         },
         (err) => {
-          this.$log.error(err);
+          this.$log.error(`[XosServiceGraphStore] graphData Observable: `, err);
         }
       );
 
-    this.TenantObservable
+    this.TenantSubscription = this.XosModelStore.query('Tenant', '/core/tenants')
       .subscribe(
         (res) => {
           this.combineData(res, 'tenants');
         },
         (err) => {
-          this.$log.error(err);
+          this.$log.error(`[XosServiceGraphStore] graphData Observable: `, err);
         }
       );
 
@@ -89,6 +88,12 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
           this.$log.error(`[XosServiceGraphStore] graphData Observable: `, err);
         }
       );
+  }
+
+  public dispose() {
+    // cancel subscriptions from observables
+    this.ServiceSubscription.unsubscribe();
+    this.TenantSubscription.unsubscribe();
   }
 
   public get() {
@@ -118,20 +123,19 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     });
   }
 
-  private getNodeIndexById(id: number, nodes: IXosServiceModel[]) {
+  private getCoarseNodeIndexById(id: number, nodes: IXosServiceModel[]) {
     return _.findIndex(nodes, {id: id});
   }
 
   private graphDataToCoarseGraph(data: IXosCoarseGraphData) {
-
     // TODO find how to bind source/target by node ID and not by position in array (ask Simon?)
     const links: IXosServiceGraphLink[] = _.chain(data.tenants)
       .filter((t: IXosTenantModel) => t.kind === 'coarse')
       .map((t: IXosTenantModel) => {
         return {
           id: t.id,
-          source: this.getNodeIndexById(t.provider_service_id, data.services),
-          target: this.getNodeIndexById(t.subscriber_service_id, data.services),
+          source: this.getCoarseNodeIndexById(t.provider_service_id, data.services),
+          target: this.getCoarseNodeIndexById(t.subscriber_service_id, data.services),
           model: t
         };
       })
