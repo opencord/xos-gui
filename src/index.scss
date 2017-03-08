@@ -10,6 +10,15 @@ html, body.blank {
   min-height: 100%;
 }
 
+body {
+  min-height: 90%;
+}
+
+ui-view, xos, .wrapper, .content {
+  display: block;
+  min-height: 100%;
+}
+
 .content > div {
   opacity: 1 !important;
 }

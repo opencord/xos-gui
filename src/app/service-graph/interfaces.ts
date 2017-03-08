@@ -17,9 +17,10 @@ export interface IXosTenantModel {
   // destination
   subscriber_service_id: number;
   subscriber_tenant_id: number;
-  subscriber_user_id: number;
   subscriber_root_id: number;
   subscriber_network_id: number;
+
+  subscriber_user_id: number;
 
   // extra informations
   service_specific_id: string;
@@ -33,6 +34,11 @@ export interface IXosTenantModel {
 export interface IXosCoarseGraphData {
   services: IXosServiceModel[];
   tenants: IXosTenantModel[];
+}
+
+export interface IXosFineGrainedGraphData extends IXosCoarseGraphData {
+  subscribers: IXosServiceModel[];
+  networks: IXosTenantModel[];
 }
 
 export interface IXosServiceGraphNodeBadge {
@@ -49,6 +55,7 @@ export interface IXosServiceGraphNode {
   py?: number;
   badge?: IXosServiceGraphNodeBadge;
   model: IXosServiceModel;
+  type: 'service' | 'tenant' | 'network' | 'subscriber';
 }
 
 export interface IXosServiceGraphLink {

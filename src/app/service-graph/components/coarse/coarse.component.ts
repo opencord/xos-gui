@@ -23,7 +23,7 @@ class XosCoarseTenancyGraphCtrl {
   private linkGroup;
   private nodeGroup;
 
-  // debounce functions
+  // debounced functions
   private renderGraph;
 
   constructor (
