@@ -36,10 +36,10 @@ export class IXosNavigationService {
         label: 'Core',
         state: 'xos.core'
       },
-      // {
-      //   label: 'Service',
-      //   state: 'xos.services'
-      // },
+      {
+        label: 'Service Graph',
+        state: 'xos.fine-grained-graph'
+      },
     ];
     // adding configuration defined routes
     // this.routes = StyleConfig.routes.concat(defaultRoutes).reverse();

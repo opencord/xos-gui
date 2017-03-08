@@ -49,6 +49,10 @@ describe('The Navigation service', () => {
       {
         label: 'Core',
         state: 'xos.core'
+      },
+      {
+        label: 'Service Graph',
+        state: 'xos.fine-grained-graph'
       }
     ].concat(mockRoutes);
   }));

@@ -23,7 +23,7 @@ class XosCoarseTenancyGraphCtrl {
   private linkGroup;
   private nodeGroup;
 
-  // debounce functions
+  // debounced functions
   private renderGraph;
 
   constructor (
@@ -40,6 +40,7 @@ class XosCoarseTenancyGraphCtrl {
     this.CoarseGraphSubscription = this.XosServiceGraphStore.getCoarse()
       .subscribe(
         (res: IXosServiceGraph) => {
+
           // id there are no data, do nothing
           if (!res.nodes || res.nodes.length === 0 || !res.links || res.links.length === 0) {
             return;
@@ -63,7 +64,6 @@ class XosCoarseTenancyGraphCtrl {
 
   $onDestroy() {
     this.CoarseGraphSubscription.unsubscribe();
-    this.XosServiceGraphStore.dispose();
   }
 
   private _renderGraph() {

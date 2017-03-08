@@ -12,7 +12,7 @@ export class XosDebouncer implements IXosDebouncer {
   }
 
   // wait for 'wait' ms without actions to call the function
-  // if 'immediate' call it immediatly then wait for 'wait'
+  // if 'immediate' call it immediately then wait for 'wait'
   // NOTE that we cannot use $timeout service to debounce functions as it trigger infiniteDigest Exception
   public debounce(func: any, wait: number, context: any, immediate?: boolean) {
     let timeout;

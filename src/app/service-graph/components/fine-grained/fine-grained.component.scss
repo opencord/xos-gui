@@ -1,0 +1,55 @@
+@import './../../../style/vars.scss';
+@import '../../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
+
+xos-fine-grained-tenancy-graph {
+  display: block;
+  // background: $color-accent;
+
+  svg {
+    height: 800px;
+    width: 100%;
+    background-color: $panel-filled-bg;
+    border-radius: 3px;
+  }
+
+  .node-group {
+
+    .node {
+      cursor: pointer;
+    }
+
+    .node {
+      rect, circle {
+        stroke: $color-accent;
+        fill: $background-color;
+      }
+
+      &.network > circle{
+        stroke: blue;
+      }
+
+      &.tenant > rect{
+        stroke: green;
+      }
+
+      &.subscriber > rect{
+        stroke: red;
+      }
+    }
+
+    .node > text {
+      fill: #fff;
+      font-size: 20px;
+    }
+  }
+
+  .link-group {
+    line {
+      stroke: $color-accent;
+    }
+  }
+  .arrow-marker {
+    stroke: $color-accent;
+    fill: $color-accent;
+  }
+}
