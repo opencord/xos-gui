@@ -15,6 +15,10 @@ timeout (time: 240) {
 
        dir('orchestration/xos-gui') {
             try {
+
+                stage 'Install Node Modules'
+                sh 'npm install'
+
                 stage 'Check Code Style'
                 sh 'npm run lint'
 
