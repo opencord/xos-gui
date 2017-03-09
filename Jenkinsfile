@@ -28,6 +28,8 @@ timeout (time: 240) {
                 stage 'Build GUI docker container'
                 sh 'docker build --no-cache -t xosproject/xos-gui .'
                 sh 'docker run -p 4000:4000 --net=host --name xos-gui -d xosproject/xos-gui'
+
+                stage 'Run E2E Tests'
                 sh 'curl 127.0.0.1:4000/spa/ --write-out %{http_code} --silent --output /dev/null | grep 200'
 
                 currentBuild.result = 'SUCCESS'
@@ -35,6 +37,7 @@ timeout (time: 240) {
                 currentBuild.result = 'FAILURE'
                 step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'teo@onlab.us', sendToIndividuals: true])
             } finally {
+                stage 'Clean'
                 sh 'docker stop xos-gui'
                 sh 'docker rm xos-gui'
                 sh 'docker rmi xosproject/xos-gui'
