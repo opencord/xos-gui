@@ -41,7 +41,7 @@ timeout (time: 240) {
                 sh 'docker stop xos-gui'
                 sh 'docker rm xos-gui'
                 sh 'docker rmi xosproject/xos-gui'
-                sh 'docker rmi $(docker images | grep none | awk '{print $3}')'
+                sh 'docker rmi $(docker images | grep none | awk "{print $3}")'
             }
             echo "RESULT: ${currentBuild.result}"
        }
