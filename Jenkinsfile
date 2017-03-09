@@ -27,8 +27,8 @@ timeout (time: 240) {
 
                 stage 'Build GUI docker container'
                 sh 'docker build -t xosproject/xos-gui .'
-                sh 'docker run -p 4000:4000 -d xosproject/xos-gui'
-                sh 'curl 127.0.0.1:4000/spa/'
+                sh 'docker run -p 4000:4000 --net=host -d xosproject/xos-gui'
+                sh 'curl 127.0.0.1:4000/spa/ --write-out %{http_code} --silent --output /dev/null | grep 200'
 
                 currentBuild.result = 'SUCCESS'
             } catch (err) {

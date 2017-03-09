@@ -92,7 +92,6 @@
     "typings": "typings install",
     "serve:dist": "gulp serve:dist",
     "serve:dist:watch": "gulp serve:dist:watch",
-    "pretest": "npm run lint",
     "test": "gulp test",
     "test:auto": "gulp test:auto",
     "config": "gulp config",
