@@ -40,8 +40,8 @@ timeout (time: 240) {
                 stage 'Clean'
                 sh 'docker stop xos-gui'
                 sh 'docker rm xos-gui'
-                sh 'docker rmi xosproject/xos-gui'
-                sh 'docker rmi $(docker images | grep none | awk "{print $3}")'
+                sh 'docker rmi -f xosproject/xos-gui'
+                sh 'docker rmi -f $(docker images -aq -f dangling=true'
             }
             echo "RESULT: ${currentBuild.result}"
        }
