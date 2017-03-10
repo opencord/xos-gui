@@ -41,7 +41,6 @@ timeout (time: 240) {
                 sh 'docker stop xos-gui'
                 sh 'docker rm xos-gui'
                 sh 'docker rmi -f xosproject/xos-gui'
-                sh 'docker rmi -f $(docker images -aq -f dangling=true'
             }
             echo "RESULT: ${currentBuild.result}"
        }
