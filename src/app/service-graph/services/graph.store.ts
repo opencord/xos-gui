@@ -253,6 +253,11 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       const sourceId = this.getSourceId(tenant);
       const targetId = this.getTargetId(tenant);
 
+      if (!angular.isDefined(targetId)) {
+        // if the tenant is not pointing to anything, don't draw links
+        return links;
+      }
+
       const tenantToProvider = {
         id: `${sourceId}_${tenant.d3Id}`,
         source: this.getNodeIndexById(sourceId, nodes),

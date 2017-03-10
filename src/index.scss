@@ -12,11 +12,13 @@ html, body.blank {
 
 body {
   min-height: 90%;
+  height: 90%;
 }
 
-ui-view, xos, .wrapper, .content {
+ui-view, xos, .wrapper, .content, .content > .container-fluid, [ui-view] {
   display: block;
   min-height: 100%;
+  height:100%;
 }
 
 .content > div {
