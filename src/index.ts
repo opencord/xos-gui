@@ -90,6 +90,7 @@ angular
     // check the user login
     $transitions.onSuccess({ to: '**' }, (transtion) => {
       if (!AuthService.isAuthenticated()) {
+        AuthService.clearUser();
         $state.go('login');
       }
     });
@@ -112,8 +113,8 @@ angular
     const lastQueryString = $location.search();
 
     // if the user is authenticated
+    $log.info(`[XOS] Is user authenticated? ${AuthService.isAuthenticated()}`);
     if (AuthService.isAuthenticated()) {
-      // ModelSetup.setup()
       XosModelDiscoverer.discover()
         .then((res) => {
           if (res) {
@@ -122,13 +123,16 @@ angular
           else {
             $log.info('[XOS] Failed to load some models, moving on.');
           }
-
           // after setting up dynamic routes, redirect to previous state
           $location.path(lastRoute).search(lastQueryString);
         })
         .finally(() => {
           $rootScope.$emit('xos.core.modelSetup');
         });
+    }
+    else {
+      AuthService.clearUser();
+      $state.go('login');
     }
 
     // register keyboard shortcut

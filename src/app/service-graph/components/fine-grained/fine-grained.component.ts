@@ -6,12 +6,16 @@ import {Subscription} from 'rxjs';
 import {XosServiceGraphConfig as config} from '../../graph.config';
 import {IXosDebouncer} from '../../../core/services/helpers/debounce.helper';
 import {IXosServiceGraph, IXosServiceGraphLink, IXosServiceGraphNode} from '../../interfaces';
+import {IXosModelDiscovererService} from '../../../datasources/helpers/model-discoverer.service';
+import {IXosSidePanelService} from '../../../core/side-panel/side-panel.service';
 
 class XosFineGrainedTenancyGraphCtrl {
   static $inject = [
     '$log',
     'XosServiceGraphStore',
-    'XosDebouncer'
+    'XosDebouncer',
+    'XosModelDiscoverer',
+    'XosSidePanel'
   ];
 
   public graph: IXosServiceGraph;
@@ -28,7 +32,9 @@ class XosFineGrainedTenancyGraphCtrl {
   constructor(
     private $log: ng.ILogService,
     private XosServiceGraphStore: IXosServiceGraphStore,
-    private XosDebouncer: IXosDebouncer
+    private XosDebouncer: IXosDebouncer,
+    private XosModelDiscoverer: IXosModelDiscovererService,
+    private XosSidePanel: IXosSidePanelService
   ) {
     this.handleSvg();
     this.setupForceLayout();
@@ -225,6 +231,7 @@ class XosFineGrainedTenancyGraphCtrl {
       .selectAll('g.node')
       .data(nodes, n => n.id);
 
+    let mouseEventsTimer, selectedModel;
     const svgDim = this.getSvgDimensions();
     const hStep = svgDim.width / (nodes.length - 1);
     const vStep = svgDim.heigth / (nodes.length - 1);
@@ -236,10 +243,30 @@ class XosFineGrainedTenancyGraphCtrl {
       })
       .call(this.forceLayout.drag)
       .on('mousedown', () => {
+        mouseEventsTimer = new Date().getTime();
         d3.event.stopPropagation();
       })
-      .on('mouseup', (d) => {
-        d.fixed = true;
+      .on('mouseup', (n) => {
+        mouseEventsTimer = new Date().getTime() - mouseEventsTimer;
+        n.fixed = true;
+      })
+      .on('click', (n: IXosServiceGraphNode) => {
+        if (mouseEventsTimer > 100) {
+          // it is a drag
+          return;
+        }
+        if (selectedModel === n.id) {
+          // this model is already selected, so close the panel
+          this.XosSidePanel.removeInjectedComponents();
+          selectedModel = null;
+          return;
+        }
+        selectedModel = n.id;
+        const modelName = n.model['class_names'].split(',')[0];
+        const formConfig = this.XosModelDiscoverer.get(modelName).formCfg;
+        const model = angular.copy(n.model);
+        delete model.d3Id;
+        this.XosSidePanel.injectComponent('xosForm', {config: formConfig, ngModel: model});
       });
 
     this.renderServiceNodes(entering.filter('.service'));

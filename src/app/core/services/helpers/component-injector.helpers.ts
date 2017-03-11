@@ -47,9 +47,6 @@ export class XosComponentInjector implements IXosComponentInjectorService {
     });
   }
 
-  // FIXME
-  // component are correctly injected but not persisted,
-  // if I change route they go away
   public injectComponent(target: string | JQuery, componentName: string, attributes?: any, transclude?: string, clean?: boolean) {
     let targetEl;
     if (angular.isString(target)) {
@@ -74,7 +71,10 @@ export class XosComponentInjector implements IXosComponentInjectorService {
 
     if (angular.isDefined(attributes) && angular.isObject(attributes)) {
       attr = this.stringifyAttributes(attributes);
-      scope = angular.merge(scope, attributes);
+      // we cannot use angular.merge as it cast Resource to Objects
+      _.forEach(Object.keys(attributes), (k: string) => {
+        scope[k] = attributes[k];
+      });
     }
 
     const componentTag = `<${componentTagName} ${attr}>${transclude || ''}</${componentTagName}>`;

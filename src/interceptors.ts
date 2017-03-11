@@ -45,6 +45,12 @@ export function NoHyperlinksInterceptor() {
       if (req.url.indexOf('.html') === -1) {
         // NOTE  force content type to be JSON
         req.headers['Content-Type'] = 'application/json';
+
+        if (req.method === 'PUT') {
+          // FIXME XosModelStore.search add this value for visualization purpose,
+          // no one should change models
+          delete req.data.modelName;
+        }
       }
       return req;
     },

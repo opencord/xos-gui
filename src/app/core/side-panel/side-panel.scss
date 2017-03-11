@@ -7,11 +7,13 @@ xos-side-panel {
     width: $side-panel-width;
     height: 100%;
     position: fixed;
-    background: $background-dark-color;
     z-index: 9999;
+    top: 0;
     right: -$side-panel-width;
+    background: $background-dark-color;
     padding: $padding;
     transition: all .5s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    overflow-y: scroll;
 
     &.open {
       right: 0;

@@ -89,7 +89,7 @@ module.exports = {
     ]
   },
   entry: {
-    indes: `./${conf.path.src('index')}`,
+    index: `./${conf.path.src('index')}`,
     loader: `./${conf.path.src('/app/style/imports/loader.scss')}`
   },
   ts: {
