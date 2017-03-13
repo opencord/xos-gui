@@ -145,6 +145,15 @@ class XosCoarseTenancyGraphCtrl {
     return d3.select(contex.parentNode).select('text').node().getBBox();
   }
 
+  private parseElemClasses (classes: string): string {
+    if (!classes) {
+      return '';
+    }
+    return classes.split(' ')
+      .map(c => `ext-${c}`)
+      .join(' ');
+  }
+
   private renderNodes(nodes: IXosServiceGraphNode[]) {
     const self = this;
     const node = this.nodeGroup
@@ -155,7 +164,7 @@ class XosCoarseTenancyGraphCtrl {
     const entering = node.enter()
       .append('g')
       .attr({
-        class: 'node',
+        class: n => `node ${this.parseElemClasses(n.d3Class)}`,
         transform: `translate(${svgDim.width / 2}, ${svgDim.heigth / 2})`
       })
       .call(this.forceLayout.drag)
@@ -201,15 +210,12 @@ class XosCoarseTenancyGraphCtrl {
       .data(links, l => l.id);
 
     const entering = link.enter();
-      // NOTE do we need to have groups?
-      // .append('g')
-      // .attr({
-      //   class: 'link',
-      // });
+
+    // TODO read classes from graph links
 
     entering.append('line')
       .attr({
-        class: 'link',
+        class: l => `link ${this.parseElemClasses(l.d3Class)}`,
         'marker-start': 'url(#arrow)'
       });
   }
