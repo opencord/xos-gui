@@ -219,6 +219,8 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       };
     });
 
+    // TODO here we should be able to register reducers for this data
+
     this.d3CoarseGraph.next({
       nodes: nodes,
       links: links
@@ -280,6 +282,8 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     if (nodes.length === 0 || links.length === 0) {
       return;
     }
+
+    // TODO here we should be able to register reducers for this data
 
     this.d3FineGrainedGraph.next({
       nodes: nodes,
