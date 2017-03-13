@@ -1,13 +1,19 @@
+interface Id3Element {
+  d3Class?: string;
+  d3Id?: string;
+}
+
 export interface IXosServiceModel {
   id: number;
   d3Id?: string;
   backend_status: string;
   kind: string;
   name: string;
+  class_names: string;
   service_specific_attributes: string; // this is json stringified
 }
 
-export interface IXosTenantModel {
+export interface IXosTenantModel extends Id3Element {
   id: number;
   d3Id?: string;
   backend_status: string;
@@ -48,19 +54,20 @@ export interface IXosServiceGraphNodeBadge {
   text: string;
 }
 
-export interface IXosServiceGraphNode {
+export interface IXosServiceGraphNode extends Id3Element {
   id: number | string;
   label: string;
   x?: number;
   y?: number;
   px?: number;
   py?: number;
-  badge?: IXosServiceGraphNodeBadge;
+  fixed?: boolean;
+  badge?: IXosServiceGraphNodeBadge; // TODO implement badges
   model: IXosServiceModel;
   type: 'service' | 'tenant' | 'network' | 'subscriber';
 }
 
-export interface IXosServiceGraphLink {
+export interface IXosServiceGraphLink extends Id3Element {
   id: number | string;
   source: number;
   target: number;

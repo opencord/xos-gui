@@ -6,13 +6,15 @@ import {IXosServiceGraph, IXosServiceGraphNode, IXosServiceGraphLink} from '../.
 import {XosServiceGraphConfig as config} from '../../graph.config';
 import {IXosDebouncer} from '../../../core/services/helpers/debounce.helper';
 import {Subscription} from 'rxjs';
+import {IXosGraphHelpers} from '../../services/d3-helpers/graph.helpers';
 
 class XosCoarseTenancyGraphCtrl {
 
   static $inject = [
     '$log',
     'XosServiceGraphStore',
-    'XosDebouncer'
+    'XosDebouncer',
+    'XosGraphHelpers'
   ];
 
   public graph: IXosServiceGraph;
@@ -29,7 +31,8 @@ class XosCoarseTenancyGraphCtrl {
   constructor (
     private $log: ng.ILogService,
     private XosServiceGraphStore: IXosServiceGraphStore,
-    private XosDebouncer: IXosDebouncer
+    private XosDebouncer: IXosDebouncer,
+    private XosGraphHelpers: IXosGraphHelpers
   ) {
 
   }
@@ -141,10 +144,6 @@ class XosCoarseTenancyGraphCtrl {
       .start();
   }
 
-  private getSiblingTextBBox(contex: any /* D3 this */) {
-    return d3.select(contex.parentNode).select('text').node().getBBox();
-  }
-
   private renderNodes(nodes: IXosServiceGraphNode[]) {
     const self = this;
     const node = this.nodeGroup
@@ -155,7 +154,7 @@ class XosCoarseTenancyGraphCtrl {
     const entering = node.enter()
       .append('g')
       .attr({
-        class: 'node',
+        class: n => `node ${this.XosGraphHelpers.parseElemClasses(n.d3Class)}`,
         transform: `translate(${svgDim.width / 2}, ${svgDim.heigth / 2})`
       })
       .call(this.forceLayout.drag)
@@ -184,7 +183,7 @@ class XosCoarseTenancyGraphCtrl {
 
     // resize node > rect as contained text
     existing.each(function() {
-      const textBBox = self.getSiblingTextBBox(this);
+      const textBBox = self.XosGraphHelpers.getSiblingTextBBox(this);
       const rect = d3.select(this);
       rect.attr({
         width: textBBox.width + config.node.padding,
@@ -201,15 +200,12 @@ class XosCoarseTenancyGraphCtrl {
       .data(links, l => l.id);
 
     const entering = link.enter();
-      // NOTE do we need to have groups?
-      // .append('g')
-      // .attr({
-      //   class: 'link',
-      // });
+
+    // TODO read classes from graph links
 
     entering.append('line')
       .attr({
-        class: 'link',
+        class: l => `link ${this.XosGraphHelpers.parseElemClasses(l.d3Class)}`,
         'marker-start': 'url(#arrow)'
       });
   }

@@ -8,6 +8,7 @@ import {IXosDebouncer} from '../../../core/services/helpers/debounce.helper';
 import {IXosServiceGraph, IXosServiceGraphLink, IXosServiceGraphNode} from '../../interfaces';
 import {IXosModelDiscovererService} from '../../../datasources/helpers/model-discoverer.service';
 import {IXosSidePanelService} from '../../../core/side-panel/side-panel.service';
+import {IXosGraphHelpers} from '../../services/d3-helpers/graph.helpers';
 
 class XosFineGrainedTenancyGraphCtrl {
   static $inject = [
@@ -15,7 +16,8 @@ class XosFineGrainedTenancyGraphCtrl {
     'XosServiceGraphStore',
     'XosDebouncer',
     'XosModelDiscoverer',
-    'XosSidePanel'
+    'XosSidePanel',
+    'XosGraphHelpers'
   ];
 
   public graph: IXosServiceGraph;
@@ -35,7 +37,8 @@ class XosFineGrainedTenancyGraphCtrl {
     private XosServiceGraphStore: IXosServiceGraphStore,
     private XosDebouncer: IXosDebouncer,
     private XosModelDiscoverer: IXosModelDiscovererService,
-    private XosSidePanel: IXosSidePanelService
+    private XosSidePanel: IXosSidePanelService,
+    private XosGraphHelpers: IXosGraphHelpers
   ) {
     this.handleSvg();
     this.loadDefs();
@@ -158,10 +161,6 @@ class XosFineGrainedTenancyGraphCtrl {
       .start();
   }
 
-  private getSiblingTextBBox(contex: any /* D3 this */) {
-    return d3.select(contex.parentNode).select('text').node().getBBox();
-  }
-
   private renderServiceNodes(nodes: any) {
 
     const self = this;
@@ -182,7 +181,7 @@ class XosFineGrainedTenancyGraphCtrl {
 
     // resize node > rect as contained text
     existing.each(function() {
-      const textBBox = self.getSiblingTextBBox(this);
+      const textBBox = self.XosGraphHelpers.getSiblingTextBBox(this);
       const rect = d3.select(this);
       rect.attr({
         width: textBBox.width + config.node.padding,
@@ -237,7 +236,7 @@ class XosFineGrainedTenancyGraphCtrl {
 
     // resize node > rect as contained text
     existing.each(function() {
-      const textBBox = self.getSiblingTextBBox(this);
+      const textBBox = self.XosGraphHelpers.getSiblingTextBBox(this);
       const useElem = d3.select(this);
       const w = textBBox.width + config.node.padding * 2;
       const h = w;
@@ -266,7 +265,7 @@ class XosFineGrainedTenancyGraphCtrl {
 
     // resize node > rect as contained text
     existing.each(function() {
-      const textBBox = self.getSiblingTextBBox(this);
+      const textBBox = self.XosGraphHelpers.getSiblingTextBBox(this);
       const rect = d3.select(this);
       rect.attr({
         width: textBBox.width + config.node.padding,
@@ -289,7 +288,7 @@ class XosFineGrainedTenancyGraphCtrl {
     const entering = node.enter()
       .append('g')
       .attr({
-        class: n => `node ${n.type}`,
+        class: n => `node ${n.type} ${this.XosGraphHelpers.parseElemClasses(n.d3Class)}`,
         transform: (n, i) => `translate(${hStep * i}, ${vStep * i})`
       })
       .call(this.forceLayout.drag)
@@ -335,7 +334,7 @@ class XosFineGrainedTenancyGraphCtrl {
 
     entering.append('line')
       .attr({
-        class: 'link',
+        class: n => `link ${this.XosGraphHelpers.parseElemClasses(n.d3Class)}`,
         'marker-start': 'url(#arrow)'
       });
   }
