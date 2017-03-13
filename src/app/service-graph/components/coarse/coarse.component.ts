@@ -151,6 +151,8 @@ class XosCoarseTenancyGraphCtrl {
       .selectAll('g.node')
       .data(nodes, n => n.id);
 
+    // TODO read classes from graph nodes
+
     const svgDim = this.getSvgDimensions();
     const entering = node.enter()
       .append('g')
@@ -201,11 +203,8 @@ class XosCoarseTenancyGraphCtrl {
       .data(links, l => l.id);
 
     const entering = link.enter();
-      // NOTE do we need to have groups?
-      // .append('g')
-      // .attr({
-      //   class: 'link',
-      // });
+
+    // TODO read classes from graph links
 
     entering.append('line')
       .attr({
