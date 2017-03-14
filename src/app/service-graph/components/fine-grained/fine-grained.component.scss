@@ -19,6 +19,18 @@ xos-fine-grained-tenancy-graph {
       cursor: pointer;
     }
 
+    .node .symbol {
+        fill-rule: evenodd;
+        stroke: #bbddff;
+        stroke-width: 4.0px;
+        fill: none;
+    }
+    .node .symbol-bg {
+        fill-rule: evenodd;
+        stroke: none;
+        fill: $background-color;
+    }
+
     .node {
       rect, circle {
         stroke: $color-accent;
