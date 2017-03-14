@@ -25,6 +25,7 @@ class XosFineGrainedTenancyGraphCtrl {
   private forceLayout;
   private linkGroup;
   private nodeGroup;
+  private defs;
 
   // debounced functions
   private renderGraph;
@@ -37,6 +38,7 @@ class XosFineGrainedTenancyGraphCtrl {
     private XosSidePanel: IXosSidePanelService
   ) {
     this.handleSvg();
+    this.loadDefs();
     this.setupForceLayout();
     this.renderGraph = this.XosDebouncer.debounce(this._renderGraph, 500, this);
 
@@ -83,6 +85,8 @@ class XosFineGrainedTenancyGraphCtrl {
   private handleSvg() {
     this.svg = d3.select('svg');
 
+    this.defs = this.svg.append('defs');
+
     this.linkGroup = this.svg.append('g')
       .attr({
         class: 'link-group'
@@ -92,6 +96,34 @@ class XosFineGrainedTenancyGraphCtrl {
       .attr({
         class: 'node-group'
       });
+  }
+
+  private loadDefs() {
+      const cloud = {
+          vbox: '0 0 303.8 185.8',
+          path: `M88.6,44.3c31.7-45.5,102.1-66.7,135-3
+             M37.8,142.9c-22.5,3.5-60.3-32.4-16.3-64.2
+             M101.8,154.2c-15.6,59.7-121.4,18.8-77.3-13
+             M194.6,150c-35.4,51.8-85.7,34.3-98.8-9.5
+             M274.4,116.4c29.4,73.2-81.9,80.3-87.7,44.3
+             M28.5,89.2C3.7,77.4,55.5,4.8,95.3,36.1
+             M216.1,28.9C270.9-13,340.8,91,278.4,131.1`,
+          bgpath: `M22,78.3C21.5,55.1,62.3,10.2,95.2,36
+             h0c31.9-33.4,88.1-50.5,120.6-7.2l0.3,0.2
+             C270.9-13,340.8,91,278.4,131.1v-0.5
+             c10.5,59.8-86.4,63.7-91.8,30.1h-0.4
+             c-30.2,33.6-67.6,24-84.6-6v-0.4
+             c-15.6,59.7-121.4,18.8-77.3-13
+             l-0.2-.2c-20.2-7.9-38.6-36.5-2.8-62.3Z`
+      };
+
+      this.defs.append('symbol')
+          .attr({ id: 'cloud', viewBox: cloud.vbox })
+          .append('path').attr('d', cloud.path);
+
+      this.defs.append('symbol')
+          .attr({ id: 'cloud_bg', viewBox: cloud.vbox })
+          .append('path').attr('d', cloud.bgpath);
   }
 
   private setupForceLayout() {
@@ -180,23 +212,42 @@ class XosFineGrainedTenancyGraphCtrl {
 
   private renderNetworkNodes(nodes: any) {
     const self = this;
-    nodes.append('circle');
+    const yTextOff = 8;
+
+    nodes.append('use')
+        .attr({
+            class: 'symbol-bg',
+            'xlink:href': '#cloud_bg'
+        });
+
+    nodes.append('use')
+        .attr({
+            class: 'symbol',
+            'xlink:href': '#cloud'
+        });
 
     nodes.append('text')
       .attr({
-        'text-anchor': 'middle'
+          'text-anchor': 'middle',
+          'transform': 'translate(0,' + yTextOff + ')'
       })
       .text(n => n.label);
 
-    const existing = nodes.selectAll('circle');
+    const existing = nodes.selectAll('use');
 
     // resize node > rect as contained text
     existing.each(function() {
       const textBBox = self.getSiblingTextBBox(this);
-      const rect = d3.select(this);
-      rect.attr({
-        r: (textBBox.width / 2) + config.node.padding,
-        cy: - (textBBox.height / 4)
+      const useElem = d3.select(this);
+      const w = textBBox.width + config.node.padding * 2;
+      const h = w;
+      const xoff = -(w / 2);
+      const yoff = -(h / 2);
+
+      useElem.attr({
+          width: w,
+          height: h,
+          transform: 'translate(' + xoff + ',' + yoff + ')'
       });
     });
   }
