@@ -64,7 +64,7 @@ module.exports = {
       compress: {unused: true, dead_code: true, warnings: false}, // eslint-disable-line camelcase
       mangle: false // NOTE mangling was breaking the build
     }),
-    new ExtractTextPlugin('index-[contenthash].css'),
+    new ExtractTextPlugin('[name].css'),
     new webpack.optimize.CommonsChunkPlugin({name: 'vendor'}),
     new webpack.ProvidePlugin({
       $: "jquery",
@@ -78,7 +78,7 @@ module.exports = {
   output: {
     path: path.join(process.cwd(), conf.paths.dist),
     publicPath: "/spa/", // enable apache proxying on the head node
-    filename: '[name]-[hash].js'
+    filename: '[name].js'
   },
   resolve: {
     extensions: [
