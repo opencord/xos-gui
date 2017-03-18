@@ -106,6 +106,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     this.graphData
       .subscribe(
         (res: IXosFineGrainedGraphData) => {
+          this.$log.debug(`[XosServiceGraphStore] New graph data received`, res);
           this.graphDataToCoarseGraph(res);
           this.graphDataToFineGrainedGraph(res);
         },

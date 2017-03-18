@@ -22,6 +22,7 @@ export class SynchronizerStore {
       })
       .subscribe(
         (event: IWSEvent) => {
+          console.log(event);
           this._notifications.next(event);
         }
       );

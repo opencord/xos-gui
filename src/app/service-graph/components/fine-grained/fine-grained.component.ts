@@ -53,12 +53,12 @@ class XosFineGrainedTenancyGraphCtrl {
     this.GraphSubscription = this.XosServiceGraphStore.get()
       .subscribe(
         (graph) => {
+          this.$log.debug(`[XosFineGrainedTenancyGraphCtrl] Fine-Grained Event and render`, graph);
 
           if (!graph.nodes || graph.nodes.length === 0 || !graph.links || graph.links.length === 0) {
             return;
           }
 
-          this.$log.debug(`[XosFineGrainedTenancyGraphCtrl] Coarse Event and render`, graph);
           this.graph = graph;
           this.renderGraph();
         },

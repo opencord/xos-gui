@@ -43,12 +43,12 @@ class XosCoarseTenancyGraphCtrl {
     this.CoarseGraphSubscription = this.XosServiceGraphStore.getCoarse()
       .subscribe(
         (res: IXosServiceGraph) => {
+          this.$log.debug(`[XosCoarseTenancyGraph] Coarse Event and render`, res);
 
           // id there are no data, do nothing
           if (!res.nodes || res.nodes.length === 0 || !res.links || res.links.length === 0) {
             return;
           }
-          this.$log.debug(`[XosCoarseTenancyGraph] Coarse Event and render`, res);
           this.graph = res;
           this.renderGraph();
         },
@@ -138,6 +138,9 @@ class XosCoarseTenancyGraphCtrl {
   }
 
   private addNodeLinksToForceLayout(data: IXosServiceGraph) {
+    if (!data.nodes || !data.links) {
+      return;
+    }
     this.forceLayout
       .nodes(data.nodes)
       .links(data.links)
