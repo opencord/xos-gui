@@ -58,8 +58,12 @@ export class IXosNavigationService {
       throw new Error('[XosNavigation] You can\'t provide both state and url');
     }
 
+    // NOTE factor this out in a separate method an eventually use recursion since we can nest more routes
     const routeExist = _.findIndex(this.routes, (r: IXosNavigationRoute) => {
       if (r.label === route.label && r.state === route.state && r.parent === route.parent) {
+        return true;
+      }
+      else if (_.findIndex(r.children, route) > -1) {
         return true;
       }
       return false;

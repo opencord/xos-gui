@@ -55,7 +55,7 @@ class XosFineGrainedTenancyGraphCtrl {
         (graph) => {
           this.$log.debug(`[XosFineGrainedTenancyGraphCtrl] Fine-Grained Event and render`, graph);
 
-          if (!graph.nodes || graph.nodes.length === 0 || !graph.links || graph.links.length === 0) {
+          if (!graph || !graph.nodes || !graph.links) {
             return;
           }
 

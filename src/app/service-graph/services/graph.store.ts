@@ -28,9 +28,14 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     subscribers: []
   });
 
+  private emptyGraph: IXosServiceGraph = {
+    nodes: [],
+    links: []
+  };
+
   // representation of the graph as D3 requires
-  private d3CoarseGraph = new BehaviorSubject({});
-  private d3FineGrainedGraph = new BehaviorSubject({});
+  private d3CoarseGraph = new BehaviorSubject(this.emptyGraph);
+  private d3FineGrainedGraph = new BehaviorSubject(this.emptyGraph);
 
   // storing locally reference to the data model
   private services;
@@ -240,7 +245,6 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
   }
 
   private graphDataToFineGrainedGraph(data: IXosFineGrainedGraphData) {
-
     try {
       data = this.removeUnwantedFineGrainedData(data);
 
@@ -292,7 +296,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
         return links;
       }, []);
 
-      if (nodes.length === 0 || links.length === 0) {
+      if (nodes.length === 0 && links.length === 0) {
         return;
       }
 
@@ -304,11 +308,9 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       _.forEach(this.XosServiceGraphExtender.getFinegrained(), (r: IXosServiceGraphReducer) => {
         graph = r.reducer(graph);
       });
-
       this.d3FineGrainedGraph.next(graph);
     } catch (e) {
      this.d3FineGrainedGraph.error(e);
     }
   }
-
 }
