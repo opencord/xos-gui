@@ -25,7 +25,8 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     services: [],
     tenants: [],
     networks: [],
-    subscribers: []
+    subscribers: [],
+    servicedependencys: []
   });
 
   private emptyGraph: IXosServiceGraph = {
@@ -42,6 +43,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
   private tenants;
   private subscribers;
   private networks;
+  private servicedependencys;
 
   // debounced functions
   private handleData;
@@ -51,6 +53,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
   private TenantSubscription: Subscription;
   private SubscriberSubscription: Subscription;
   private NetworkSubscription: Subscription;
+  private ServiceDependencySubscription: Subscription;
 
   constructor (
     private $log: ng.ILogService,
@@ -65,12 +68,20 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     this.handleData = this.XosDebouncer.debounce(this._handleData, 500, this, false);
 
     // observe models and populate graphData
-    // TODO get Nodes (model that represent compute nodes in a pod)
-    // TODO get Instances (model that represent deployed VMs)
     this.ServiceSubscription = this.XosModelStore.query('Service', '/core/services')
       .subscribe(
         (res) => {
           this.combineData(res, 'services');
+        },
+        (err) => {
+          this.$log.error(`[XosServiceGraphStore] Service Observable: `, err);
+        }
+      );
+
+    this.ServiceDependencySubscription = this.XosModelStore.query('ServiceDependency', '/core/servicedependencys')
+      .subscribe(
+        (res) => {
+          this.combineData(res, 'servicedependencys');
         },
         (err) => {
           this.$log.error(`[XosServiceGraphStore] Service Observable: `, err);
@@ -129,7 +140,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     return this.d3CoarseGraph.asObservable();
   }
 
-  private combineData(data: any, type: 'services'|'tenants'|'subscribers'|'networks') {
+  private combineData(data: any, type: 'services'|'tenants'|'subscribers'|'networks'|'servicedependencys') {
     switch (type) {
       case 'services':
         this.services = data;
@@ -143,6 +154,9 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       case 'networks':
         this.networks = data;
         break;
+      case 'servicedependencys':
+        this.servicedependencys = data;
+        break;
     }
     this.handleData(this.services, this.tenants);
   }
@@ -152,7 +166,8 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       services: this.services,
       tenants: this.tenants,
       subscribers: this.subscribers,
-      networks: this.networks
+      networks: this.networks,
+      servicedependencys: this.servicedependencys
     });
   }
 
@@ -209,8 +224,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
   private graphDataToCoarseGraph(data: IXosCoarseGraphData) {
 
     try {
-      const links: IXosServiceGraphLink[] = _.chain(data.tenants)
-        .filter((t: IXosTenantModel) => t.kind === 'coarse')
+      const links: IXosServiceGraphLink[] = _.chain(data.servicedependencys)
         .map((t: IXosTenantModel) => {
           return {
             id: t.id,
