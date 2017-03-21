@@ -76,7 +76,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     pluralize.addPluralRule(/library$/i, 'librarys');
     pluralize.addPluralRule(/imagedeployments/i, 'imagedeploymentses');
     pluralize.addPluralRule(/controllerimages/i, 'controllerimageses');
-
+    pluralize.addPluralRule(/servicedependency/i, 'servicedependencys');
   }
 
   public pluralize(string: string, quantity?: number, count?: boolean): string {

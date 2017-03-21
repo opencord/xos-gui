@@ -14,6 +14,7 @@ const subjects = {
   tenant: new Subject<any>(),
   subscriber: new Subject<any>(),
   network: new Subject<any>(),
+  servicedependency: new Subject<any>()
 };
 
 // COARSE data
@@ -69,7 +70,7 @@ describe('The XosServiceGraphStore service', () => {
   describe('when subscribing for the COARSE service graph', () => {
     beforeEach((done) => {
       subjects.service.next(coarseServices);
-      subjects.tenant.next(coarseTenants);
+      subjects.servicedependency.next(coarseTenants);
       setTimeout(done, 500);
     });
 
