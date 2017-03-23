@@ -10,12 +10,12 @@ module.exports = function () {
         conf.paths.src
       ],
       middleware: function(req, res, next){
-        if (req.url.indexOf('xosapi') !== -1) {
+        if (req.url.indexOf('xosapi') !== -1 || req.url.indexOf('socket.io') !== -1) {
           proxy.web(req, res);
         }
-        // else if (req.url.indexOf('extensions') !== -1) {
-        //   extensionsProxy.web(req, res);
-        // }
+        else if (req.url.indexOf('extensions') !== -1) {
+          extensionsProxy.web(req, res);
+        }
         else{
           next();
         }

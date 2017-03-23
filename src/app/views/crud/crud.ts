@@ -89,8 +89,7 @@ class CrudController {
       // if it is the create page
       if ($stateParams['id'] === 'add') {
         // generate a resource for an empty model
-        // TODO get the proper URL from model discoverer
-        const endpoint = this.StoreHelpers.urlFromCoreModel(this.data.model);
+        const endpoint = this.XosModelDiscovererService.getApiUrlFromModel(this.XosModelDiscovererService.get(this.data.model));
         const resource = this.ModelRest.getResource(endpoint);
         this.model = new resource({});
       }
@@ -110,4 +109,3 @@ export const xosCrud: angular.IComponentOptions = {
   controllerAs: 'vm',
   controller: CrudController
 };
-

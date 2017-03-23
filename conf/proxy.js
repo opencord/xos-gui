@@ -1,11 +1,13 @@
 const httpProxy = require('http-proxy');
 
+const target = process.env.PROXY || '192.168.46.100';
+
 const proxy = httpProxy.createProxyServer({
-  target: 'http://192.168.46.100:9101'
+  target: `http://${target}:9101`
 });
 
 const extensionsProxy = httpProxy.createProxyServer({
-  target: 'http://192.168.46.100/spa/'
+  target: `http://${target}/spa/`
 });
 
 proxy.on('error', function(error, req, res) {

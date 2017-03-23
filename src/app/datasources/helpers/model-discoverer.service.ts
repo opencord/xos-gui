@@ -24,6 +24,7 @@ export interface IXosModel {
 export interface IXosModelDiscovererService {
   discover(): ng.IPromise<boolean>;
   get(modelName: string): IXosModel;
+  getApiUrlFromModel(model: IXosModel): string;
 }
 
 export class XosModelDiscovererService implements IXosModelDiscovererService {
@@ -57,6 +58,16 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
 
   public get(modelName: string): IXosModel|null {
     return _.find(this.xosModels, m => m.name === modelName);
+  }
+
+  public getApiUrlFromModel(model: IXosModel): string {
+    if (model.app === 'core') {
+      return `/core/${this.ConfigHelpers.pluralize(model.name.toLowerCase())}`;
+    }
+    else {
+      const serviceName = this.serviceNameFromAppName(model.app);
+      return `/${serviceName}/${this.ConfigHelpers.pluralize(model.name.toLowerCase())}`;
+    }
   }
 
   public discover() {
@@ -131,16 +142,6 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
       parentState = `xos.${serviceName}`;
     }
     return parentState;
-  }
-
-  private getApiUrlFromModel(model: IXosModel): string {
-    if (model.app === 'core') {
-      return `/core/${this.ConfigHelpers.pluralize(model.name.toLowerCase())}`;
-    }
-    else {
-      const serviceName = this.serviceNameFromAppName(model.app);
-      return `/${serviceName}/${this.ConfigHelpers.pluralize(model.name.toLowerCase())}`;
-    }
   }
 
   // add a service state and navigation item if it is not already there

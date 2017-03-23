@@ -275,7 +275,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
       item.$save()
         .then((res) => {
-          if (res.status === 403 || res.status === 405 || res.status === 500) {
+          if (res.status === 403 || res.status === 405 || res.status === 404 || res.status === 500) {
             // TODO understand why 405 does not go directly in catch (it may be related to ng-rest-gw)
             throw new Error();
           }
