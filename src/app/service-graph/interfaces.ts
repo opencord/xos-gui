@@ -69,7 +69,7 @@ export interface IXosServiceGraphNode extends Id3Element {
 }
 
 export interface IXosServiceGraphLink extends Id3Element {
-  id: number | string;
+  id: string;
   source: number;
   target: number;
   model: IXosTenantModel;

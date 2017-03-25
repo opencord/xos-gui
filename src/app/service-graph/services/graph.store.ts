@@ -98,7 +98,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
         }
       );
 
-    this.SubscriberSubscription = this.XosModelStore.query('Subscriber', '/core/subscribers')
+    this.SubscriberSubscription = this.XosModelStore.query('Tenantroot', '/core/tenantroots')
       .subscribe(
         (res) => {
           this.combineData(res, 'subscribers');
@@ -192,7 +192,8 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       targetId = this.d3Id('network', tenant.subscriber_network_id);
     }
     else if (tenant.subscriber_root_id) {
-      targetId = this.d3Id('subscriber', tenant.subscriber_root_id);
+      // FIXME understand what's the correct model for the subscriber
+      targetId = this.d3Id('tenantroot', tenant.subscriber_root_id);
     }
     return targetId;
   }

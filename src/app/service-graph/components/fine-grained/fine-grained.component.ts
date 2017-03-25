@@ -132,7 +132,7 @@ class XosFineGrainedTenancyGraphCtrl {
   }
 
   private setupForceLayout() {
-
+    this.$log.debug(`[XosFineGrainedTenancyGraphCtrl] Setup Force Layout`);
     const tick = () => {
       this.nodeGroup.selectAll('g.node')
         .attr({
@@ -147,10 +147,17 @@ class XosFineGrainedTenancyGraphCtrl {
           y2: l => l.target.y || 0,
         });
     };
+    const getLinkStrenght = (l: IXosServiceGraphLink) => {
+      if (l.id.indexOf('service') > -1) {
+        return 0.1;
+      }
+      return 1;
+    };
     const svgDim = this.getSvgDimensions();
     this.forceLayout = d3.layout.force()
       .size([svgDim.width, svgDim.heigth])
       .linkDistance(config.force.linkDistance)
+      .linkStrength(l => getLinkStrenght(l))
       .charge(config.force.charge)
       .gravity(config.force.gravity)
       .on('tick', tick);
@@ -204,11 +211,6 @@ class XosFineGrainedTenancyGraphCtrl {
         x: -20,
         y: -20,
         transform: `rotate(45)`
-      });
-
-    nodes.append('circle')
-      .attr({
-        r: '4px'
       });
 
     nodes.append('text')
@@ -333,6 +335,7 @@ class XosFineGrainedTenancyGraphCtrl {
     this.renderTenantNodes(entering.filter('.tenant'));
     this.renderNetworkNodes(entering.filter('.network'));
     this.renderSubscriberNodes(entering.filter('.subscriber'));
+    this.renderSubscriberNodes(entering.filter('.tenantroot'));
   }
 
   private renderLinks(links: IXosServiceGraphLink[]) {

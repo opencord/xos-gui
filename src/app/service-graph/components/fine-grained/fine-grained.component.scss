@@ -45,7 +45,8 @@ xos-fine-grained-tenancy-graph {
         stroke: green;
       }
 
-      &.subscriber > rect{
+      &.subscriber > rect,
+      &.tenantroot > rect{
         stroke: red;
       }
     }

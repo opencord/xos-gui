@@ -23,7 +23,7 @@ export interface IXosServiceGraphConfig {
 
 export const XosServiceGraphConfig: IXosServiceGraphConfig = {
   force: {
-    linkDistance: 160,
+    linkDistance: 80,
     charge: -60,
     gravity: 0.01
   },
