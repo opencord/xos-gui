@@ -13,6 +13,7 @@ const subjects = {
   service: new Subject<any>(),
   tenant: new Subject<any>(),
   subscriber: new Subject<any>(),
+  tenantroot: new Subject<any>(),
   network: new Subject<any>(),
   servicedependency: new Subject<any>()
 };

@@ -206,11 +206,6 @@ class XosFineGrainedTenancyGraphCtrl {
         transform: `rotate(45)`
       });
 
-    nodes.append('circle')
-      .attr({
-        r: '4px'
-      });
-
     nodes.append('text')
       .attr({
         'text-anchor': 'middle',
@@ -333,6 +328,7 @@ class XosFineGrainedTenancyGraphCtrl {
     this.renderTenantNodes(entering.filter('.tenant'));
     this.renderNetworkNodes(entering.filter('.network'));
     this.renderSubscriberNodes(entering.filter('.subscriber'));
+    this.renderSubscriberNodes(entering.filter('.tenantroot'));
   }
 
   private renderLinks(links: IXosServiceGraphLink[]) {
