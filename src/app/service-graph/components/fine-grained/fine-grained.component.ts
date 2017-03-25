@@ -28,6 +28,8 @@ class XosFineGrainedTenancyGraphCtrl {
   private linkGroup;
   private nodeGroup;
   private defs;
+  private textSize = 20;
+  private textOffset = this.textSize / 4;
 
   // debounced functions
   private renderGraph;
@@ -164,6 +166,7 @@ class XosFineGrainedTenancyGraphCtrl {
   private renderServiceNodes(nodes: any) {
 
     const self = this;
+
     nodes.append('rect')
     .attr({
       rx: config.node.radius,
@@ -172,7 +175,8 @@ class XosFineGrainedTenancyGraphCtrl {
 
     nodes.append('text')
       .attr({
-        'text-anchor': 'middle'
+        'text-anchor': 'middle',
+        'transform': `translate(0,${this.textOffset})`
       })
       .text(n => n.label);
     // .text(n => `${n.id} - ${n.label}`);
@@ -187,7 +191,7 @@ class XosFineGrainedTenancyGraphCtrl {
         width: textBBox.width + config.node.padding,
         height: textBBox.height + config.node.padding,
         x: textBBox.x - (config.node.padding / 2),
-        y: textBBox.y - (config.node.padding / 2)
+        y: (textBBox.y + self.textOffset) - (config.node.padding / 2)
       });
     });
   }
@@ -197,21 +201,26 @@ class XosFineGrainedTenancyGraphCtrl {
       .attr({
         width: 40,
         height: 40,
-        x: -25,
-        y: -25,
+        x: -20,
+        y: -20,
         transform: `rotate(45)`
+      });
+
+    nodes.append('circle')
+      .attr({
+        r: '4px'
       });
 
     nodes.append('text')
       .attr({
-        'text-anchor': 'middle'
+        'text-anchor': 'middle',
+        'transform': `translate(0,${this.textOffset})`
       })
       .text(n => n.label);
   }
 
   private renderNetworkNodes(nodes: any) {
     const self = this;
-    const yTextOff = 8;
 
     nodes.append('use')
         .attr({
@@ -228,7 +237,7 @@ class XosFineGrainedTenancyGraphCtrl {
     nodes.append('text')
       .attr({
           'text-anchor': 'middle',
-          'transform': 'translate(0,' + yTextOff + ')'
+          'transform': `translate(0,${this.textOffset})`
       })
       .text(n => n.label);
 
@@ -257,7 +266,8 @@ class XosFineGrainedTenancyGraphCtrl {
 
     nodes.append('text')
       .attr({
-        'text-anchor': 'middle'
+        'text-anchor': 'middle',
+        'transform': `translate(0,${this.textOffset})`
       })
       .text(n => n.label);
 
@@ -271,7 +281,7 @@ class XosFineGrainedTenancyGraphCtrl {
         width: textBBox.width + config.node.padding,
         height: textBBox.height + config.node.padding,
         x: textBBox.x - (config.node.padding / 2),
-        y: textBBox.y - (config.node.padding / 2)
+        y: (textBBox.y + self.textOffset) - (config.node.padding / 2)
       });
     });
   }

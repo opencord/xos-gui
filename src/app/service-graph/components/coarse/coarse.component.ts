@@ -24,6 +24,8 @@ class XosCoarseTenancyGraphCtrl {
   private forceLayout;
   private linkGroup;
   private nodeGroup;
+  private textSize = 20;
+  private textOffset = this.textSize / 4;
 
   // debounced functions
   private renderGraph;
@@ -173,7 +175,8 @@ class XosCoarseTenancyGraphCtrl {
 
     entering.append('text')
       .attr({
-        'text-anchor': 'middle'
+        'text-anchor': 'middle',
+        'transform': `translate(0,${this.textOffset})`
       })
       .text(n => n.label);
       // .text(n => `${n.id} - ${n.label}`);
@@ -189,7 +192,7 @@ class XosCoarseTenancyGraphCtrl {
         width: textBBox.width + config.node.padding,
         height: textBBox.height + config.node.padding,
         x: textBBox.x - (config.node.padding / 2),
-        y: textBBox.y - (config.node.padding / 2)
+        y: (textBBox.y + self.textOffset) - (config.node.padding / 2)
       });
     });
   }
