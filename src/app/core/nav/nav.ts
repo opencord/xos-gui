@@ -30,6 +30,10 @@ class NavCtrl {
   }
 
   activateRoute(route: IXosNavigationRoute) {
+    if (this.navSelected === route.state) {
+      delete this.navSelected;
+      return;
+    }
     this.navSelected = route.state;
   }
 
