@@ -1,0 +1,12 @@
+ecord-stats {
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  .square {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin-right: 10px;
+  }
+}

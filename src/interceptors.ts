@@ -13,7 +13,7 @@ export function userStatusInterceptor($state: angular.ui.IStateService, $cookies
       case 401:
       case 500:
         $cookies.remove('sessionid', {path: '/'});
-        $state.go('login');
+        // $state.go('login');
         return $q.reject(res);
       default:
         return res;
