@@ -1,0 +1,9 @@
+ecord-topology {
+  display: block;
+  height: 100%;
+
+  [map-lazy-load],
+  ng-map {
+    height: 100%;
+  }
+}
