@@ -1,0 +1,57 @@
+<form ng-submit="vm.save(vm.ngModel)">
+    <div class="form-group">
+        <div class="btn-group btn-group-justified">
+            <a
+                ng-class="{active: vm.ngModel.type === 'lan'}"
+                type="button"
+                class="btn btn-default"
+                ng-click="vm.ngModel.type = 'lan'"
+            >E-Lan</a>
+            <a
+                ng-class="{active: vm.ngModel.type === 'line'}"
+                type="button"
+                class="btn btn-default"
+                ng-click="vm.ngModel.type = 'line'"
+            >E-Line</a>
+            <a
+                ng-class="{active: vm.ngModel.type === 'tree'}"
+                type="button"
+                class="btn btn-default"
+                ng-click="vm.ngModel.type = 'tree'"
+            >E-Tree</a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>EVC Bandwidth Profile:</label>
+        <select
+            class="form-control"
+            ng-model="vm.ngModel.profileId"
+            ng-change="vm.updateBP(vm.ngModel.profileId, vm.ngModel)"
+            ng-options="bp.id as bp.name for bp in vm.bandwidthProfiles"
+        ></select>
+    </div>
+    <ecord-bandwith-profile ng-model="vm.ngModel.profile" ng-show="vm.ngModel.profileId"></ecord-bandwith-profile>
+    <fieldset>
+        <legend class="col-xs-12">
+            CoS Bandwidth Profile:
+            <a class="fa fa-plus pull-right" ng-click="vm.addSelector()"></a>
+        </legend>
+    </fieldset>
+    <section ng-repeat="selector in vm.ngModel.selectors">
+        <div class="form-group">
+            <label>Selector:</label>
+            <a class="fa fa-ban pull-right" ng-click="vm.removeSelector($index)"></a>
+            <input type="text" class="form-control" ng-model="selector.selector">
+        </div>
+        <div class="form-group">
+            <ecord-bandwith-profile ng-model="selector.bandwidthProfile"></ecord-bandwith-profile>
+        </div>
+    </section>
+    <div class="form-group">
+        <button type="submit" class="btn btn-success btn-block">Save</button>
+    </div>
+    <div class="form-group" ng-show="vm.ngModel.status === 1">
+        <a ui-sref="xos.ecord.stats({lineId: vm.ngModel.id})" class="btn btn-info btn-block">Analytics</a>
+    </div>
+
+</form>

@@ -102,6 +102,7 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
 
       // NOTE e.key change if we are using some modifiers (eg: Alt) while getting the value from the keyCode works
       const binding = this.findBindedShortcut(pressedKey);
+
       if (angular.isDefined(binding) && angular.isFunction(binding.cb)) {
         // NOTE disable binding if they come from an input or textarea
         // if not different specified
