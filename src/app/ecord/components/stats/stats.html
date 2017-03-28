@@ -1,0 +1,55 @@
+<div ng-hide="vm.lineChart.data.length > 0">
+    <div class="loader">
+        Loading
+    </div>
+</div>
+<div class="row" ng-show="vm.lineChart.data.length > 0">
+    <div class="col-sm-8">
+        <h3>Delay and Jitter</h3>
+        <canvas class="chart chart-line" chart-data="vm.lineChart.data" chart-dataset-override="vm.lineChart.dataset"
+            chart-labels="vm.lineChart.labels" chart-series="vm.lineChart.series" chart-options="vm.lineOptions">
+        </canvas>
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="square" style="background-color: #ffa500"></div>
+                <label>Jitter Max</label>
+            </div>
+            <div class="col-xs-2">
+                <div class="square" style="background-color: #c55d01"></div>
+                <label>Jitter Average</label>
+            </div>
+            <div class="col-xs-2">
+                <div class="square" style="background-color: #8b0000"></div>
+                <label>Jitter Min</label>
+            </div>
+            <div class="col-xs-2">
+                <div class="square" style="background-color: #add8e6"></div>
+                <label>Delay Max</label>
+            </div>
+            <div class="col-xs-2">
+                <div class="square" style="background-color: #6f6db9"></div>
+                <label>Delay Average</label>
+            </div>
+            <div class="col-xs-2">
+                <div class="square" style="background-color: #00008b"></div>
+                <label>Delay Min</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="row">
+            <div class="col-sm-12" style="margin-bottom: 50px">
+                <h3>Current Delay Bin</h3>
+                <canvas class="chart chart-bar" chart-data="vm.delayBin.data" chart-dataset-override="vm.delayBin.dataset"
+                        chart-labels="vm.delayBin.labels" chart-series="vm.delayBin.series" chart-options="vm.options">
+                </canvas>
+            </div>
+            <div class="col-sm-12">
+                <h3>Current Jitter Bin</h3>
+                <canvas class="chart chart-bar" chart-data="vm.jitterBin.data" chart-dataset-override="vm.jitterBin.dataset"
+                        chart-labels="vm.jitterBin.labels" chart-series="vm.jitterBin.series" chart-options="vm.options">
+                </canvas>
+            </div>
+        </div>
+    </div>
+</div>
