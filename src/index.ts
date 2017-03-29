@@ -28,6 +28,7 @@ import {xosExtender} from './app/extender/index';
 import {IXosKeyboardShortcutService} from './app/core/services/keyboard-shortcut';
 import {IXosModelDiscovererService} from './app/datasources/helpers/model-discoverer.service';
 import {xosServiceGraph} from './app/service-graph/index';
+import {rcordModule} from './app/rcord/index';
 
 export interface IXosAppConfig {
   apiEndpoint: string;
@@ -51,6 +52,7 @@ angular
     xosExtender,
     xosTemplate, // template module
     xosServiceGraph,
+    rcordModule,
     'ui.router',
     'ngResource',
     'ngProgress'
