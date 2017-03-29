@@ -1,0 +1,27 @@
+<h1>Manage you subscribers</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Subscriber Name:</th>
+            <th>Status:</th>
+            <th>Uplink speed:</th>
+            <th>Downlink speed:</th>
+            <th>Firewall:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="sub in vm.subscribers">
+            <td>{{sub.name}}</td>
+            <td>
+                <a ng-click="vm.setStatus(sub.id, 'enabled')" class="btn" ng-class="{'btn-success': sub.status === 'enabled', 'btn-default': sub.status !== 'enabled'}">Enabled</a>
+                <a ng-click="vm.setStatus(sub.id, 'suspended')" class="btn" ng-class="{'btn-success': sub.status === 'suspended', 'btn-default': sub.status !== 'suspended'}">Suspended</a>
+                <a ng-click="vm.setStatus(sub.id, 'delinquent')" class="btn" ng-class="{'btn-success': sub.status === 'delinquent', 'btn-default': sub.status !== 'delinquent'}">Delinquent</a>
+                <a ng-click="vm.setStatus(sub.id, 'copyrightviolation')" class="btn" ng-class="{'btn-success': sub.status === 'copyrightviolation', 'btn-default': sub.status !== 'copyrightviolation'}">Copyright Violation</a>
+            </td>
+            <td>{{sub.uplink_speed / 1000000}} Mbps</td>
+            <td>{{sub.downlink_speed / 1000000}} Mbps</td>
+            <td>{{sub.firewall_enable}}</td>
+        </tr>
+    </tbody>
+</table>
