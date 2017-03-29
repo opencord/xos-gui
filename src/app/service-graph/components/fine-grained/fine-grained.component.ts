@@ -193,7 +193,14 @@ class XosFineGrainedTenancyGraphCtrl {
         'text-anchor': 'middle',
         'transform': `translate(0,${this.textOffset})`
       })
-      .text(n => n.label);
+      .text(n => {
+
+        if (n.label === 'vtr') {
+          return 'Virtual_Truckoll'.toUpperCase();
+        }
+
+        return n.label.toUpperCase()
+      });
     // .text(n => `${n.id} - ${n.label}`);
 
     const existing = nodes.selectAll('rect');
@@ -214,19 +221,19 @@ class XosFineGrainedTenancyGraphCtrl {
   private renderTenantNodes(nodes: any) {
     nodes.append('rect')
       .attr({
-        width: 40,
-        height: 40,
-        x: -20,
-        y: -20,
+        width: 20,
+        height: 20,
+        x: -10,
+        y: -10,
         transform: `rotate(45)`
       });
 
-    nodes.append('text')
-      .attr({
-        'text-anchor': 'middle',
-        'transform': `translate(0,${this.textOffset})`
-      })
-      .text(n => n.label);
+    // nodes.append('text')
+    //   .attr({
+    //     'text-anchor': 'middle',
+    //     'transform': `translate(0,${this.textOffset})`
+    //   })
+    //   .text(n => n.label);
   }
 
   private renderNetworkNodes(nodes: any) {

@@ -31,17 +31,18 @@ export class WebSocketEvent {
     ) {
       this.socket = io(this.AppConfig.websocketClient);
       this.socket.on('event', (data: IWSEvent): void => {
-          this.$log.debug(`[WebSocket] Received Event for: ${data.model} [${data.msg.pk}]`);
-          this._events.next(data);
-
-          // NOTE update observers of parent classes
-          if (data.msg.object.class_names && angular.isString(data.msg.object.class_names)) {
-            const models = data.msg.object.class_names.split(',');
-            _.forEach(models, (m: string) => {
-              data.model = m;
-              this._events.next(data);
-            });
-          }
+        return;
+          // this.$log.debug(`[WebSocket] Received Event for: ${data.model} [${data.msg.pk}]`);
+          // this._events.next(data);
+          //
+          // // NOTE update observers of parent classes
+          // if (data.msg.object.class_names && angular.isString(data.msg.object.class_names)) {
+          //   const models = data.msg.object.class_names.split(',');
+          //   _.forEach(models, (m: string) => {
+          //     data.model = m;
+          //     this._events.next(data);
+          //   });
+          // }
 
         });
     }
