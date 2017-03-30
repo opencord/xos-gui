@@ -2,6 +2,7 @@ import {IXosServiceGraphStore} from '../../services/graph.store';
 import './fine-grained.component.scss';
 import * as d3 from 'd3';
 import * as $ from 'jquery';
+import * as _ from 'lodash';
 import {Subscription} from 'rxjs';
 import {XosServiceGraphConfig as config} from '../../graph.config';
 import {IXosDebouncer} from '../../../core/services/helpers/debounce.helper';
@@ -9,6 +10,7 @@ import {IXosServiceGraph, IXosServiceGraphLink, IXosServiceGraphNode} from '../.
 import {IXosModelDiscovererService} from '../../../datasources/helpers/model-discoverer.service';
 import {IXosSidePanelService} from '../../../core/side-panel/side-panel.service';
 import {IXosGraphHelpers} from '../../services/d3-helpers/graph.helpers';
+import {IXosServiceGraphExtender, IXosServiceGraphReducer} from '../../services/graph.extender';
 
 class XosFineGrainedTenancyGraphCtrl {
   static $inject = [
@@ -17,7 +19,8 @@ class XosFineGrainedTenancyGraphCtrl {
     'XosDebouncer',
     'XosModelDiscoverer',
     'XosSidePanel',
-    'XosGraphHelpers'
+    'XosGraphHelpers',
+    'XosServiceGraphExtender'
   ];
 
   public graph: IXosServiceGraph;
@@ -40,12 +43,13 @@ class XosFineGrainedTenancyGraphCtrl {
     private XosDebouncer: IXosDebouncer,
     private XosModelDiscoverer: IXosModelDiscovererService,
     private XosSidePanel: IXosSidePanelService,
-    private XosGraphHelpers: IXosGraphHelpers
+    private XosGraphHelpers: IXosGraphHelpers,
+    private XosServiceGraphExtender: IXosServiceGraphExtender
   ) {
     this.handleSvg();
     this.loadDefs();
     this.setupForceLayout();
-    this.renderGraph = this.XosDebouncer.debounce(this._renderGraph, 500, this);
+    this.renderGraph = this.XosDebouncer.debounce(this._renderGraph, 1000, this);
 
     $(window).on('resize', () => {
       this.setupForceLayout();
@@ -60,6 +64,10 @@ class XosFineGrainedTenancyGraphCtrl {
           if (!graph || !graph.nodes || !graph.links) {
             return;
           }
+
+          _.forEach(this.XosServiceGraphExtender.getFinegrained(), (r: IXosServiceGraphReducer) => {
+            graph = r.reducer(graph);
+          });
 
           this.graph = graph;
           this.renderGraph();

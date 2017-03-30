@@ -6,7 +6,6 @@ import {
   IXosServiceGraphNode, IXosServiceGraphLink, IXosFineGrainedGraphData
 } from '../interfaces';
 import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
-import {IXosServiceGraphExtender, IXosServiceGraphReducer} from './graph.extender';
 export interface IXosServiceGraphStore {
   get(): Observable<IXosServiceGraph>;
   getCoarse(): Observable<IXosServiceGraph>;
@@ -16,8 +15,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
   static $inject = [
     '$log',
     'XosModelStore',
-    'XosDebouncer',
-    'XosServiceGraphExtender'
+    'XosDebouncer'
   ];
 
   // graph data store
@@ -58,8 +56,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
   constructor (
     private $log: ng.ILogService,
     private XosModelStore: IXosModelStoreService,
-    private XosDebouncer: IXosDebouncer,
-    private XosServiceGraphExtender: IXosServiceGraphExtender
+    private XosDebouncer: IXosDebouncer
   ) {
 
     this.$log.info(`[XosServiceGraphStore] Setup`);
@@ -249,10 +246,6 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
         links
       };
 
-      _.forEach(this.XosServiceGraphExtender.getCoarse(), (r: IXosServiceGraphReducer) => {
-        graph = r.reducer(graph);
-      });
-
       this.d3CoarseGraph.next(graph);
     } catch (e) {
       this.d3CoarseGraph.error(e);
@@ -286,8 +279,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       const links = _.reduce(data.tenants, (links: IXosServiceGraphLink[], tenant: IXosTenantModel) => {
         const sourceId = this.getSourceId(tenant);
         const targetId = this.getTargetId(tenant);
-
-        if (!angular.isDefined(targetId)) {
+        if (!angular.isDefined(targetId) || !angular.isDefined(sourceId)) {
           // if the tenant is not pointing to anything, don't draw links
           return links;
         }
@@ -306,8 +298,12 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
           model: tenant
         };
 
-        links.push(tenantToProvider);
-        links.push(tenantToSubscriber);
+        if (angular.isDefined(tenantToProvider.source) && angular.isDefined(tenantToProvider.target)) {
+          links.push(tenantToProvider);
+        }
+        if (angular.isDefined(tenantToSubscriber.source) && angular.isDefined(tenantToSubscriber.target)) {
+          links.push(tenantToSubscriber);
+        }
         return links;
       }, []);
 
@@ -320,9 +316,6 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
         links
       };
 
-      _.forEach(this.XosServiceGraphExtender.getFinegrained(), (r: IXosServiceGraphReducer) => {
-        graph = r.reducer(graph);
-      });
       this.d3FineGrainedGraph.next(graph);
     } catch (e) {
      this.d3FineGrainedGraph.error(e);

@@ -1,12 +1,14 @@
 import './coarse.component.scss';
 import * as d3 from 'd3';
 import * as $ from 'jquery';
+import * as _ from 'lodash';
 import {IXosServiceGraphStore} from '../../services/graph.store';
 import {IXosServiceGraph, IXosServiceGraphNode, IXosServiceGraphLink} from '../../interfaces';
 import {XosServiceGraphConfig as config} from '../../graph.config';
 import {IXosDebouncer} from '../../../core/services/helpers/debounce.helper';
 import {Subscription} from 'rxjs';
 import {IXosGraphHelpers} from '../../services/d3-helpers/graph.helpers';
+import {IXosServiceGraphReducer, IXosServiceGraphExtender} from '../../services/graph.extender';
 
 class XosCoarseTenancyGraphCtrl {
 
@@ -14,7 +16,8 @@ class XosCoarseTenancyGraphCtrl {
     '$log',
     'XosServiceGraphStore',
     'XosDebouncer',
-    'XosGraphHelpers'
+    'XosGraphHelpers',
+    'XosServiceGraphExtender'
   ];
 
   public graph: IXosServiceGraph;
@@ -34,7 +37,8 @@ class XosCoarseTenancyGraphCtrl {
     private $log: ng.ILogService,
     private XosServiceGraphStore: IXosServiceGraphStore,
     private XosDebouncer: IXosDebouncer,
-    private XosGraphHelpers: IXosGraphHelpers
+    private XosGraphHelpers: IXosGraphHelpers,
+    private XosServiceGraphExtender: IXosServiceGraphExtender
   ) {
 
   }
@@ -44,14 +48,18 @@ class XosCoarseTenancyGraphCtrl {
 
     this.CoarseGraphSubscription = this.XosServiceGraphStore.getCoarse()
       .subscribe(
-        (res: IXosServiceGraph) => {
-          this.$log.debug(`[XosCoarseTenancyGraph] Coarse Event and render`, res);
+        (graph: IXosServiceGraph) => {
+          this.$log.debug(`[XosCoarseTenancyGraph] Coarse Event and render`, graph);
 
           // id there are no data, do nothing
-          if (!res) {
+          if (graph.nodes.length === 0) {
             return;
           }
-          this.graph = res;
+          this.graph = graph;
+
+          _.forEach(this.XosServiceGraphExtender.getCoarse(), (r: IXosServiceGraphReducer) => {
+            graph = r.reducer(graph);
+          });
           this.renderGraph();
         },
         err => {

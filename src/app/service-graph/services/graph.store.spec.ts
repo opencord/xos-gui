@@ -91,8 +91,8 @@ describe('The XosServiceGraphStore service', () => {
         );
     });
 
-    describe('when a reducer is register', () => {
-
+    xdescribe('when a reducer is registered', () => {
+      // NOTE the reducer appliance has been moved in the component
       beforeEach((done) => {
         extender.register('coarse', 'test', (graph: IXosServiceGraph) => {
           graph.nodes = graph.nodes.map(n => {
