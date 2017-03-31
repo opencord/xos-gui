@@ -21,6 +21,25 @@ ui-view, xos, .wrapper, .content, .content > .container-fluid, [ui-view] {
   height:100%;
 }
 
+.content {
+  position: initial;
+}
+
+.droppable {
+  position: initial;
+  .drop-area {
+    border: 1px dashed $gray-light;
+    height: 600px;
+    padding-top: $padding;
+    border-radius: $border-radius-base;
+  }
+}
+
+[draggable] {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
 .content > div {
   opacity: 1 !important;
 }
