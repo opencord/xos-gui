@@ -28,8 +28,8 @@ export const XosServiceGraphConfig: IXosServiceGraphConfig = {
     gravity: 0.01
   },
   node: {
-    padding: 10,
-    radius: 2
+    padding: 20,
+    radius: 12
   },
   markers: [
     {

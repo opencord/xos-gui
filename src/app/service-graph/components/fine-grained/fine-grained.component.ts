@@ -214,10 +214,10 @@ class XosFineGrainedTenancyGraphCtrl {
   private renderTenantNodes(nodes: any) {
     nodes.append('rect')
       .attr({
-        width: 40,
-        height: 40,
-        x: -20,
-        y: -20,
+        width: 20,
+        height: 20,
+        x: -10,
+        y: -10,
         transform: `rotate(45)`
       });
 
@@ -257,7 +257,7 @@ class XosFineGrainedTenancyGraphCtrl {
     existing.each(function() {
       const textBBox = self.XosGraphHelpers.getSiblingTextBBox(this);
       const useElem = d3.select(this);
-      const w = textBBox.width + config.node.padding * 2;
+      const w = textBBox.width + (config.node.padding * 4);
       const h = w;
       const xoff = -(w / 2);
       const yoff = -(h / 2);
