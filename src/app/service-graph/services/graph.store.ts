@@ -222,7 +222,8 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
   private graphDataToCoarseGraph(data: IXosCoarseGraphData) {
 
     try {
-      const links: IXosServiceGraphLink[] = _.chain(data.servicedependencys)
+      const links: IXosServiceGraphLink[] = _.chain(data.tenants)
+        .filter((t: IXosTenantModel) => t.kind === 'coarse')
         .map((t: IXosTenantModel) => {
           return {
             id: t.id,

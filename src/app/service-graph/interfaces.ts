@@ -42,6 +42,7 @@ export interface IXosTenantModel extends Id3Element {
 export interface IXosCoarseGraphData {
   services: IXosServiceModel[];
   servicedependencys: any[];
+  tenants?: any[]
 }
 
 export interface IXosFineGrainedGraphData extends IXosCoarseGraphData {
