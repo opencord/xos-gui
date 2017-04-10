@@ -34,8 +34,13 @@ module.exports = function (config) {
     },
     reporters: ['progress', 'coverage'],
     coverageReporter: {
-      type: 'html',
-      dir: 'coverage/'
+      // type: 'html',
+      dir: 'coverage/',
+      reporters: [
+        {type: 'json', subdir: '.'},
+        {type: 'html', subdir: 'html'},
+        {type: 'cobertura', subdir: '.'}
+      ]
     },
     webpack: require('./webpack-test.conf'),
     webpackMiddleware: {

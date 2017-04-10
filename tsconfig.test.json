@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "inlineSourceMap": true
+  },
+  "compileOnSave": false,
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "typings/**",
+    "conf/app/**",
+    "node_modules"
+  ]
+}

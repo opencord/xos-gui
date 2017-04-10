@@ -43,11 +43,18 @@ module.exports = {
         test: /\.(png|woff|woff2|eot|ttf|svg|jpg|gif|jpeg)$/,
         loader: 'url-loader?limit=100000'
       }
+    ],
+    postLoaders : [
+      {
+        test: /\.ts$/,
+        exclude: /(node_modules|tests|(.spec\.ts))/,
+        loader: 'istanbul-instrumenter' // used to to get the code coverage for TypeScript
+      }
     ]
   },
   plugins: [],
   debug: true,
-  devtool: 'source-map',
+  devtool: false,
   resolve: {
     extensions: [
       '',
@@ -58,7 +65,7 @@ module.exports = {
     ]
   },
   ts: {
-    configFileName: 'tsconfig.json'
+    configFileName: 'tsconfig.test.json'
   },
   tslint: {
     configuration: require('../tslint.json')

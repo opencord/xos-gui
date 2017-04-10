@@ -25,3 +25,15 @@ function karmaAutoRun(done) {
   const karmaServer = new karma.Server({configFile}, karmaFinishHandler(done));
   karmaServer.start();
 }
+
+const remapIstanbul = require('remap-istanbul/lib/gulpRemapIstanbul');
+gulp.task('remap-istanbul', function() {
+  return gulp.src('coverage/coverage-final.json')
+    .pipe(remapIstanbul({
+      reports: {
+        'json': 'coverage/coverage-final.json',
+        'html': 'coverage/html',
+        'cobertura': 'coverage/coverage.xml'
+      }
+    }));
+});
