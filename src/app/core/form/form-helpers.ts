@@ -1,4 +1,3 @@
-import {IXosConfigHelpersService} from '../services/helpers/config.helpers';
 import {IXosFormInput} from './form';
 
 export interface IXosFormHelpersService {
@@ -9,20 +8,14 @@ export interface IXosFormHelpersService {
 }
 
 export class XosFormHelpers {
-  static $inject = ['ConfigHelpers'];
-
-  constructor (
-    private ConfigHelpers: IXosConfigHelpersService
-  ) {
-
-  }
+  static $inject = [];
 
   public _isEmail = (text) => {
     const re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
     return re.test(text);
   };
 
-  public  _getFieldFormat = (value) => {
+  public _getFieldFormat = (value) => {
     if (angular.isArray(value)) {
       return 'array';
     }

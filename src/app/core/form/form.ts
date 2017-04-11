@@ -2,7 +2,6 @@
 
 import * as _ from 'lodash';
 import {IXosFormHelpersService} from './form-helpers';
-import {IXosConfigHelpersService} from '../services/helpers/config.helpers';
 
 export interface IXosFormAction {
   label: string;
@@ -53,17 +52,15 @@ export interface IXosFormCfg {
 }
 
 class FormCtrl {
-  $inject = ['$onInit', '$scope', 'XosFormHelpers', 'ConfigHelpers'];
+  $inject = ['$onInit', '$scope', 'XosFormHelpers'];
 
   public ngModel: any;
-  public excludedField: string[];
   public formField: any;
   private config: any;
 
   constructor (
     private $scope: ng.IScope,
-    private XosFormHelpers: IXosFormHelpersService,
-    private ConfigHelpers: IXosConfigHelpersService
+    private XosFormHelpers: IXosFormHelpersService
   ) {
   }
 
@@ -91,7 +88,9 @@ class FormCtrl {
     }
 
     // remove excluded inputs
-    _.remove(this.config.inputs, i => this.config.exclude.indexOf(i.name) > -1);
+    if (angular.isDefined(this.config.exclude) && this.config.exclude.leading > 0) {
+      _.remove(this.config.inputs, i => this.config.exclude.indexOf(i.name) > -1);
+    }
   }
 }
 
