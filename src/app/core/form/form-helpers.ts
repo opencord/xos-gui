@@ -1,19 +1,9 @@
-import {IXosFormInput} from './form';
-
 export interface IXosFormHelpersService {
   _getFieldFormat(value: any): string;
-  parseModelField(fields: any): any[];
-  buildFormStructure(modelField: any[], customField: any[], model: any, order: string[]): any;
-  buildFormData(fields: IXosFormInput[], model: any): any;
 }
 
-export class XosFormHelpers {
+export class XosFormHelpers implements IXosFormHelpersService {
   static $inject = [];
-
-  public _isEmail = (text) => {
-    const re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
-    return re.test(text);
-  };
 
   public _getFieldFormat = (value) => {
     if (angular.isArray(value)) {
@@ -47,6 +37,11 @@ export class XosFormHelpers {
     }
 
     return typeof value;
+  };
+
+  private _isEmail = (text) => {
+    const re = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+    return re.test(text);
   };
 }
 
