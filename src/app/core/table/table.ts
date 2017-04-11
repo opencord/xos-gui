@@ -38,17 +38,30 @@ export interface IXosTableCfg {
 }
 
 class TableCtrl {
-  $inject = ['$onInit'];
+  $inject = ['$onInit', '$scope'];
 
   public columns: any[];
   public orderBy: string;
   public reverse: boolean;
   public classes: string;
+  public data: any;
   private config: IXosTableCfg;
   private currentPage: number;
+  private loader: boolean = true;
 
+  constructor(
+    private $scope: ng.IScope
+  ) {
+
+  }
 
   $onInit() {
+
+    this.$scope.$watch(() => this.data, data => {
+      if (angular.isDefined(data)) {
+        this.loader = false;
+      }
+    });
 
     this.classes = 'table table-striped'; // table-bordered
 

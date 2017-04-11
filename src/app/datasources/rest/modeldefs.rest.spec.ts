@@ -51,6 +51,6 @@ describe('The XosModelDefs service', () => {
         done(e);
       });
     $scope.$apply();
-    httpBackend.flush();
+    // httpBackend.flush();
   });
 });

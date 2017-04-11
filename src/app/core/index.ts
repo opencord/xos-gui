@@ -23,6 +23,7 @@ import {xosKeyBindingPanel} from './key-binding/key-binding-panel';
 import {xosPagination} from './pagination/pagination';
 import {PaginationFilter} from './pagination/pagination.filter';
 import {XosDebouncer} from './services/helpers/debounce.helper';
+import {ArrayToListFilter} from './table/array-to-list.filter';
 
 export const xosCore = 'xosCore';
 
@@ -55,4 +56,5 @@ angular
   .component('xosValidation', xosValidation)
   .component('xosSidePanel', xosSidePanel)
   .component('xosKeyBindingPanel', xosKeyBindingPanel)
-  .filter('pagination', PaginationFilter);
+  .filter('pagination', PaginationFilter)
+  .filter('arrayToList', ArrayToListFilter);

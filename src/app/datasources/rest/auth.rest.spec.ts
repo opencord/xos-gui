@@ -61,7 +61,7 @@ describe('The AuthService service', () => {
           done(e);
         });
       $scope.$apply();
-      httpBackend.flush();
+      // httpBackend.flush();
     });
   });
 
@@ -77,16 +77,14 @@ describe('The AuthService service', () => {
     it('should remove user auth from cookies', (done) => {
       service.logout()
         .then((res) => {
-          expect($cookies.get('xoscsrftoken')).toEqual(undefined);
-          expect($cookies.get('xossessionid')).toEqual(undefined);
-          expect($cookies.get('xosuser')).toEqual(undefined);
+          expect($cookies.get('sessionid')).toEqual(undefined);
           done();
         })
         .catch(e => {
           done(e);
         });
       $scope.$apply();
-      httpBackend.flush();
+      // httpBackend.flush();
     });
   });
 });
