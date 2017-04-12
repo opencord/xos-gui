@@ -56,7 +56,7 @@ class HeaderController {
 
     // listen for keypress
     this.XosKeyboardShortcut.registerKeyBinding({
-      key: 'f',
+      key: 'F',
       description: 'Select search box',
       cb: () => {
         $('.navbar-form input').focus();
