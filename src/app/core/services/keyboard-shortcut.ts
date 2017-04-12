@@ -17,6 +17,7 @@ export interface IXosKeyboardShortcutBinding {
   key: string;
   cb: any;
   modifiers?: string[];
+  label?: string;
   description?: string;
   onInput?: boolean;
 }
@@ -27,7 +28,7 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
     global: [],
     view: []
   };
-  public allowedModifiers: string[] = ['Meta', 'Alt', 'Shift', 'Control'];
+  public allowedModifiers: string[] = ['meta', 'alt', 'shift', 'control'];
   public activeModifiers: string[] = [];
 
   private toggleKeyBindingPanel = (): void => {
@@ -44,17 +45,14 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
   /* tslint:disable */
   public baseBindings: IXosKeyboardShortcutBinding[] = [
     {
-      key: '?',
+      key: 'slash',
+      label: '/',
       description: 'Toggle Shortcut Panel',
       cb: this.toggleKeyBindingPanel,
     },
     {
-      key: '/',
-      description: 'Toggle Shortcut Panel',
-      cb: this.toggleKeyBindingPanel,
-    },
-    {
-      key: 'Escape',
+      key: 'esc',
+      label: 'Esc',
       cb: (event) => {
         // NOTE removing focus from input elements on Esc
         event.target.blur();
@@ -85,15 +83,7 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
     this.$log.info(`[XosKeyboardShortcut] Setup`);
     $('body').on('keydown', (e) => {
 
-      let pressedKey = null;
-
-      if (e.key.length === 1 && e.key.match(/[a-z]/i) || String.fromCharCode(e.keyCode).toLowerCase().match(/[a-z]/i)) {
-        // alphabet letters found
-        pressedKey = String.fromCharCode(e.keyCode).toLowerCase();
-      }
-      else {
-        pressedKey = e.key;
-      }
+      const pressedKey = this.whatKey(e.which);
 
       if (this.allowedModifiers.indexOf(e.key) > -1) {
         this.addActiveModifierKey(e.key);
@@ -123,12 +113,18 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
   }
 
   public registerKeyBinding(binding: IXosKeyboardShortcutBinding, target: string = 'view'): void {
-    // NOTE check for already taken binding (by key)
-    // NOTE check target is either 'view' or 'global'
-    this.$log.debug(`[XosKeyboardShortcut] Registering binding for key: ${binding.key}`);
-    if (!_.find(this.keyMapping[target], {key: binding.key})) {
-      this.keyMapping[target].push(binding);
+
+    if (target !== 'global' && target !== 'view') {
+      throw new Error('[XosKeyboardShortcut] A shortcut can be registered with scope "global" or "view" only');
     }
+
+    binding.key = binding.key.toLowerCase();
+    if (_.find(this.keyMapping.global, {key: binding.key}) || _.find(this.keyMapping.view, {key: binding.key})) {
+      throw new Error(`[XosKeyboardShortcut] A shortcut for key "${binding.key}" has already been registered`);
+    }
+
+    this.$log.debug(`[XosKeyboardShortcut] Registering binding for key: ${binding.key}`);
+    this.keyMapping[target].push(binding);
   }
 
   private addActiveModifierKey(key: string) {
@@ -142,23 +138,65 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
   }
 
   private findBindedShortcut(key: string): IXosKeyboardShortcutBinding {
-    // NOTE search for binding in the global map
-    let target =  _.find(this.keyMapping.global, {key: key});
+    const globalTargets =  _.filter(this.keyMapping.global, {key: key.toLowerCase()});
 
-    // NOTE if it is not there look in the view map
-    if (!angular.isDefined(target)) {
-      target = _.find(this.keyMapping.view, {key: key});
+    const localTargets = _.filter(this.keyMapping.view, {key: key.toLowerCase()});
+
+    let targets = globalTargets.concat(localTargets);
+
+    if (targets.length === 0) {
+      return;
     }
 
+    // NOTE remove targets that does not match modifiers
+    targets = _.filter(targets, (t: IXosKeyboardShortcutBinding) => {
+      if (this.activeModifiers.length === 0) {
+        return true;
+      }
+      else if (t.modifiers && _.difference(t.modifiers, this.activeModifiers).length === 0) {
+        return true;
+      }
+      return false;
+    });
 
-    if (target && target.modifiers) {
-      // if not all the modifier keys for that binding are pressed
-      if (_.difference(target.modifiers, this.activeModifiers).length > 0) {
-        // do not match
-        return;
-      };
-    }
-    return target;
+    return targets[0];
   }
+
+  private whatKey(code: number) {
+    switch (code) {
+      case 8: return 'delete';
+      case 9: return 'tab';
+      case 13: return 'enter';
+      case 16: return 'shift';
+      case 17: return 'control';
+      case 18: return 'alt';
+      case 27: return 'esc';
+      case 32: return 'space';
+      case 37: return 'leftArrow';
+      case 38: return 'upArrow';
+      case 39: return 'rightArrow';
+      case 40: return 'downArrow';
+      case 91: return 'meta';
+      case 186: return 'semicolon';
+      case 187: return 'equals';
+      case 188: return 'comma';
+      case 189: return 'dash';
+      case 190: return 'dot';
+      case 191: return 'slash';
+      case 192: return 'backQuote';
+      case 219: return 'openBracket';
+      case 220: return 'backSlash';
+      case 221: return 'closeBracket';
+      case 222: return 'quote';
+      default:
+        if ((code >= 48 && code <= 57) ||
+          (code >= 65 && code <= 90)) {
+          return String.fromCharCode(code);
+        } else if (code >= 112 && code <= 123) {
+          return 'F' + (code - 111);
+        }
+        return null;
+  }
+}
 
 }

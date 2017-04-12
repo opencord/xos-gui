@@ -1,6 +1,6 @@
 // TODO check used deps
 
-import {minimalizaMenu, panelTools} from './directives/directives';
+import {minimalizaMenu, panelTools, XosNavHandlerService} from './directives/directives';
 export const xosTemplate = 'xosTemplate';
 
 import 'angular-ui-bootstrap';
@@ -26,6 +26,7 @@ import {capitalize} from './filters/capitalize';
     // 'datatables.buttons',       // Datatables Buttons
     // 'ui.tree'                   // Angular ui Tree
   ])
+    .service('XosNavHandler', XosNavHandlerService)
     .directive('minimalizaMenu', minimalizaMenu)
     // .directive('sparkline', sparkline)
     .directive('panelTools', panelTools)
