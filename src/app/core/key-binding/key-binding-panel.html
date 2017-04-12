@@ -14,7 +14,7 @@
                     <span ng-repeat="m in binding.modifiers">
                         {{m}} +
                     </span>
-                    {{binding.key}}
+                    {{binding.label.toLowerCase() || binding.key.toLowerCase()}}
                 </code>
             </div>
             <div class="col-xs-7">

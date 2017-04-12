@@ -1,6 +1,5 @@
 /// <reference path="../typings/index.d.ts" />
 
-
 import * as angular from 'angular';
 
 import 'angular-ui-router';
@@ -139,7 +138,7 @@ angular
     XosKeyboardShortcut.setup();
 
     XosKeyboardShortcut.registerKeyBinding({
-      key: 'd',
+      key: 'D',
       // modifiers: ['Command'],
       cb: () => {
         if (window.localStorage.getItem('debug') === 'true') {
