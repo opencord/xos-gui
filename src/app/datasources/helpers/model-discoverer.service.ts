@@ -25,6 +25,7 @@ export interface IXosModelDiscovererService {
   discover(): ng.IPromise<boolean>;
   get(modelName: string): IXosModel;
   getApiUrlFromModel(model: IXosModel): string;
+  areModelsLoaded(): boolean;
 }
 
 export class XosModelDiscovererService implements IXosModelDiscovererService {
@@ -41,6 +42,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
   private xosModels: IXosModel[] = []; // list of augmented model definitions;
   private xosServices: string[] = []; // list of loaded services
   private progressBar;
+  private modelsLoaded: boolean = false;
 
   constructor (
     private $log: ng.ILogService,
@@ -54,6 +56,10 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
   ) {
     this.progressBar = this.ngProgressFactory.createInstance();
     this.progressBar.setColor('#f6a821');
+  }
+
+  public areModelsLoaded(): boolean {
+    return this.modelsLoaded;
   }
 
   public get(modelName: string): IXosModel|null {
@@ -119,6 +125,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
           })
           .finally(() => {
             this.progressBar.complete();
+            this.modelsLoaded = true;
           });
       });
     return d.promise;

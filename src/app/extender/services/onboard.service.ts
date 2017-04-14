@@ -4,11 +4,18 @@ import * as _ from 'lodash';
 import {Observable} from 'rxjs';
 
 export interface IXosOnboarder {
-
+  onboard(): ng.IPromise<boolean>;
 }
 
 export class XosOnboarder implements IXosOnboarder {
-  static $inject = ['$timeout', '$log', '$q', 'WebSocket', '$ocLazyLoad', 'XosModelStore'];
+  static $inject = [
+    '$timeout',
+    '$log',
+    '$q',
+    'WebSocket',
+    '$ocLazyLoad',
+    'XosModelStore'
+  ];
 
   constructor(
     private $timeout: ng.ITimeoutService,
@@ -18,23 +25,37 @@ export class XosOnboarder implements IXosOnboarder {
     private $ocLazyLoad: any, // TODO add definition
     private XosModelStore: IXosModelStoreService
   ) {
+
+  }
+
+  public onboard(): ng.IPromise<boolean> {
+    const d = this.$q.defer();
+
     this.$log.info('[XosOnboarder] Setup');
 
     // Load onboarded app
     const ComponentObservable: Observable<any> = this.XosModelStore.query('XOSGuiExtension');
 
     ComponentObservable.subscribe(
-        (component) => {
-          _.forEach(component, (c) => {
-            this.$log.info(`[XosOnboarder] Loading files for app: ${c.name}`);
-            const files = c.files.split(',').map(s => s.trim());
-            this.loadFile(files)
-              .then((res) => {
-                this.$log.info(`[XosOnboarder] All files loaded for app: ${c.name}`);
-              });
-          });
+      (component) => {
+        if (component.length === 0) {
+          return d.resolve();
         }
-      );
+        _.forEach(component, (c) => {
+          this.$log.info(`[XosOnboarder] Loading files for app: ${c.name}`);
+          const files = c.files.split(',').map(s => s.trim());
+          this.loadFile(files)
+            .then((res) => {
+              this.$log.info(`[XosOnboarder] All files loaded for app: ${c.name}`);
+              d.resolve();
+            })
+            .catch(e => {
+              this.$log.info(`[XosOnboarder] Error while onboarding apps: `, e);
+            });
+        });
+      }
+    );
+    return d.promise;
   }
 
   // NOTE files needs to be loaded in order, so async loop!
@@ -43,6 +64,7 @@ export class XosOnboarder implements IXosOnboarder {
       d = this.$q.defer();
     }
     const file = files.shift();
+
     this.$log.info(`[XosOnboarder] Loading file: ${file}`);
     this.$ocLazyLoad.load(file)
       .then((res) => {

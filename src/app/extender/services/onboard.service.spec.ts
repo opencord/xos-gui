@@ -61,6 +61,9 @@ describe('The XosOnboarder service', () => {
     spyOn($ocLazyLoad, 'load').and.callThrough();
     service = XosOnboarder;
     $timeout = _$timeout_;
+
+    // start the service
+    service.onboard();
   }));
 
   describe('when receive an event', () => {

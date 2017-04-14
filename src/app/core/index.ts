@@ -24,6 +24,7 @@ import {xosPagination} from './pagination/pagination';
 import {PaginationFilter} from './pagination/pagination.filter';
 import {XosDebouncer} from './services/helpers/debounce.helper';
 import {ArrayToListFilter} from './table/array-to-list.filter';
+import {xosLoader} from './loader/loader';
 
 export const xosCore = 'xosCore';
 
@@ -48,6 +49,7 @@ angular
   .component('xosFooter', xosFooter)
   .component('xosNav', xosNav)
   .component('xosLogin', xosLogin)
+  .component('xosLoader', xosLoader)
   .component('xosPagination', xosPagination)
   .component('xosTable', xosTable)
   .component('xosForm', xosForm)

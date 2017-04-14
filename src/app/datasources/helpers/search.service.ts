@@ -25,6 +25,7 @@ export class SearchService {
     private XosModelStore: IXosModelStoreService,
     private ConfigHelpers: IXosConfigHelpersService
   ) {
+    this.$log.info(`[XosSearchService] Alive`);
     this.$rootScope.$on('xos.core.modelSetup', () => {
       this.$log.info(`[XosSearchService] Loading views`);
       this.states = this.NavigationService.query().reduce((list, state) => {
@@ -41,6 +42,7 @@ export class SearchService {
         return list;
       }, []);
       this.states = _.uniqBy(this.states, 'state');
+      this.$log.debug(`[XosSearchService] States: `, this.states);
     });
   }
 

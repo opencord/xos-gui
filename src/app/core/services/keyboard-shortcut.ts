@@ -120,7 +120,8 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
 
     binding.key = binding.key.toLowerCase();
     if (_.find(this.keyMapping.global, {key: binding.key}) || _.find(this.keyMapping.view, {key: binding.key})) {
-      throw new Error(`[XosKeyboardShortcut] A shortcut for key "${binding.key}" has already been registered`);
+      this.$log.warn(`[XosKeyboardShortcut] A shortcut for key "${binding.key}" has already been registered`);
+      return;
     }
 
     this.$log.debug(`[XosKeyboardShortcut] Registering binding for key: ${binding.key}`);
