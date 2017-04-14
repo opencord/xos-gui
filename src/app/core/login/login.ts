@@ -2,10 +2,15 @@ import {AuthService} from '../../datasources/rest/auth.rest';
 import './login.scss';
 
 import {IXosStyleConfig} from '../../../index';
-import {IXosModelDiscovererService} from '../../datasources/helpers/model-discoverer.service';
 
 class LoginCtrl {
-  static $inject = ['$log', 'AuthService', '$state', 'XosModelDiscoverer', 'StyleConfig'];
+  static $inject = [
+    '$log',
+    'AuthService',
+    '$state',
+    'StyleConfig'
+  ];
+
   public loginStyle: any;
   public img: string;
   public showErrorMsg: boolean = false;
@@ -14,7 +19,6 @@ class LoginCtrl {
     private $log: ng.ILogService,
     private authService: AuthService,
     private $state: angular.ui.IStateService,
-    private XosModelDiscoverer: IXosModelDiscovererService,
     private StyleConfig: IXosStyleConfig
   ) {
 
@@ -35,15 +39,10 @@ class LoginCtrl {
       password: password
     })
       .then(res => {
-        this.showErrorMsg = false;
-        // after login set up models
-        return this.XosModelDiscoverer.discover();
-      })
-      .then(() => {
-        this.$state.go('xos.dashboard');
+        this.$state.go('loader');
       })
       .catch(e => {
-        this.$log.error(`[XosLogin] Error during login.`);
+        this.$log.error(`[XosLogin] Error during login.`, e);
         this.errorMsg = `Something went wrong, please try again.`;
         this.showErrorMsg = true;
       });

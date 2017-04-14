@@ -7,6 +7,7 @@ let service: IXosKeyboardShortcutService;
 let $log: ng.ILogService;
 let $transitions: any;
 let XosSidePanel: IXosSidePanelService;
+let logSpy: any;
 
 const baseGlobalModifiers: IXosKeyboardShortcutBinding[] = [
   {
@@ -55,6 +56,7 @@ describe('The XosKeyboardShortcut service', () => {
       $log = _$log_;
       $transitions = _$transitions_;
       XosSidePanel = _XosSidePanel_;
+      logSpy = spyOn($log, 'warn');
     });
 
     service = new XosKeyboardShortcut($log, $transitions, XosSidePanel);
@@ -167,13 +169,11 @@ describe('The XosKeyboardShortcut service', () => {
     });
 
     it('should not add binding that has an already registered key', () => {
-      function errorFunctionWrapper() {
-        service['registerKeyBinding']({
-          key: 'A',
-          cb: 'cb'
-        }, 'global');
-      }
-      expect(errorFunctionWrapper).toThrow(new Error('[XosKeyboardShortcut] A shortcut for key "a" has already been registered'));
+      service['registerKeyBinding']({
+        key: 'A',
+        cb: 'cb'
+      }, 'global');
+      expect(logSpy).toHaveBeenCalledWith('[XosKeyboardShortcut] A shortcut for key "a" has already been registered');
     });
   });
 });

@@ -62,16 +62,15 @@ angular
   .factory('CredentialsInterceptor', CredentialsInterceptor)
   .factory('NoHyperlinksInterceptor', NoHyperlinksInterceptor)
   .component('xos', main)
-  .run(function($log: ng.ILogService, $rootScope: ng.IRootScopeService, $transitions: any, StyleConfig: IXosStyleConfig) {
-    $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
-    $transitions.onSuccess({ to: '**' }, (transtion) => {
-      if (transtion.$to().name === 'login') {
-        $rootScope['class'] = 'blank';
-      }
-      else {
-        $rootScope['class'] = '';
-      }
-    });
+  .provider('XosConfig', function(){
+    // save the last visited state before reload
+    const lastVisitedUrl = window.location.hash.replace('#', '');
+    this.$get = [() => {
+      return {
+        lastVisitedUrl
+      };
+    }] ;
+    return this;
   })
   .run((
     $rootScope: ng.IRootScopeService,
@@ -79,14 +78,27 @@ angular
     $log: ng.ILogService,
     $location: ng.ILocationService,
     $state: ng.ui.IStateService,
+    StyleConfig: IXosStyleConfig,
     XosModelDiscoverer: IXosModelDiscovererService,
     AuthService: IXosAuthService,
     XosKeyboardShortcut: IXosKeyboardShortcutService,
-    toastr: ng.toastr.IToastrService,
-    PageTitle: IXosPageTitleService
+    PageTitle: IXosPageTitleService // NOTE this service is not used, but needs to be loaded somewhere
   ) => {
+    // handle style configs
+    $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
+    if ($state.current.data && $state.current.data.specialClass) {
+      $rootScope['class'] = $state.current.data.specialClass;
+    }
+    $transitions.onSuccess({ to: '**' }, (transtion) => {
+      if ($state.current.data && $state.current.data.specialClass) {
+        $rootScope['class'] = transtion.$to().data.specialClass;
+      }
+      else {
+        $rootScope['class'] = '';
+      }
+    });
 
-    // check the user login
+    // check the user login (on route change)
     $transitions.onSuccess({ to: '**' }, (transtion) => {
       if (!AuthService.isAuthenticated()) {
         AuthService.clearUser();
@@ -94,40 +106,10 @@ angular
       }
     });
 
-    // preserve debug=true query string parameter
-    $transitions.onStart({ to: '**' }, (transtion) => {
-      // save location.search so we can add it back after transition is done
-      this.locationSearch = $location.search();
-    });
-
-    $transitions.onSuccess({ to: '**' }, (transtion) => {
-      // restore all query string parameters back to $location.search
-      if (angular.isDefined(this.locationSearch.debug) && this.locationSearch.debug) {
-        $location.search({debug: 'true'});
-      }
-    });
-
-    // save the last visited state before reload
-    const lastRoute = $location.path();
-    const lastQueryString = $location.search();
-
     // if the user is authenticated
     $log.info(`[XOS] Is user authenticated? ${AuthService.isAuthenticated()}`);
     if (AuthService.isAuthenticated()) {
-      XosModelDiscoverer.discover()
-        .then((res) => {
-          if (res) {
-            $log.info('[XOS] All models loaded');
-          }
-          else {
-            $log.info('[XOS] Failed to load some models, moving on.');
-          }
-          // after setting up dynamic routes, redirect to previous state
-          $location.path(lastRoute).search(lastQueryString);
-        })
-        .finally(() => {
-          $rootScope.$emit('xos.core.modelSetup');
-        });
+      $state.go('loader');
     }
     else {
       AuthService.clearUser();
@@ -139,7 +121,6 @@ angular
 
     XosKeyboardShortcut.registerKeyBinding({
       key: 'D',
-      // modifiers: ['Command'],
       cb: () => {
         if (window.localStorage.getItem('debug') === 'true') {
           $log.info(`[XosKeyboardShortcut] Disabling debug`);

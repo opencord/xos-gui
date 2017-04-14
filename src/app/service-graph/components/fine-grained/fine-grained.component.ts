@@ -83,6 +83,9 @@ class XosFineGrainedTenancyGraphCtrl {
   }
 
   private _renderGraph() {
+    if (!angular.isDefined(this.graph) || !angular.isDefined(this.graph.nodes) || !angular.isDefined(this.graph.links)) {
+      return;
+    }
     this.addNodeLinksToForceLayout(this.graph);
     this.renderNodes(this.graph.nodes);
     this.renderLinks(this.graph.links);

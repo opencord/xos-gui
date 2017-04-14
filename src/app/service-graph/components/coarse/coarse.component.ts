@@ -80,6 +80,9 @@ class XosCoarseTenancyGraphCtrl {
   }
 
   private _renderGraph() {
+    if (!angular.isDefined(this.graph) || !angular.isDefined(this.graph.nodes) || !angular.isDefined(this.graph.links)) {
+      return;
+    }
     this.addNodeLinksToForceLayout(this.graph);
     this.renderNodes(this.graph.nodes);
     this.renderLinks(this.graph.links);
@@ -87,8 +90,8 @@ class XosCoarseTenancyGraphCtrl {
 
   private getSvgDimensions(): {width: number, heigth: number} {
     return {
-      width: $('xos-coarse-tenancy-graph svg').width(),
-      heigth: $('xos-coarse-tenancy-graph svg').height()
+      width: $('xos-coarse-tenancy-graph svg').width() || 0,
+      heigth: $('xos-coarse-tenancy-graph svg').height() || 0
     };
   }
 
