@@ -3,6 +3,23 @@
 
 FROM nginx
 
+# label image
+ARG org_label-schema_schema-version=1.0
+ARG org_label-schema_name=xos-gui
+ARG org_label-schema_version=dirty
+ARG org_label-schema_vcs-url=unknown
+ARG org_label-schema_vcs-ref=unknown
+ARG org_label-schema_build-date=unknown
+ARG org_opencord_vcs-commit-date=unknown
+
+LABEL org.label-schema.schema-version=org_label-schema_schema-version \
+      org.label-schema.name=org_label-schema_name \
+      org.label-schema.version=org_label-schema_version \
+      org.label-schema.vcs-url=org_label-schema_vcs-url \
+      org.label-schema.vcs-ref=org_label-schema_vcs-ref \
+      org.label-schema.build-date=org_label-schema_build-date \
+      org.opencord.vcs-commit-date=org_opencord_vcs-commit-date
+
 # Set environment vars
 ENV CODE_SOURCE .
 ENV CODE_DEST /var/www
