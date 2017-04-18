@@ -3,7 +3,6 @@ import * as pluralize from 'pluralize';
 import {IXosTableColumn, IXosTableCfg} from '../../table/table';
 import {IXosModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosFormCfg, IXosFormInput, IXosFormInputValidator} from '../../form/form';
-import {IXosAuthService} from '../../../datasources/rest/auth.rest';
 import {IXosModelStoreService} from '../../../datasources/stores/model.store';
 import {IXosState} from '../runtime-states';
 
@@ -42,7 +41,6 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   static $inject = [
     '$state',
     'toastr',
-    'AuthService',
     'XosModelStore'];
 
   public excluded_fields = [
@@ -67,7 +65,6 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   constructor(
     private $state: ng.ui.IStateService,
     private toastr: ng.toastr.IToastrService,
-    private AuthService: IXosAuthService,
     private XosModelStore: IXosModelStoreService
   ) {
     pluralize.addIrregularRule('xos', 'xoses');
@@ -262,9 +259,6 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
       // TODO remove ManyToMany relations and save them separately (how??)
       delete item.networks;
-
-      // adding userId as creator
-      // item.creator = this.AuthService.getUser().id;
 
       // remove field added by xosTable
       _.forEach(Object.keys(item), prop => {

@@ -106,7 +106,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
               return this.$q.resolve('true');
             })
             .catch(err => {
-              this.$log.error(`[XosModelDiscovererService] Model ${model.name} NOT stored`);
+              this.$log.error(`[XosModelDiscovererService] Model ${model.name} NOT stored`, err);
               return this.$q.resolve('false');
             });
             pArray.push(p);
@@ -116,11 +116,12 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
             // the Model Loader promise won't ever be reject, in case it will be resolve with value false,
             // that's because we want to wait anyway for all the models to be loaded
             if (res.indexOf('false') > -1) {
-              d.resolve(false);
+              return d.resolve(false);
             }
             d.resolve(true);
           })
-          .catch(() => {
+          .catch((e) => {
+            this.$log.error(`[XosModelDiscovererService]`, e);
             d.resolve(false);
           })
           .finally(() => {

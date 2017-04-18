@@ -47,7 +47,7 @@ export function NoHyperlinksInterceptor() {
         req.headers['Content-Type'] = 'application/json';
 
         if (req.method === 'PUT') {
-          // FIXME XosModelStore.search add this value for visualization purpose,
+          // XosModelStore.search add this value for visualization purpose,
           // no one should change models
           delete req.data.modelName;
         }
