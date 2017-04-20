@@ -30,7 +30,7 @@ timeout (time: 240) {
                 sh 'docker run -p 4000:4000 --net=host --name xos-gui -d xosproject/xos-gui'
 
                 stage 'Run E2E Tests'
-                sh 'curl 127.0.0.1:4000/spa/ --write-out %{http_code} --silent --output /dev/null | grep 200'
+                sh 'UI_URL=127.0.0.1:4000/spa/#' protractor conf/protractor.conf.js
 
                 currentBuild.result = 'SUCCESS'
             } catch (err) {
