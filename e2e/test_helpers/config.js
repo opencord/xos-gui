@@ -1,0 +1,1 @@
+exports.url = process.env.UI_URL || 'http://192.168.46.100/xos/#';

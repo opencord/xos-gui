@@ -26,6 +26,7 @@
     "babel-loader": "6.4.1",
     "babel-plugin-istanbul": "2.0.3",
     "base-href-webpack-plugin": "1.0.0",
+    "bluebird": "^3.5.0",
     "browser-sync": "2.18.8",
     "browser-sync-spa": "1.0.3",
     "copy-webpack-plugin": "4.0.1",
@@ -58,6 +59,7 @@
     "istanbul-instrumenter-loader": "2.0.0",
     "jasmine": "2.5.3",
     "jasmine-jquery": "2.1.1",
+    "jasmine-spec-reporter": "^4.0.0",
     "json-loader": "0.5.4",
     "karma": "1.6.0",
     "karma-angular-filesort": "1.0.2",
@@ -96,6 +98,7 @@
     "serve:dist:watch": "gulp serve:dist:watch",
     "test": "gulp test",
     "test:auto": "gulp test:auto",
+    "test:e2e": "protractor conf/protractor.conf.js",
     "config": "gulp config",
     "lint": "tslint -c ./tslint.json 'src/**/*.ts'"
   },
