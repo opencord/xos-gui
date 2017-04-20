@@ -58,6 +58,7 @@
     "istanbul-instrumenter-loader": "2.0.0",
     "jasmine": "2.5.3",
     "jasmine-jquery": "2.1.1",
+    "jasmine-spec-reporter": "^4.0.0",
     "json-loader": "0.5.4",
     "karma": "1.6.0",
     "karma-angular-filesort": "1.0.2",
@@ -96,6 +97,7 @@
     "serve:dist:watch": "gulp serve:dist:watch",
     "test": "gulp test",
     "test:auto": "gulp test:auto",
+    "test:e2e": "protractor conf/protractor.conf.js",
     "config": "gulp config",
     "lint": "tslint -c ./tslint.json 'src/**/*.ts'"
   },

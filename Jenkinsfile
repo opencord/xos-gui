@@ -24,26 +24,29 @@ timeout (time: 240) {
 
                 stage 'Run Unit Tests'
                 sh 'npm test'
-
-                stage 'Build GUI docker container'
-                sh 'docker build --no-cache -t xosproject/xos-gui .'
-                sh 'docker run -p 4000:4000 --net=host --name xos-gui -d xosproject/xos-gui'
-
+            } catch (err) {
+                currentBuild.result = 'FAILURE'
+                step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'teo@onlab.us', sendToIndividuals: true])
+            }
+       }
+       dir('build/platform-install') {
+            stage 'Build Mock R-CORD Config'
+            sh `ansible-playbook -i inventory/mock-rcord deploy-xos-playbook.yml`
+       }
+       dir('orchestration/xos-gui') {
+            try {
                 stage 'Run E2E Tests'
-                sh 'curl 127.0.0.1:4000/spa/ --write-out %{http_code} --silent --output /dev/null | grep 200'
-
+                sh 'UI_URL=127.0.0.1:4000/spa/#' protractor conf/protractor.conf.js
                 currentBuild.result = 'SUCCESS'
             } catch (err) {
                 currentBuild.result = 'FAILURE'
                 step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'teo@onlab.us', sendToIndividuals: true])
-            } finally {
-                stage 'Clean'
-                sh 'docker stop xos-gui'
-                sh 'docker rm xos-gui'
-                sh 'docker rmi -f xosproject/xos-gui'
             }
+       }
+       dir('build/platform-install') {
+            sh `ansible-playbook -i inventory/mock-rcord teardown-playbook.yml`
+            sh 'docker rmi -f xosproject/xos-gui'
             echo "RESULT: ${currentBuild.result}"
        }
-
     }
 }
