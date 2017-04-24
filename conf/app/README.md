@@ -1,6 +1,6 @@
 # XOS-GUI Config
 
-### Note that the configurations defined in this folder are for development only, they are most likely to be overrided by a volume mount defined in `service-profile`
+#### Note that the configurations defined in this folder are for development only, they are most likely to be overrided by a volume mount defined in `platform-install`
 
 ## App Config
 
@@ -10,7 +10,7 @@ Here is it's structure:
 ```
 angular.module('app')
   .constant('AppConfig', {
-    apiEndpoint: '/spa/api',
+    apiEndpoint: '/xosapi',
     websocketClient: '/'
   });
 

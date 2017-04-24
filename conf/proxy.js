@@ -7,7 +7,7 @@ const proxy = httpProxy.createProxyServer({
 });
 
 const extensionsProxy = httpProxy.createProxyServer({
-  target: `http://${target}/spa/`
+  target: `http://${target}/xos/`
 });
 
 proxy.on('error', function(error, req, res) {

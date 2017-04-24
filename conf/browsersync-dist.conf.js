@@ -20,7 +20,7 @@ module.exports = function () {
         }
       },
       routes: {
-        "/spa": "./dist"
+        "/xos": "./dist"
       }
     },
     open: true
