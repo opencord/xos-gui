@@ -1,0 +1,354 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Data Sources · XOS-GUI User Documentation</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../developer/" />
+    
+    
+    <link rel="prev" href="gui-modules.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Architectural Overview
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="gui-modules.html">
+            
+                <a href="gui-modules.html">
+            
+                    
+                    Module Strucure
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.2" data-path="data-sources.html">
+            
+                <a href="data-sources.html">
+            
+                    
+                    Data Sources
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../developer/">
+            
+                <a href="../developer/">
+            
+                    
+                    Developer Guide
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../developer/quickstart.html">
+            
+                <a href="../developer/quickstart.html">
+            
+                    
+                    Quickstart
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../developer/tests.html">
+            
+                <a href="../developer/tests.html">
+            
+                    
+                    Tests
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../developer/gui_extensions.html">
+            
+                <a href="../developer/gui_extensions.html">
+            
+                    
+                    GUI Extensions
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Data Sources</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="the-data-sources-module-and-the-observable-pattern">The Data Sources module and the observable pattern</h1>
+<p>The Data Source module is the actual glue between the Single Page Application and XOS and is responsible to keep data up to date in the UI. It use a combination of REST APIs (used to fetch the initial data) and Websocket events (used to incrementally extend those data) and create a set of Observables.</p>
+<p>An observable is basically a sequence of ongoing events ordered in time, to know more about this topics you can start here: <a href="https://gist.github.com/staltz/868e7e9bc2a7b8c1f754" target="_blank">The introduction to Reactive Programming you&apos;ve been missing</a></p>
+<p>The way synchronization is achieved follow this pattern:</p>
+<ul>
+<li>When the application is loaded we read all the core model definition from the backend</li>
+<li>For each Core Model <ul>
+<li>we read the existing data</li>
+<li>we store them in an Observable</li>
+<li>we generate a configuration for tables and forms </li>
+</ul>
+</li>
+<li>Any view that need those data require the Model Observable and the Model Configuration</li>
+<li>For any Websocket event we trigger a new event in the related Observable</li>
+</ul>
+<p><img src="images/data-source-flow.png" alt="data-source-flow"></p>
+<p>You can see an example of this behavior in <code>/src/app/views/crud/crud.ts</code>.
+This view is responsible to auto-generate a CRUD interface for each model in the system.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="gui-modules.html" class="navigation navigation-prev " aria-label="Previous page: Module Strucure">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../developer/" class="navigation navigation-next " aria-label="Next page: Developer Guide">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Data Sources","level":"1.2.2","depth":2,"next":{"title":"Developer Guide","level":"1.3","depth":1,"path":"developer/README.md","ref":"developer/README.md","articles":[{"title":"Quickstart","level":"1.3.1","depth":2,"path":"developer/quickstart.md","ref":"developer/quickstart.md","articles":[]},{"title":"Tests","level":"1.3.2","depth":2,"path":"developer/tests.md","ref":"developer/tests.md","articles":[]},{"title":"GUI Extensions","level":"1.3.3","depth":2,"path":"developer/gui_extensions.md","ref":"developer/gui_extensions.md","articles":[]}]},"previous":{"title":"Module Strucure","level":"1.2.1","depth":2,"path":"architecture/gui-modules.md","ref":"architecture/gui-modules.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"XOS-GUI User Documentation","gitbook":"*"},"file":{"path":"architecture/data-sources.md","mtime":"2017-05-12T21:22:54.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-05-12T21:23:19.264Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

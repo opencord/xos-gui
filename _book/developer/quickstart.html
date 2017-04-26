@@ -1,0 +1,376 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Quickstart · XOS-GUI User Documentation</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="tests.html" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../architecture/">
+            
+                <a href="../architecture/">
+            
+                    
+                    Architectural Overview
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../architecture/gui-modules.html">
+            
+                <a href="../architecture/gui-modules.html">
+            
+                    
+                    Module Strucure
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../architecture/data-sources.html">
+            
+                <a href="../architecture/data-sources.html">
+            
+                    
+                    Data Sources
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Developer Guide
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.3.1" data-path="quickstart.html">
+            
+                <a href="quickstart.html">
+            
+                    
+                    Quickstart
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="tests.html">
+            
+                <a href="tests.html">
+            
+                    
+                    Tests
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="gui_extensions.html">
+            
+                <a href="gui_extensions.html">
+            
+                    
+                    GUI Extensions
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Quickstart</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="gui-quickstart">GUI Quickstart</h1>
+<p><em>We assume that you already have the code downloaded with <code>repo</code></em></p>
+<h2 id="setting-up-the-frontend-configuration">Setting up the <code>frontend</code> configuration</h2>
+<p>The easiest to work on the XOS GUI is to create a local deployment of the <code>frontend</code> configuration of CORD.</p>
+<p>You can find detailed instructions in the <code>platform-install</code> documentation, but for all that we need you can: </p>
+<pre><code>cd opencord/build/platform-install
+vagrant up head-node
+vagrant ssh
+// you&apos;re now inside the vagrant VM
+cd cord/buid/platform-install
+ansible-playbook -i inventory/frontend deploy-xos-playbook.yml
+</code></pre><blockquote>
+<p>This commands will spin up a local vm and deploy the minimal configuration of CORD in it. <br>
+<em>NOTE the first you&apos;ll execute this commands they may take a long time (~20 min)</em></p>
+</blockquote>
+<h4 id="retrieve-the-password-to-access-xos">Retrieve the password to access XOS</h4>
+<pre><code>cat ~/cord/buid/platform-install/credentials/xosadmin@opencord.org
+// save the output somewhere
+</code></pre><h2 id="serving-the-gui-in-development-mode">Serving the GUI in development mode</h2>
+<p>Once your basic CORD config is up and running you should be able to access the GUI at <code>http://192.168.46.100/xos/</code>
+but that&apos;s not your development copy, it is the one deployed inside a container in XOS.</p>
+<p>To launch a development copy:</p>
+<pre><code>// back to your local system
+cd opencord/orchestration/xos-gui
+npm install
+npm start
+</code></pre><p>It will open your default browser at <code>localhost:3000</code>, proxy your API request to the local environment and watch for file changes.</p>
+<p><strong>Now you&apos;re ready to start working on it!</strong></p>
+<p>To get start, login using username <code>xosadmin@opencord.org</code> and the password you previously saved,
+then pick any file and make a change, you&apos;ll see the GUI reload.</p>
+<h3 id="configuring-the-dev-gui">Configuring the <code>dev</code> GUI</h3>
+<p>There are two configuration file available in the application, and they depend on the environment. You can find the various possibilities in <code>conf/app</code>, and they regard application constants, such as <code>apiEndpoint</code>, or branding elements, such as <code>projectName</code>.</p>
+<p>To load a different configration file you can use two environment variables:</p>
+<ul>
+<li><code>NODE_ENV</code>: to configure the app constants (eg: <code>dev</code>, <code>production</code>)</li>
+<li><code>BRAND</code>: to configure style constants (eg: <code>cord</code>, <code>opencloud</code>)</li>
+</ul>
+<p>You can also specify a different installation of XOS as backend by using the <code>PROXY</code> environment variable.
+For example you can connect to a remote CORD-in-a-box installation for debugging purposes with:
+<code>PROXY=ms1106.utah.cloudlab.us:8080 npm start</code></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: Developer Guide">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="tests.html" class="navigation navigation-next " aria-label="Next page: Tests">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Quickstart","level":"1.3.1","depth":2,"next":{"title":"Tests","level":"1.3.2","depth":2,"path":"developer/tests.md","ref":"developer/tests.md","articles":[]},"previous":{"title":"Developer Guide","level":"1.3","depth":1,"path":"developer/README.md","ref":"developer/README.md","articles":[{"title":"Quickstart","level":"1.3.1","depth":2,"path":"developer/quickstart.md","ref":"developer/quickstart.md","articles":[]},{"title":"Tests","level":"1.3.2","depth":2,"path":"developer/tests.md","ref":"developer/tests.md","articles":[]},{"title":"GUI Extensions","level":"1.3.3","depth":2,"path":"developer/gui_extensions.md","ref":"developer/gui_extensions.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"XOS-GUI User Documentation","gitbook":"*"},"file":{"path":"developer/quickstart.md","mtime":"2017-05-12T21:22:54.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-05-12T21:23:19.264Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
