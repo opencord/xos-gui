@@ -1,7 +1,7 @@
 # xosproject/xos-gui
 # To build use: docker build -t xosproject/xos-gui .
 # To run use: docker run -p 4000:4000 --volumes-from gui-extensions-store -d xosproject/xos-gui
-FROM nginx
+FROM nginx:candidate
 
 # Label image
 ARG org_label_schema_schema_version=1.0
@@ -27,10 +27,9 @@ ENV VHOST /var/www/dist
 
 # Install nodeJs
 RUN apt-get update
-RUN apt-get install curl git bzip2 -y
-RUN curl -sL https://deb.nodesource.com/setup_4.x > install_node.sh
-RUN chmod a+x install_node.sh
-RUN ./install_node.sh
+RUN apt-get install curl git bzip2 gnupg -y
+RUN curl -sL https://deb.nodesource.com/setup_7.x > node_install.sh
+RUN bash node_install.sh
 RUN apt-get install -y nodejs
 
 # Add the app deps
