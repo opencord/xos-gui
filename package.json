@@ -41,6 +41,7 @@
     "eslint-plugin-babel": "3.3.0",
     "extract-text-webpack-plugin": "2.0.0-beta.3",
     "file-loader": "0.9.0",
+    "gitbook-cli": "^2.3.0",
     "gulp": "gulpjs/gulp#4ed9a4a3275559c73a396eff7e1fde3824951ebb",
     "gulp-angular-filesort": "1.1.1",
     "gulp-angular-templatecache": "1.9.1",
@@ -100,7 +101,8 @@
     "test:auto": "gulp test:auto",
     "test:e2e": "protractor conf/protractor.conf.js",
     "config": "gulp config",
-    "lint": "tslint -c ./tslint.json 'src/**/*.ts'"
+    "lint": "tslint -c ./tslint.json 'src/**/*.ts'",
+    "docs": "gitbook serve"
   },
   "eslintConfig": {
     "globals": {
