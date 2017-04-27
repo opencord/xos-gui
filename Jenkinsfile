@@ -42,7 +42,9 @@ timeout (time: 240) {
                 stage 'Clean'
                 sh 'docker stop xos-gui'
                 sh 'docker rm xos-gui'
-                sh 'docker rmi -f $(docker images -aq)'
+                sh 'docker rmi -f xosproject/xos-gui:latest'
+                sh 'docker rmi -f nginx:candidate'
+                sh 'docker rmi -f nginx:latest'
             }
             echo "RESULT: ${currentBuild.result}"
        }
