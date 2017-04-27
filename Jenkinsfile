@@ -26,6 +26,8 @@ timeout (time: 240) {
                 sh 'npm test'
 
                 stage 'Build GUI docker container'
+                sh 'docker pull nginx'
+                sh 'docker tag nginx nginx:candidate'
                 sh 'docker build --no-cache -t xosproject/xos-gui .'
                 sh 'docker run -p 4000:4000 --net=host --name xos-gui -d xosproject/xos-gui'
 
@@ -40,7 +42,7 @@ timeout (time: 240) {
                 stage 'Clean'
                 sh 'docker stop xos-gui'
                 sh 'docker rm xos-gui'
-                sh 'docker rmi -f xosproject/xos-gui'
+                sh 'docker rmi -f $(docker images -aq)'
             }
             echo "RESULT: ${currentBuild.result}"
        }
