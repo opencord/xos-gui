@@ -2,6 +2,20 @@
 
 FROM node:argon
 
+# Set environment vars
+ENV CODE_SOURCE .
+ENV CODE_DEST /var/www
+
+RUN mkdir -p ${CODE_DEST}
+
+# Add the app deps
+COPY ${CODE_SOURCE}/package.json ${CODE_SOURCE}/typings.json ${CODE_DEST}/
+
+# Install Deps
+WORKDIR ${CODE_DEST}
+RUN npm install \
+ && npm run typings
+
 # Label image
 ARG org_label_schema_schema_version=1.0
 ARG org_label_schema_name=xos-gui-extension-builder
@@ -19,17 +33,3 @@ LABEL org.label-schema.schema-version=$org_label_schema_schema_version \
       org.label-schema.build-date=$org_label_schema_build_date \
       org.opencord.vcs-commit-date=$org_opencord_vcs_commit_date
 
-# Set environment vars
-ENV CODE_SOURCE .
-ENV CODE_DEST /var/www
-
-RUN mkdir -p /var/www
-
-# Add the app deps
-COPY ${CODE_SOURCE}/package.json ${CODE_DEST}/package.json
-COPY ${CODE_SOURCE}/typings.json ${CODE_DEST}/typings.json
-
-# Install Deps
-WORKDIR ${CODE_DEST}
-RUN npm install
-RUN npm run typings
