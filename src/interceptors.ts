@@ -11,17 +11,16 @@ export function userStatusInterceptor($state: angular.ui.IStateService, $cookies
     switch (res.status) {
       case -1:
       case 401:
-      case 500:
         $cookies.remove('sessionid', {path: '/'});
         $state.go('login');
         return $q.reject(res);
       default:
-        return res;
+        return $q.reject(res);
     }
   };
 
   return {
-    response: checkLogin,
+    // response: checkLogin,
     responseError: checkLogin
   };
 }
@@ -39,7 +38,7 @@ export function CredentialsInterceptor($cookies: angular.cookies.ICookiesService
   };
 }
 
-export function NoHyperlinksInterceptor() {
+export function NoHyperlinksInterceptor($q: ng.IQService) {
   return {
     request: (req) => {
       if (req.url.indexOf('.html') === -1) {
@@ -68,6 +67,9 @@ export function NoHyperlinksInterceptor() {
         res.data = res.data;
       }
       return res;
+    },
+    responseError: (res) => {
+      return $q.reject(res.data);
     }
   };
 }
