@@ -269,10 +269,6 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
       item.$save()
         .then((res) => {
-          if (res.status === 403 || res.status === 405 || res.status === 404 || res.status === 500) {
-            // TODO understand why 405 does not go directly in catch (it may be related to ng-rest-gw)
-            throw new Error();
-          }
           formCfg.feedback = {
             show: true,
             message: `${model.name} succesfully saved`,
@@ -282,8 +278,13 @@ export class ConfigHelpers implements IXosConfigHelpersService {
           this.toastr.success(`${model.name} succesfully saved`);
         })
         .catch(err => {
-          // TODO keep the edited model
-          this.toastr.error(`Error while saving ${model.name}`);
+          formCfg.feedback = {
+            show: true,
+            message: `Error while saving ${model.name}: ${err.error}. ${err.specific_error || ''}`,
+            type: 'danger',
+            closeBtn: true
+          };
+          this.toastr.error(err.specific_error || '', `Error while saving ${model.name}: ${err.error}`);
         });
     };
 
