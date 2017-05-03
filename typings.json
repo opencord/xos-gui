@@ -5,11 +5,12 @@
     "angular-mocks": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-mocks.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
     "angular-resource": "registry:dt/angular-resource#1.5.0+20161114123626",
     "angular-ui-router": "registry:dt/angular-ui-router#1.1.5+20160707113237",
-    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160726072212",
     "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
     "jasmine-jquery": "registry:dt/jasmine-jquery#1.5.8+20161128184045",
     "jquery": "registry:dt/jquery#1.10.0+20161119044246",
     "require": "registry:dt/require#2.1.20+20160316155526",
+    "rx": "npm:rx/ts/rx.all.d.ts",
     "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654"
   },
   "dependencies": {
