@@ -1,6 +1,6 @@
 # To build use: docker build -t xosproject/xos-gui-extension-builder .
 
-FROM node:argon
+FROM node:7.9.0
 
 # Set environment vars
 ENV CODE_SOURCE .
