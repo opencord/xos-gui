@@ -1,6 +1,6 @@
 # To build use: docker build -t xosproject/xos-gui-extension-builder .
 
-FROM node:argon
+FROM node:7.9.0
 
 # Label image
 ARG org_label_schema_schema_version=1.0
