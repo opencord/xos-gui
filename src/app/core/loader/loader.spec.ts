@@ -17,13 +17,22 @@ const MockOnboarder = {
   onboard: null
 };
 
+const MockAuth = {
+  isAuthenticated: jasmine.createSpy('isAuthenticated')
+    .and.callFake(() => {
+      // TODO test not authenticated case
+      return true;
+    })
+};
+
 describe('The XosLoader component', () => {
   beforeEach(() => {
     angular
-      .module('loader', [])
+      .module('loader', ['ui.router'])
       .value('XosConfig', MockConfig)
       .value('XosModelDiscoverer', MockDiscover)
       .value('XosOnboarder', MockOnboarder)
+      .value('AuthService', MockAuth)
       .component('xosLoader', xosLoader);
     angular.mock.module('loader');
   });
