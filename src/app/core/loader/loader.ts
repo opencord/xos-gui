@@ -1,23 +1,26 @@
 import {IXosModelDiscovererService} from '../../datasources/helpers/model-discoverer.service';
 import {IXosOnboarder} from '../../extender/services/onboard.service';
+import {IXosAuthService} from '../../datasources/rest/auth.rest';
 class LoaderCtrl {
   static $inject = [
     '$log',
     '$rootScope',
     '$location',
     '$timeout',
+    '$state',
+    'AuthService',
     'XosConfig',
     'XosModelDiscoverer',
     `XosOnboarder`
   ];
-
-  public aaaaa = 'ciao';
 
   constructor (
     private $log: ng.ILogService,
     private $rootScope: ng.IScope,
     private $location: ng.ILocationService,
     private $timeout: ng.ITimeoutService,
+    private $state: ng.ui.IStateService,
+    private XosAuthService: IXosAuthService,
     private XosConfig: any,
     private XosModelDiscoverer: IXosModelDiscovererService,
     private XosOnboarder: IXosOnboarder
@@ -29,6 +32,9 @@ class LoaderCtrl {
   public run() {
     if (this.XosModelDiscoverer.areModelsLoaded()) {
       this.moveOnTo(this.XosConfig.lastVisitedUrl);
+    }
+    else if (!this.XosAuthService.isAuthenticated()) {
+      this.$state.go('xos.login');
     }
     else {
       this.XosModelDiscoverer.discover()
@@ -48,7 +54,6 @@ class LoaderCtrl {
         })
         .finally(() => {
           // NOTE it is in a timeout as the searchService is loaded after that
-          // we navigate to another page
           this.$timeout(() => {
             this.$rootScope.$emit('xos.core.modelSetup');
           }, 500);

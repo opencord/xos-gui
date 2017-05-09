@@ -3,6 +3,7 @@ import 'angular-mocks';
 import {xosLoader} from './loader';
 
 let loaded = true;
+let authenticated = true;
 
 const MockConfig = {
   lastVisitedUrl: '/test'
@@ -17,6 +18,15 @@ const MockOnboarder = {
   onboard: null
 };
 
+const MockAuth = {
+  isAuthenticated: jasmine.createSpy('isAuthenticated')
+    .and.callFake(() => authenticated)
+};
+
+const MockState = {
+  go: jasmine.createSpy('state.go')
+};
+
 describe('The XosLoader component', () => {
   beforeEach(() => {
     angular
@@ -24,6 +34,8 @@ describe('The XosLoader component', () => {
       .value('XosConfig', MockConfig)
       .value('XosModelDiscoverer', MockDiscover)
       .value('XosOnboarder', MockOnboarder)
+      .value('AuthService', MockAuth)
+      .value('$state', MockState)
       .component('xosLoader', xosLoader);
     angular.mock.module('loader');
   });
@@ -96,6 +108,24 @@ describe('The XosLoader component', () => {
         expect(location.path).toHaveBeenCalledWith('/dashboard');
         done();
       }, 600);
+    });
+  });
+
+  describe('when user is not authenticated', () => {
+
+    beforeEach(() => {
+      loaded = false;
+      authenticated = false;
+      compileElement();
+      isolatedScope.run();
+    });
+
+    it('should redirect to the login page', () => {
+      expect(MockState.go).toHaveBeenCalledWith('xos.login');
+    });
+
+    afterEach(() => {
+      authenticated = true;
     });
   });
 
