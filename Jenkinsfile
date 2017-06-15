@@ -57,7 +57,7 @@ timeout (time: 240) {
             }
        }
        dir('build/platform-install') {
-            sh `ansible-playbook -i inventory/mock-rcord teardown-playbook.yml`
+            sh 'ansible-playbook -i inventory/mock-rcord teardown-playbook.yml'
             echo "RESULT: ${currentBuild.result}"
        }
     }
