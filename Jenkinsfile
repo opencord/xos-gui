@@ -37,7 +37,7 @@ timeout (time: 240) {
        }
        dir('build/platform-install') {
             stage 'Build Mock R-CORD Config'
-            sh `ansible-playbook -i inventory/mock-rcord deploy-xos-playbook.yml`
+            sh 'ansible-playbook -i inventory/mock-rcord deploy-xos-playbook.yml'
        }
        dir('orchestration/xos-gui') {
             try {
