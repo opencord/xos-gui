@@ -47,11 +47,22 @@ timeout (time: 240) {
             } catch (err) {
                 currentBuild.result = 'FAILURE'
                 step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'teo@onlab.us', sendToIndividuals: true])
+            } finally {
+               stage 'Cleanup'
+               dir('build/platform-install') {
+                    sh 'ansible-playbook -i inventory/mock-rcord teardown-playbook.yml'
+                    sh """
+                    docker rmi -f xosproject/xos-synchronizer-base:candidate || true
+                    docker rmi -f xosproject/xos-client:candidate || true
+                    docker rmi -f xosproject/xos-corebuilder:candidate || true
+                    docker rmi -f xosproject/xos-ui:candidate || true
+                    docker rmi -f xosproject/xos:candidate || true
+                    docker rmi -f xosproject/gui-extension-sample:candidate || true
+                    docker rmi -f xosproject/chameleon:candidate || true
+                    """
+                    echo "RESULT: ${currentBuild.result}"
+               }
             }
-       }
-       dir('build/platform-install') {
-            sh 'ansible-playbook -i inventory/mock-rcord teardown-playbook.yml'
-            echo "RESULT: ${currentBuild.result}"
        }
     }
 }
