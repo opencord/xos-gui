@@ -25,11 +25,11 @@ timeout (time: 240) {
                 stage 'Run Unit Tests'
                 sh 'npm test'
 
-                stage 'Build GUI docker container'
-                sh 'docker pull nginx'
-                sh 'docker tag nginx nginx:candidate'
-                sh 'docker build --no-cache -t xosproject/xos-gui .'
-                sh 'docker run -p 4000:4000 --net=host --name xos-gui -d xosproject/xos-gui'
+                // stage 'Build GUI docker container'
+                // sh 'docker pull nginx'
+                // sh 'docker tag nginx nginx:candidate'
+                // sh 'docker build --no-cache -t xosproject/xos-gui .'
+                // sh 'docker run -p 4000:4000 --net=host --name xos-gui -d xosproject/xos-gui'
             } catch (err) {
                 currentBuild.result = 'FAILURE'
                 step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'teo@onlab.us', sendToIndividuals: true])
@@ -42,18 +42,11 @@ timeout (time: 240) {
        dir('orchestration/xos-gui') {
             try {
                 stage 'Run E2E Tests'
-                sh 'UI_URL=127.0.0.1:4000/spa/#' protractor conf/protractor.conf.js
+                sh 'UI_URL=127.0.0.1:4000/xos/#' protractor conf/protractor.conf.js
                 currentBuild.result = 'SUCCESS'
             } catch (err) {
                 currentBuild.result = 'FAILURE'
                 step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'teo@onlab.us', sendToIndividuals: true])
-            } finally {
-                stage 'Clean'
-                sh 'docker stop xos-gui'
-                sh 'docker rm xos-gui'
-                sh 'docker rmi -f xosproject/xos-gui:latest'
-                sh 'docker rmi -f nginx:candidate'
-                sh 'docker rmi -f nginx:latest'
             }
        }
        dir('build/platform-install') {

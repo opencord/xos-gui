@@ -17,7 +17,7 @@ describe('XOS CRUD Page', function() {
     });
     it('should have a table', () => {
       expect(page.tableRows.count()).toBe(2);
-      expect(page.tableColumn.count()).toBe(5);
+      expect(page.tableColumn.count()).toBe(4);
       expect(page.deleteBtn.count()).toBe(1); // per row
     });
 
@@ -35,7 +35,7 @@ describe('XOS CRUD Page', function() {
         browser.get(`${config.url}/core/nodes/1`);
       });
       it('should have a form', () => {
-        expect(page.formInputs.count()).toBe(5);
+        expect(page.formInputs.count()).toBe(4);
         expect(page.formBtn.isPresent()).toBeTruthy();
       });
 
