@@ -42,7 +42,7 @@ timeout (time: 240) {
        dir('orchestration/xos-gui') {
             try {
                 stage 'Run E2E Tests'
-                sh 'UI_URL=127.0.0.1:4000/xos/#' protractor conf/protractor.conf.js
+                sh 'UI_URL=127.0.0.1:4000/xos/# protractor conf/protractor.conf.js'
                 currentBuild.result = 'SUCCESS'
             } catch (err) {
                 currentBuild.result = 'FAILURE'
