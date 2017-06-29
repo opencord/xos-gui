@@ -88,10 +88,10 @@ class XosCoarseTenancyGraphCtrl {
     this.renderLinks(this.graph.links);
   }
 
-  private getSvgDimensions(): {width: number, heigth: number} {
+  private getSvgDimensions(): {width: number, height: number} {
     return {
       width: $('xos-coarse-tenancy-graph svg').width() || 0,
-      heigth: $('xos-coarse-tenancy-graph svg').height() || 0
+      height: $('xos-coarse-tenancy-graph svg').height() || 0
     };
   }
 
@@ -127,10 +127,13 @@ class XosCoarseTenancyGraphCtrl {
 
   private setupForceLayout() {
 
+    const svgDim = this.getSvgDimensions();
+
     const tick = () => {
       this.nodeGroup.selectAll('g.node')
         .attr({
-          transform: d => `translate(${d.x}, ${d.y})`
+          transform: d => `translate(${Math.max(d.width / 2, Math.min(d.x, svgDim.width - (d.width / 2)))}, 
+            ${Math.max(d.height / 2, Math.min(d.y, svgDim.height - (d.height / 2)))})`
         });
 
       this.linkGroup.selectAll('line')
@@ -141,9 +144,9 @@ class XosCoarseTenancyGraphCtrl {
           y2: l => l.target.y || 0,
         });
     };
-    const svgDim = this.getSvgDimensions();
+
     this.forceLayout = d3.layout.force()
-      .size([svgDim.width, svgDim.heigth])
+      .size([svgDim.width, svgDim.height])
       .linkDistance(config.force.linkDistance)
       .charge(config.force.charge)
       .gravity(config.force.gravity)
@@ -168,7 +171,7 @@ class XosCoarseTenancyGraphCtrl {
       .append('g')
       .attr({
         class: n => `node ${this.XosGraphHelpers.parseElemClasses(n.d3Class)}`,
-        transform: `translate(${svgDim.width / 2}, ${svgDim.heigth / 2})`
+        transform: `translate(${svgDim.width / 2}, ${svgDim.height / 2})`
       })
       .call(this.forceLayout.drag)
       .on('mousedown', () => {
@@ -194,9 +197,9 @@ class XosCoarseTenancyGraphCtrl {
 
     const existing = node.selectAll('rect');
 
-
     // resize node > rect as contained text
-    existing.each(function() {
+
+    existing.each(function(d: any) {
       const textBBox = self.XosGraphHelpers.getSiblingTextBBox(this);
       const rect = d3.select(this);
       rect.attr({
@@ -205,7 +208,10 @@ class XosCoarseTenancyGraphCtrl {
         x: textBBox.x - (config.node.padding / 2),
         y: (textBBox.y + self.textOffset) - (config.node.padding / 2)
       });
+      d.width = textBBox.width + config.node.padding;
+      d.height = textBBox.height + config.node.padding;
     });
+
   }
 
   private renderLinks(links: IXosServiceGraphLink[]) {

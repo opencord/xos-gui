@@ -91,10 +91,10 @@ class XosFineGrainedTenancyGraphCtrl {
     this.renderLinks(this.graph.links);
   }
 
-  private getSvgDimensions(): {width: number, heigth: number} {
+  private getSvgDimensions(): {width: number, height: number} {
     return {
       width: $('xos-fine-grained-tenancy-graph svg').width(),
-      heigth: $('xos-fine-grained-tenancy-graph svg').height()
+      height: $('xos-fine-grained-tenancy-graph svg').height()
     };
   }
 
@@ -166,7 +166,7 @@ class XosFineGrainedTenancyGraphCtrl {
     };
     const svgDim = this.getSvgDimensions();
     this.forceLayout = d3.layout.force()
-      .size([svgDim.width, svgDim.heigth])
+      .size([svgDim.width, svgDim.height])
       .linkDistance(config.force.linkDistance)
       .linkStrength(l => getLinkStrenght(l))
       .charge(config.force.charge)
@@ -307,7 +307,7 @@ class XosFineGrainedTenancyGraphCtrl {
     let mouseEventsTimer, selectedModel;
     const svgDim = this.getSvgDimensions();
     const hStep = svgDim.width / (nodes.length - 1);
-    const vStep = svgDim.heigth / (nodes.length - 1);
+    const vStep = svgDim.height / (nodes.length - 1);
     const entering = node.enter()
       .append('g')
       .attr({
