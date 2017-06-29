@@ -62,6 +62,8 @@ export interface IXosServiceGraphNode extends Id3Element {
   y?: number;
   px?: number;
   py?: number;
+  width?: number;
+  height?: number;
   fixed?: boolean;
   badge?: IXosServiceGraphNodeBadge; // TODO implement badges
   model: IXosServiceModel;
