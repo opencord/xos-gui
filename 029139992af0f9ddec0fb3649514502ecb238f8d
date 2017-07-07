@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a202591_e4508460",
+        "filename": "src/app/service-graph/components/coarse/coarse.component.ts",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-07-07T15:14:25Z",
+      "side": 1,
+      "message": "what about moving this in a separate method? given the length it\u0027s not so readable inside a template string",
+      "range": {
+        "startLine": 135,
+        "startChar": 10,
+        "endLine": 136,
+        "endChar": 86
+      },
+      "revId": "029139992af0f9ddec0fb3649514502ecb238f8d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a202591_c44d88c6",
+        "filename": "src/app/service-graph/components/coarse/coarse.component.ts",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-07-07T15:14:25Z",
+      "side": 1,
+      "message": "why do we need to store this in the node?",
+      "range": {
+        "startLine": 211,
+        "startChar": 6,
+        "endLine": 212,
+        "endChar": 55
+      },
+      "revId": "029139992af0f9ddec0fb3649514502ecb238f8d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
