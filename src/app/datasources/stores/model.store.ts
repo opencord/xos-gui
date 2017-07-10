@@ -33,7 +33,7 @@ export class XosModelStore implements IXosModelStoreService {
       this._collections[modelName] = new BehaviorSubject([]); // NOTE maybe this can be created when we get response from the resource
       this.loadInitialData(modelName, apiUrl);
     }
-    // else manually trigger the next with the last know value to trigger the subscribe method of who's requestiong this data
+    // else manually trigger the next with the last know value to trigger the subscribe method of who's requesting this data
     else {
       this.efficientNext(this._collections[modelName]);
     }

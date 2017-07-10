@@ -87,4 +87,37 @@ describe('The AuthService service', () => {
       // httpBackend.flush();
     });
   });
+
+  describe('the handleUnauthenticatedRequest method', () => {
+
+    beforeEach(() => {
+      spyOn(service, 'clearUser');
+    });
+
+    it('should logout the user and redirect to login', () => {
+      service.handleUnauthenticatedRequest({
+        error: 'XOSPermissionDenied',
+        fields: {},
+        specific_error: 'test'
+      });
+      expect(service.clearUser).toHaveBeenCalled();
+    });
+
+    it('should catch errors from strings', () => {
+      service.handleUnauthenticatedRequest('{"fields": {}, "specific_error": "failed to authenticate token g09et150o2s25kdzg8t2n9wotvds9jyl", "error": "XOSPermissionDenied"}');
+      expect(service.clearUser).toHaveBeenCalled();
+    });
+
+    it('should not catch other errors', () => {
+      service.handleUnauthenticatedRequest({
+        error: 'XOSProgrammingError',
+        fields: {},
+        specific_error: 'test'
+      });
+      expect(service.clearUser).not.toHaveBeenCalled();
+
+      service.handleUnauthenticatedRequest('some error');
+      expect(service.clearUser).not.toHaveBeenCalled();
+    });
+  });
 });
