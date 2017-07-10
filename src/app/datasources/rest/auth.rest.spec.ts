@@ -3,7 +3,7 @@ import 'angular-mocks';
 import 'angular-resource';
 import 'angular-cookies';
 import {xosDataSources} from '../index';
-import {IXosAuthService} from './auth.rest';
+import {IXosAuthService, AuthService} from './auth.rest';
 
 let service: IXosAuthService;
 let httpBackend: ng.IHttpBackendService;
@@ -85,6 +85,31 @@ describe('The AuthService service', () => {
         });
       $scope.$apply();
       // httpBackend.flush();
+    });
+  });
+
+  describe('the handleUnauthenticatedRequest method', () => {
+
+    beforeEach(() => {
+      spyOn(service, 'clearUser');
+    });
+
+    it('should logout the user and redirect to login', () => {
+      service.handleUnauthenticatedRequest({
+        error: 'XOSPermissionDenied',
+        fields: {},
+        specific_error: 'test'
+      });
+      expect(service.clearUser).toHaveBeenCalled();
+    });
+
+    it('should not catch other errors', () => {
+      service.handleUnauthenticatedRequest({
+        error: 'XOSProgrammingError',
+        fields: {},
+        specific_error: 'test'
+      });
+      expect(service.clearUser).not.toHaveBeenCalled();
     });
   });
 });

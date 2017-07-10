@@ -16,12 +16,19 @@ export interface IXosUser {
   email: string;
 }
 
+export interface IXosRestError {
+  error: string;
+  specific_error: string;
+  fields: any;
+}
+
 export interface IXosAuthService {
   login(data: IAuthRequestData): Promise<any>;
   logout(): Promise<any>;
   getUser(): any; // NOTE how to define return user || false ???
   isAuthenticated(): boolean;
   clearUser(): void;
+  handleUnauthenticatedRequest(error: IXosRestError): void;
 }
 export class AuthService {
 
@@ -29,7 +36,8 @@ export class AuthService {
     private $http: angular.IHttpService,
     private $q: angular.IQService,
     private $cookies: angular.cookies.ICookiesService,
-    private AppConfig: IXosAppConfig
+    private AppConfig: IXosAppConfig,
+    private $state: angular.ui.IStateService
   ) {
   }
 
@@ -83,5 +91,20 @@ export class AuthService {
     // const token = this.$cookies.get('xoscsrftoken');
     const session = this.$cookies.get('sessionid');
     return angular.isDefined(session);
+  }
+
+  public handleUnauthenticatedRequest(err: IXosRestError): void {
+    if (!angular.isObject(err)) {
+      return;
+    }
+
+    if (err.error) {
+      switch (err.error) {
+        case 'XOSPermissionDenied':
+          this.clearUser();
+          this.$state.go('login');
+          break;
+      }
+    }
   }
 }

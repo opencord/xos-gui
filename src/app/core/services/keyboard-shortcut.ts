@@ -85,6 +85,10 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
 
       const pressedKey = this.whatKey(e.which);
 
+      if (!pressedKey) {
+        return;
+      }
+
       if (this.allowedModifiers.indexOf(e.key) > -1) {
         this.addActiveModifierKey(e.key);
         return;
