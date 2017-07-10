@@ -87,4 +87,29 @@ describe('The AuthService service', () => {
       // httpBackend.flush();
     });
   });
+
+  describe('the handleUnauthenticatedRequest method', () => {
+
+    beforeEach(() => {
+      spyOn(service, 'clearUser');
+    });
+
+    it('should logout the user and redirect to login', () => {
+      service.handleUnauthenticatedRequest({
+        error: 'XOSPermissionDenied',
+        fields: {},
+        specific_error: 'test'
+      });
+      expect(service.clearUser).toHaveBeenCalled();
+    });
+
+    it('should not catch other errors', () => {
+      service.handleUnauthenticatedRequest({
+        error: 'XOSProgrammingError',
+        fields: {},
+        specific_error: 'test'
+      });
+      expect(service.clearUser).not.toHaveBeenCalled();
+    });
+  });
 });
