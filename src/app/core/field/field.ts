@@ -1,3 +1,4 @@
+import './field.scss';
 import {IXosConfigHelpersService} from '../services/helpers/config.helpers';
 import {IXosFormHelpersService} from '../form/form-helpers';
 import * as _ from 'lodash';
