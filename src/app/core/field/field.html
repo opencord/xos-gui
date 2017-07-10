@@ -1,4 +1,7 @@
-<label ng-if="vm.field.type !== 'object' && vm.field.type !== 'array'">{{vm.field.label}}</label>
+<label ng-if="vm.field.type !== 'object' && vm.field.type !== 'array'">
+    {{vm.field.label}}
+    <span class="required" ng-if="vm.field.validators.required">*</span>
+</label>
 <input
         xos-custom-validator custom-validator="vm.field.validators.custom || null"
         ng-if="vm.field.type !== 'boolean' && vm.field.type !== 'object' && vm.field.type !== 'select' && vm.field.type !== 'array'"
