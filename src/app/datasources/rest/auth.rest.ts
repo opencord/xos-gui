@@ -43,7 +43,7 @@ export class AuthService {
         this.$cookies.put('sessionid', res.data.sessionid, {path: '/'});
         d.resolve(res.data);
       })
-      .catch(e => {
+      .catch((e) => {
         d.reject(e);
       });
     return d.promise;
