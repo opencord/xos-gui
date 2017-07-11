@@ -23,12 +23,12 @@ const coarseServices = [
   {
     id: 1,
     name: 'Service A',
-    class_names: 'Service,PlCoreBase'
+    class_names: 'Service, XOSBase'
   },
   {
     id: 2,
     name: 'Service B',
-    class_names: 'Service,PlCoreBase'
+    class_names: 'Service, XOSBase'
   }
 ];
 
@@ -38,7 +38,7 @@ const coarseTenants = [
     provider_service_id: 2,
     subscriber_service_id: 1,
     kind: 'coarse',
-    class_names: 'Tenant,PlCoreBase'
+    class_names: 'Tenant, XOSBase'
   }
 ];
 
