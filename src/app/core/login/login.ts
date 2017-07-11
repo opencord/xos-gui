@@ -43,7 +43,12 @@ class LoginCtrl {
       })
       .catch(e => {
         this.$log.error(`[XosLogin] Error during login.`, e);
-        this.errorMsg = `Something went wrong, please try again.`;
+        if (e.error === 'XOSNotAuthenticated') {
+          this.errorMsg = `This combination of username/password cannot be authenticated`;
+        }
+        else {
+          this.errorMsg = `Something went wrong, please try again.`;
+        }
         this.showErrorMsg = true;
       });
   }
