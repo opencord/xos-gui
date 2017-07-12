@@ -8,6 +8,7 @@ import {IXosNavigationService} from '../../core/services/navigation';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 import {IXosRuntimeStatesService, IXosState} from '../../core/services/runtime-states';
 import {IXosModelStoreService} from '../stores/model.store';
+import {IXosAuthService} from '../rest/auth.rest';
 
 export interface IXosModel {
   name: string; // the model name
@@ -37,7 +38,8 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     'XosRuntimeStates',
     'XosNavigationService',
     'XosModelStore',
-    'ngProgressFactory'
+    'ngProgressFactory',
+    'AuthService'
   ];
   private xosModels: IXosModel[] = []; // list of augmented model definitions;
   private xosServices: string[] = []; // list of loaded services
@@ -52,7 +54,8 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     private XosRuntimeStates: IXosRuntimeStatesService,
     private XosNavigationService: IXosNavigationService,
     private XosModelStore: IXosModelStoreService,
-    private ngProgressFactory: any // check for type defs
+    private ngProgressFactory: any, // check for type defs
+    private AuthService: IXosAuthService
   ) {
     this.progressBar = this.ngProgressFactory.createInstance();
     this.progressBar.setColor('#f6a821');
@@ -236,6 +239,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
           return d.resolve(model);
         },
         err => {
+          this.AuthService.handleUnauthenticatedRequest(err);
           return d.reject(err);
         }
       );

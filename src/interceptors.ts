@@ -8,9 +8,11 @@ export function interceptorConfig($httpProvider: angular.IHttpProvider, $resourc
 
 export function userStatusInterceptor($state: angular.ui.IStateService, $cookies: ng.cookies.ICookiesService, $q: ng.IQService) {
   const checkLogin = (res) => {
+    // NOTE this interceptor may never be called as the request is not rejected byt the "model-discoverer" service
     switch (res.status) {
       case -1:
       case 401:
+      case 403:
         $cookies.remove('sessionid', {path: '/'});
         $state.go('login');
         return $q.reject(res);
@@ -20,7 +22,6 @@ export function userStatusInterceptor($state: angular.ui.IStateService, $cookies
   };
 
   return {
-    // response: checkLogin,
     responseError: checkLogin
   };
 }

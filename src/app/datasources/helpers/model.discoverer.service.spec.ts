@@ -78,7 +78,8 @@ describe('The ModelDicoverer service', () => {
       .value('XosRuntimeStates', MockXosRuntimeStates)
       .value('XosModelStore', MockXosModelStore)
       .value('ngProgressFactory', MockngProgressFactory)
-      .value('XosNavigationService', MockXosNavigationService);
+      .value('XosNavigationService', MockXosNavigationService)
+      .value('AuthService', {});
 
     angular.mock.module('test');
   });

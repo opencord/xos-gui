@@ -37,8 +37,8 @@ class LoaderCtrl {
       this.$state.go('xos.login');
     }
     else {
-      this.XosModelDiscoverer.discover()
       // NOTE loading XOS Models
+      this.XosModelDiscoverer.discover()
         .then((res) => {
           if (res) {
             this.$log.info('[XosLoader] All models loaded');
@@ -46,9 +46,9 @@ class LoaderCtrl {
           else {
             this.$log.info('[XosLoader] Failed to load some models, moving on.');
           }
+          // NOTE loading GUI Extensions
           return this.XosOnboarder.onboard();
         })
-        // NOTE loading GUI Extensions
         .then(() => {
           this.moveOnTo(this.XosConfig.lastVisitedUrl);
         })
