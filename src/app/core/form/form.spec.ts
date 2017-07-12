@@ -96,7 +96,9 @@ describe('The Xos Form component', () => {
           name: 'email',
           label: 'Mail:',
           type: 'email',
-          validators: {}
+          validators: {
+            required: true
+          }
         },
         {
           name: 'birthDate',
@@ -170,9 +172,16 @@ describe('The Xos Form component', () => {
 
     // TODO move in xosField test
     it('should set a custom label', () => {
-      let nameField = element[0].getElementsByClassName('form-group')[0];
+      let nameField = element[0].getElementsByClassName('form-group')[1];
       let label = angular.element(nameField.getElementsByTagName('label')[0]).text();
-      expect(label).toEqual('Id:');
+      expect(label).toContain('Name:');
+      expect(label).not.toContain('*');
+    });
+
+    it('should print an * for required fields', () => {
+      let nameField = element[0].getElementsByClassName('form-group')[2];
+      let label = angular.element(nameField.getElementsByTagName('label')[0]).text();
+      expect(label).toContain('*');
     });
 
     // TODO move test in xos-field
