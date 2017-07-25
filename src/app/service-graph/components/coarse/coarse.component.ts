@@ -2,7 +2,7 @@ import './coarse.component.scss';
 import * as d3 from 'd3';
 import * as $ from 'jquery';
 import * as _ from 'lodash';
-import {IXosServiceGraphStore} from '../../services/graph.store';
+import {IXosServiceGraphStore} from '../../services/service-graph.store';
 import {IXosServiceGraph, IXosServiceGraphNode, IXosServiceGraphLink} from '../../interfaces';
 import {XosServiceGraphConfig as config} from '../../graph.config';
 import {IXosDebouncer} from '../../../core/services/helpers/debounce.helper';
@@ -177,6 +177,7 @@ class XosCoarseTenancyGraphCtrl {
     const entering = node.enter()
       .append('g')
       .attr({
+        id: n => n.id,
         class: n => `node ${this.XosGraphHelpers.parseElemClasses(n.d3Class)}`,
         transform: `translate(${svgDim.width / 2}, ${svgDim.height / 2})`
       })
@@ -232,6 +233,7 @@ class XosCoarseTenancyGraphCtrl {
 
     entering.append('line')
       .attr({
+        id: n => n.id,
         class: l => `link ${this.XosGraphHelpers.parseElemClasses(l.d3Class)}`,
         'marker-start': 'url(#arrow)'
       });
