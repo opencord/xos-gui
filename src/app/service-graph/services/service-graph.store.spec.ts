@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 import 'angular-mocks';
 import 'angular-ui-router';
-import {IXosServiceGraphStore, XosServiceGraphStore} from './graph.store';
+import {IXosServiceGraphStore, XosServiceGraphStore} from './service-graph.store';
 import {Subject} from 'rxjs';
 import {XosDebouncer} from '../../core/services/helpers/debounce.helper';
 import {IXosServiceGraph} from '../interfaces';

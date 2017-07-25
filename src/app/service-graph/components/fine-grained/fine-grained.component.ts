@@ -1,4 +1,3 @@
-import {IXosServiceGraphStore} from '../../services/graph.store';
 import './fine-grained.component.scss';
 import * as d3 from 'd3';
 import * as $ from 'jquery';
@@ -11,11 +10,12 @@ import {IXosModelDiscovererService} from '../../../datasources/helpers/model-dis
 import {IXosSidePanelService} from '../../../core/side-panel/side-panel.service';
 import {IXosGraphHelpers} from '../../services/d3-helpers/graph.helpers';
 import {IXosServiceGraphExtender, IXosServiceGraphReducer} from '../../services/graph.extender';
+import {IXosServiceInstanceGraphStore} from '../../services/service-instance.graph.store';
 
 class XosFineGrainedTenancyGraphCtrl {
   static $inject = [
     '$log',
-    'XosServiceGraphStore',
+    'XosServiceInstanceGraphStore',
     'XosDebouncer',
     'XosModelDiscoverer',
     'XosSidePanel',
@@ -39,7 +39,7 @@ class XosFineGrainedTenancyGraphCtrl {
 
   constructor(
     private $log: ng.ILogService,
-    private XosServiceGraphStore: IXosServiceGraphStore,
+    private XosServiceInstanceGraphStore: IXosServiceInstanceGraphStore,
     private XosDebouncer: IXosDebouncer,
     private XosModelDiscoverer: IXosModelDiscovererService,
     private XosSidePanel: IXosSidePanelService,
@@ -56,10 +56,10 @@ class XosFineGrainedTenancyGraphCtrl {
       this.renderGraph();
     });
 
-    this.GraphSubscription = this.XosServiceGraphStore.get()
+    this.GraphSubscription = this.XosServiceInstanceGraphStore.get()
       .subscribe(
         (graph) => {
-          this.$log.debug(`[XosFineGrainedTenancyGraphCtrl] Fine-Grained Event and render`, graph);
+          this.$log.debug(`[XosServiceInstanceGraphStore] Fine-Grained Event and render`, graph);
 
           if (!graph || !graph.nodes || !graph.links) {
             return;
@@ -159,9 +159,6 @@ class XosFineGrainedTenancyGraphCtrl {
         });
     };
     const getLinkStrenght = (l: IXosServiceGraphLink) => {
-      if (l.id.indexOf('service') > -1) {
-        return 0.1;
-      }
       return 1;
     };
     const svgDim = this.getSvgDimensions();
@@ -311,6 +308,7 @@ class XosFineGrainedTenancyGraphCtrl {
     const entering = node.enter()
       .append('g')
       .attr({
+        id: n => n.id,
         class: n => `node ${n.type} ${this.XosGraphHelpers.parseElemClasses(n.d3Class)}`,
         transform: (n, i) => `translate(${hStep * i}, ${vStep * i})`
       })
@@ -343,10 +341,10 @@ class XosFineGrainedTenancyGraphCtrl {
       });
 
     this.renderServiceNodes(entering.filter('.service'));
-    this.renderTenantNodes(entering.filter('.tenant'));
+    this.renderTenantNodes(entering.filter('.serviceinstance'));
     this.renderNetworkNodes(entering.filter('.network'));
     this.renderSubscriberNodes(entering.filter('.subscriber'));
-    this.renderSubscriberNodes(entering.filter('.tenantroot'));
+    // this.renderSubscriberNodes(entering.filter('.tenantroot'));
   }
 
   private renderLinks(links: IXosServiceGraphLink[]) {
@@ -358,6 +356,7 @@ class XosFineGrainedTenancyGraphCtrl {
 
     entering.append('line')
       .attr({
+        id: n => n.id,
         class: n => `link ${this.XosGraphHelpers.parseElemClasses(n.d3Class)}`,
         'marker-start': 'url(#arrow)'
       });

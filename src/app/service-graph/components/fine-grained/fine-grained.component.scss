@@ -41,7 +41,7 @@ xos-fine-grained-tenancy-graph {
         stroke: blue;
       }
 
-      &.tenant > rect{
+      &.tenant, &.serviceinstance > rect{
         stroke: green;
       }
 
@@ -60,6 +60,15 @@ xos-fine-grained-tenancy-graph {
   .link-group {
     line {
       stroke: $color-accent;
+
+      &.ext-service-instance {
+        stroke: green;
+      }
+
+      &.ext-owner {
+        stroke: green;
+        stroke-dasharray: 5;
+      }
     }
   }
   .arrow-marker {

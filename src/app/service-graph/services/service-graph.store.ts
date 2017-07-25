@@ -7,7 +7,9 @@ import {
 } from '../interfaces';
 import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
 export interface IXosServiceGraphStore {
+  // TODO remove, moved in a new service
   get(): Observable<IXosServiceGraph>;
+  // TODO rename in get()
   getCoarse(): Observable<IXosServiceGraph>;
 }
 
@@ -24,7 +26,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     tenants: [],
     networks: [],
     subscribers: [],
-    servicedependencys: []
+    servicedependencies: []
   });
 
   private emptyGraph: IXosServiceGraph = {
@@ -78,7 +80,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     this.ServiceDependencySubscription = this.XosModelStore.query('ServiceDependency', '/core/servicedependencys')
       .subscribe(
         (res) => {
-          this.combineData(res, 'servicedependencys');
+          this.combineData(res, 'servicedependencies');
         },
         (err) => {
           this.$log.error(`[XosServiceGraphStore] Service Observable: `, err);
@@ -121,7 +123,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
         (res: IXosFineGrainedGraphData) => {
           this.$log.debug(`[XosServiceGraphStore] New graph data received`, res);
           this.graphDataToCoarseGraph(res);
-          this.graphDataToFineGrainedGraph(res);
+          // this.graphDataToFineGrainedGraph(res);
         },
         (err) => {
           this.$log.error(`[XosServiceGraphStore] graphData Observable: `, err);
@@ -137,7 +139,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     return this.d3CoarseGraph.asObservable();
   }
 
-  private combineData(data: any, type: 'services'|'tenants'|'subscribers'|'networks'|'servicedependencys') {
+  private combineData(data: any, type: 'services'|'tenants'|'subscribers'|'networks'|'servicedependencies') {
     switch (type) {
       case 'services':
         this.services = data;
@@ -151,7 +153,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       case 'networks':
         this.networks = data;
         break;
-      case 'servicedependencys':
+      case 'servicedependencies':
         this.servicedependencys = data;
         break;
     }
@@ -164,7 +166,7 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       tenants: this.tenants,
       subscribers: this.subscribers,
       networks: this.networks,
-      servicedependencys: this.servicedependencys
+      servicedependencies: this.servicedependencys
     });
   }
 
@@ -172,57 +174,10 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
     return _.findIndex(nodes, {id: id});
   }
 
-  private d3Id(type: string, id: number) {
-    return `${type.toLowerCase()}~${id}`;
-  }
-
-  private getTargetId(tenant: IXosTenantModel) {
-
-    let targetId;
-    if (tenant.subscriber_service_id) {
-      targetId = this.d3Id('service', tenant.subscriber_service_id);
-    }
-    else if (tenant.subscriber_tenant_id) {
-      targetId = this.d3Id('tenant', tenant.subscriber_tenant_id);
-    }
-    else if (tenant.subscriber_network_id) {
-      targetId = this.d3Id('network', tenant.subscriber_network_id);
-    }
-    else if (tenant.subscriber_root_id) {
-      // FIXME understand what's the correct model for the subscriber
-      targetId = this.d3Id('tenantroot', tenant.subscriber_root_id);
-    }
-    return targetId;
-  }
-
-  private getSourceId(tenant: IXosTenantModel) {
-    return this.d3Id('service', tenant.provider_service_id);
-  }
-
-  private getNodeType(n: any) {
-    return n.class_names.split(',')[0].toLowerCase();
-  }
-
-  private getNodeLabel(n: any) {
-    if (this.getNodeType(n) === 'tenant') {
-      return n.id;
-    }
-    return n.humanReadableName ? n.humanReadableName : n.name;
-  }
-
-  private removeUnwantedFineGrainedData(data: IXosFineGrainedGraphData): IXosFineGrainedGraphData {
-    data.tenants = _.filter(data.tenants, t => t.kind !== 'coarse');
-    data.networks = _.filter(data.networks, n => {
-      const subscriber = _.findIndex(data.tenants, {subscriber_network_id: n.id});
-      return subscriber > -1;
-    });
-    return data;
-  }
-
   private graphDataToCoarseGraph(data: IXosCoarseGraphData) {
 
     try {
-      const links: IXosServiceGraphLink[] = _.chain(data.servicedependencys)
+      const links: IXosServiceGraphLink[] = _.chain(data.servicedependencies)
         .map((t: IXosTenantModel) => {
           return {
             id: t.id,
@@ -249,76 +204,6 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       this.d3CoarseGraph.next(graph);
     } catch (e) {
       this.d3CoarseGraph.error(e);
-    }
-  }
-
-  private graphDataToFineGrainedGraph(data: IXosFineGrainedGraphData) {
-    try {
-      data = this.removeUnwantedFineGrainedData(data);
-
-      let nodes = _.reduce(Object.keys(data), (list: any[], k: string) => {
-        return list.concat(data[k]);
-      }, []);
-
-      nodes = _.chain(nodes)
-        .map(n => {
-          n.d3Id = this.d3Id(this.getNodeType(n), n.id);
-          return n;
-        })
-        .map(n => {
-          let node: IXosServiceGraphNode = {
-            id: n.d3Id,
-            label: this.getNodeLabel(n),
-            model: n,
-            type: this.getNodeType(n)
-          };
-          return node;
-        })
-        .value();
-
-      const links = _.reduce(data.tenants, (links: IXosServiceGraphLink[], tenant: IXosTenantModel) => {
-        const sourceId = this.getSourceId(tenant);
-        const targetId = this.getTargetId(tenant);
-        if (!angular.isDefined(targetId) || !angular.isDefined(sourceId)) {
-          // if the tenant is not pointing to anything, don't draw links
-          return links;
-        }
-
-        const tenantToProvider = {
-          id: `${sourceId}_${tenant.d3Id}`,
-          source: this.getNodeIndexById(sourceId, nodes),
-          target: this.getNodeIndexById(tenant.d3Id, nodes),
-          model: tenant
-        };
-
-        const tenantToSubscriber = {
-          id: `${tenant.d3Id}_${targetId}`,
-          source: this.getNodeIndexById(tenant.d3Id, nodes),
-          target: this.getNodeIndexById(targetId, nodes),
-          model: tenant
-        };
-
-        if (angular.isDefined(tenantToProvider.source) && angular.isDefined(tenantToProvider.target)) {
-          links.push(tenantToProvider);
-        }
-        if (angular.isDefined(tenantToSubscriber.source) && angular.isDefined(tenantToSubscriber.target)) {
-          links.push(tenantToSubscriber);
-        }
-        return links;
-      }, []);
-
-      if (nodes.length === 0 && links.length === 0) {
-        return;
-      }
-
-      let graph: IXosServiceGraph = {
-        nodes,
-        links
-      };
-
-      this.d3FineGrainedGraph.next(graph);
-    } catch (e) {
-     this.d3FineGrainedGraph.error(e);
     }
   }
 }
