@@ -41,7 +41,7 @@ xos-fine-grained-tenancy-graph {
         stroke: blue;
       }
 
-      &.tenant > rect{
+      &.tenant, &.serviceinstance > rect{
         stroke: green;
       }
 
