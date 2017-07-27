@@ -36,7 +36,20 @@ timeout (time: 240) {
             }
        }
        dir('build/platform-install') {
+            stage 'Cleanup'
+            sh 'ls'
+            sh 'ansible-playbook -i inventory/mock-rcord teardown-playbook.yml'
+            sh """
+            docker rmi -f xosproject/xos-synchronizer-base:candidate || true
+            docker rmi -f xosproject/xos-client:candidate || true
+            docker rmi -f xosproject/xos-corebuilder:candidate || true
+            docker rmi -f xosproject/xos-ui:candidate || true
+            docker rmi -f xosproject/xos:candidate || true
+            docker rmi -f xosproject/gui-extension-sample:candidate || true
+            docker rmi -f xosproject/chameleon:candidate || true
+            """
             stage 'Build Mock R-CORD Config'
+            sh 'ansible-playbook -i inventory/mock-rcord bootstrap-dev-env.yml'
             sh 'ansible-playbook -i inventory/mock-rcord deploy-xos-playbook.yml'
        }
        dir('orchestration/xos-gui') {
@@ -48,20 +61,7 @@ timeout (time: 240) {
                 currentBuild.result = 'FAILURE'
                 step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'teo@onlab.us', sendToIndividuals: true])
             } finally {
-               stage 'Cleanup'
-               dir('build/platform-install') {
-                    sh 'ansible-playbook -i inventory/mock-rcord teardown-playbook.yml'
-                    sh """
-                    docker rmi -f xosproject/xos-synchronizer-base:candidate || true
-                    docker rmi -f xosproject/xos-client:candidate || true
-                    docker rmi -f xosproject/xos-corebuilder:candidate || true
-                    docker rmi -f xosproject/xos-ui:candidate || true
-                    docker rmi -f xosproject/xos:candidate || true
-                    docker rmi -f xosproject/gui-extension-sample:candidate || true
-                    docker rmi -f xosproject/chameleon:candidate || true
-                    """
-                    echo "RESULT: ${currentBuild.result}"
-               }
+                echo "RESULT: ${currentBuild.result}"
             }
        }
     }
