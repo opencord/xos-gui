@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as pluralize from 'pluralize';
 import {IXosTableColumn, IXosTableCfg} from '../../table/table';
 import {IXosModeldef} from '../../../datasources/rest/modeldefs.rest';
-import {IXosFormCfg, IXosFormInput, IXosFormInputValidator} from '../../form/form';
+import {IXosFormCfg, IXosFormInput, IXosFormInputValidator, IXosFormInputOptions} from '../../form/form';
 import {IXosModelStoreService} from '../../../datasources/stores/model.store';
 import {IXosState} from '../runtime-states';
 
@@ -21,6 +21,8 @@ export interface IXosModelDefsField {
     model: string;
     type: string;
   };
+  options?: IXosFormInputOptions[];
+  default?: any | null;
 }
 
 export interface IXosConfigHelpersService {
@@ -217,12 +219,20 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         label: this.toLabel(f.name),
         type: f.type,
         validators: this.formatValidators(f.validators),
-        hint: f.hint
+        hint: f.hint,
+        default: f.default || null
       };
+
+      // NOTE populate drop-downs based on relation
       if (f.relation) {
         input.type = 'select';
         this.populateSelectField(f, input);
-        return input;
+      }
+      // NOTE if static options are defined in modeldefs
+      // the f.options field is already populated,
+      // we just need to move it to the input
+      else if (f.options && f.options.length > 0) {
+        input.options = f.options;
       }
       return input;
     })

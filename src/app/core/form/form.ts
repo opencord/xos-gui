@@ -41,6 +41,7 @@ export interface IXosFormInput {
   hint?: string;
   validators: IXosFormInputValidator;
   options?: IXosFormInputOptions[];
+  default?: any | null;
 }
 
 export interface IXosFormCfg {
