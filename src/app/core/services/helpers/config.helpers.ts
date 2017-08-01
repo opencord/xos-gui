@@ -61,8 +61,15 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'validators',
     'password',
     'backend_need_delete',
-    'backend_need_reap'
+    'backend_need_reap',
+    'leaf_model_name'
   ];
+
+  public form_excluded_fields = this.excluded_fields.concat([
+    'id',
+    'policy_status',
+    'backend_status',
+  ]);
 
   constructor(
     private $state: ng.ui.IStateService,
@@ -165,19 +172,19 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         };
       }
 
-      if (f.name === 'backend_status') {
+      if (f.name === 'backend_status' || f.name === 'policy_status') {
         col.type = 'icon';
         col.hover = (item) => {
           return item[f.name];
         };
         col.formatter = (item) => {
-          if (item.backend_status.indexOf('1') > -1) {
+          if (item[f.name].indexOf('1') > -1) {
             return 'check';
           }
-          if (item.backend_status.indexOf('2') > -1) {
+          if (item[f.name].indexOf('2') > -1) {
             return 'exclamation-circle';
           }
-          if (item.backend_status.indexOf('0') > -1) {
+          if (item[f.name].indexOf('0') > -1) {
             return 'clock-o';
           }
         };
@@ -236,13 +243,13 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       }
       return input;
     })
-      .filter(f => this.excluded_fields.indexOf(f.name) === -1);
+      .filter(f => this.form_excluded_fields.indexOf(f.name) === -1);
   }
 
   public modelToFormCfg(model: IXosModeldef): IXosFormCfg {
     const formCfg: IXosFormCfg = {
       formName: `${model.name}Form`,
-      exclude: ['backend_status', 'creator', 'id'],
+      exclude: this.form_excluded_fields,
       actions: [{
         label: 'Save',
         class: 'success',

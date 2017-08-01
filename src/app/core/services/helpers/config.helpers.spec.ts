@@ -198,25 +198,22 @@ describe('The ConfigHelpers service', () => {
   describe('the modelFieldToInputConfig', () => {
     it('should return an array of inputs', () => {
       const inputs: IXosFormInput[] = service.modelFieldToInputCfg(model.fields);
-      expect(inputs[0].name).toBe('id');
-      expect(inputs[0].type).toBe('number');
-      expect(inputs[0].label).toBe('Id');
 
-      expect(inputs[1].name).toBe('name');
+      expect(inputs[0].name).toBe('name');
+      expect(inputs[0].type).toBe('string');
+      expect(inputs[0].label).toBe('Name');
+      expect(inputs[0].validators.required).toBe(true);
+
+      expect(inputs[1].name).toBe('something');
       expect(inputs[1].type).toBe('string');
-      expect(inputs[1].label).toBe('Name');
-      expect(inputs[1].validators.required).toBe(true);
+      expect(inputs[1].label).toBe('Something');
+      expect(inputs[1].validators.maxlength).toBe(30);
 
-      expect(inputs[2].name).toBe('something');
-      expect(inputs[2].type).toBe('string');
-      expect(inputs[2].label).toBe('Something');
-      expect(inputs[2].validators.maxlength).toBe(30);
-
-      expect(inputs[3].name).toBe('else');
-      expect(inputs[3].type).toBe('number');
-      expect(inputs[3].label).toBe('Else');
-      expect(inputs[3].validators.min).toBe(20);
-      expect(inputs[3].validators.max).toBe(40);
+      expect(inputs[2].name).toBe('else');
+      expect(inputs[2].type).toBe('number');
+      expect(inputs[2].label).toBe('Else');
+      expect(inputs[2].validators.min).toBe(20);
+      expect(inputs[2].validators.max).toBe(40);
     });
   });
 
@@ -229,7 +226,8 @@ describe('The ConfigHelpers service', () => {
       expect(config.actions[0].class).toBe('success');
       expect(config.actions[0].icon).toBe('ok');
       expect(config.actions[0].cb).toBeDefined();
-      expect(config.inputs.length).toBe(4);
+      // NOTE 'id' and 'updated' are hidden fields
+      expect(config.inputs.length).toBe(3);
     });
   });
 
