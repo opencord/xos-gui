@@ -154,7 +154,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       }
 
       // if the field identify a relation, create a link
-      if (f.relation && f.relation.type === 'many_to_one') {
+      if (f.relation && f.relation.type === 'manytoone') {
         col.type = 'custom';
         col.formatter = item => {
           this.populateRelated(item, item[f.name], f);
