@@ -38,6 +38,16 @@ class FieldCtrl {
       throw new Error('[xosField] Please provide an ng-model');
     }
 
+    // NOTE set default value (if any)
+    if (this.field.default && !angular.isDefined(this.ngModel)) {
+      if (this.field.type === 'number') {
+        this.ngModel = parseInt(this.field.default, 10);
+      }
+      else {
+        this.ngModel = this.field.default;
+      }
+    }
+
 
     if (this.field.type === 'array') {
       this.$scope.$watch(() => this.ngModel.length, () => {

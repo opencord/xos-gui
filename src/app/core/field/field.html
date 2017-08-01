@@ -12,7 +12,7 @@
         ng-minlength="vm.field.validators.minlength || 0"
         ng-maxlength="vm.field.validators.maxlength || 2000"
         ng-required="vm.field.validators.required || false" />
-<select class="form-control" ng-if ="vm.field.type === 'select'"
+<select class="form-control" ng-if="vm.field.type === 'select'"
         name = "{{vm.name}}"
         ng-options="item.id as item.label for item in vm.field.options"
         ng-model="vm.ngModel"
