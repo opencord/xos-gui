@@ -190,6 +190,30 @@ describe('The ModelDicoverer service', () => {
     scope.$apply();
   });
 
+  it('should add a state with relations in the system', (done) => {
+    MockXosRuntimeStates.addState.calls.reset();
+    service['addState']({name: 'Tenant', app: 'services.vsg', relations: [{model: 'Something', type: 'manytoone'}]})
+      .then((model) => {
+        expect(MockXosRuntimeStates.addState).toHaveBeenCalledWith('xos.vsg.tenant', {
+          parent: 'xos.vsg',
+          url: '/tenants/:id?',
+          params: {
+            id: null
+          },
+          data: {
+            model: 'Tenant',
+            relations: [
+              {model: 'Something', type: 'manytoone'}
+            ]
+          },
+          component: 'xosCrud',
+        });
+        expect(model.clientUrl).toBe('vsg/tenants/:id?');
+        done();
+      });
+    scope.$apply();
+  });
+
   it('should add an item to navigation', () => {
     service['addNavItem']({name: 'Tenant', app: 'services.vsg'});
     expect(MockXosNavigationService.add).toHaveBeenCalledWith({

@@ -31,7 +31,7 @@ class MockWs {
 
 const queryData = [
   {id: 1, name: 'foo'},
-  {id: 1, name: 'bar'}
+  {id: 2, name: 'bar'}
 ];
 
 const MockAppCfg = {
@@ -72,23 +72,42 @@ describe('The ModelStore service', () => {
       .respond(queryData);
   }));
 
-  it('should return an Observable', () => {
-    expect(typeof service.query('test').subscribe).toBe('function');
+  describe('the QUERY method', () => {
+    it('should return an Observable', () => {
+      expect(typeof service.query('test').subscribe).toBe('function');
+    });
+
+    it('the first event should be the resource response', (done) => {
+      let event = 0;
+      service.query('sample')
+        .subscribe(collection => {
+          event++;
+          if (event === 2) {
+            expect(collection[0].id).toEqual(queryData[0].id);
+            expect(collection[1].id).toEqual(queryData[1].id);
+            done();
+          }
+        });
+      $scope.$apply();
+      httpBackend.flush();
+    });
   });
 
-  it('the first event should be the resource response', (done) => {
-    let event = 0;
-    service.query('sample')
-      .subscribe(collection => {
-        event++;
-        if (event === 2) {
-          expect(collection[0].id).toEqual(queryData[0].id);
-          expect(collection[1].id).toEqual(queryData[1].id);
-          done();
-        }
-      });
-    $scope.$apply();
-    httpBackend.flush();
+  describe('the GET method', () => {
+    it('should return an observable containing a single model', (done) => {
+      let event = 0;
+      service.get('sample', queryData[1].id)
+        .subscribe((model) => {
+          event++;
+          if (event === 2) {
+            expect(model.id).toEqual(queryData[1].id);
+            expect(model.name).toEqual(queryData[1].name);
+            done();
+          }
+        });
+      httpBackend.flush();
+      $scope.$apply();
+    });
   });
 
   describe('when a web-socket event is received for that model', () => {

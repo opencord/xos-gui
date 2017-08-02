@@ -12,7 +12,7 @@
         <table ng-class="vm.classes">
         <thead>
         <tr>
-            <th ng-repeat="col in vm.columns">
+            <th ng-repeat="col in vm.config.columns">
                 {{col.label}}
                 <div ng-if="vm.config.order">
                     <a href="" ng-click="vm.orderBy = col.prop; vm.reverse = false">
@@ -28,7 +28,7 @@
         </thead>
         <tbody ng-if="vm.config.filter == 'field'">
             <tr>
-                <td ng-repeat="col in vm.columns">
+                <td ng-repeat="col in vm.config.columns">
                     <input
                             ng-if="col.type !== 'boolean' && col.type !== 'array' && col.type !== 'object' && col.type !== 'custom'"
                             class="form-control"
@@ -49,7 +49,7 @@
         </tbody>
         <tbody>
         <tr ng-repeat="item in vm.data | filter:vm.query | orderBy:vm.orderBy:vm.reverse | pagination:vm.currentPage * vm.config.pagination.pageSize | limitTo: (vm.config.pagination.pageSize || vm.data.length) track by $index">
-            <td ng-repeat="col in vm.columns" xos-link-wrapper>
+            <td ng-repeat="col in vm.config.columns" xos-link-wrapper>
                 <span ng-if="!col.type || col.type === 'text'">{{item[col.prop]}}</span>
                 <span ng-if="col.type === 'boolean'">
                     <i class="fa"
