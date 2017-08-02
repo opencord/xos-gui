@@ -80,9 +80,10 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     pluralize.addPluralRule(/slice$/i, 'slices');
     pluralize.addSingularRule(/slice$/i, 'slice');
     pluralize.addPluralRule(/library$/i, 'librarys');
-    pluralize.addPluralRule(/imagedeployments/i, 'imagedeploymentses');
-    pluralize.addPluralRule(/controllerimages/i, 'controllerimageses');
-    pluralize.addPluralRule(/servicedependency/i, 'servicedependencies');
+    pluralize.addPluralRule(/imagedeployments/i, 'imagedeploymentss');
+    pluralize.addPluralRule(/controllerimages/i, 'controllerimagess');
+    pluralize.addPluralRule(/servicedependency/i, 'servicedependencys');
+    pluralize.addPluralRule(/servicemonitoringagentinfo/i, 'servicemonitoringagentinfoes');
   }
 
   public pluralize(string: string, quantity?: number, count?: boolean): string {

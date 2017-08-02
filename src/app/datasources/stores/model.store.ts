@@ -8,6 +8,7 @@ import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
 
 export interface  IXosModelStoreService {
   query(model: string, apiUrl?: string): Observable<any>;
+  get(model: string, id: string | number): Observable<any>;
   search(modelName: string): any[];
 }
 
@@ -26,7 +27,7 @@ export class XosModelStore implements IXosModelStoreService {
     this.efficientNext = this.XosDebouncer.debounce(this.next, 500, this, false);
   }
 
-  public query(modelName: string, apiUrl: string): Observable<any> {
+  public query(modelName: string, apiUrl?: string): Observable<any> {
     // if there isn't already an observable for that item
     // create a new one and .next() is called by this.loadInitialData once data are received
     if (!this._collections[modelName]) {
@@ -80,8 +81,31 @@ export class XosModelStore implements IXosModelStoreService {
     }
   }
 
-  public get(model: string, id: number) {
-    // TODO implement a get method
+  public get(modelName: string, modelId: string | number): Observable<any> {
+    const subject = new BehaviorSubject([]);
+
+    const _findModel = (subject) => {
+      this._collections[modelName]
+        .subscribe((res) => {
+          const model = _.find(res, {id: modelId});
+          if (model) {
+            subject.next(model);
+          }
+        });
+    };
+
+    if (!this._collections[modelName]) {
+      // cache the models in that collection
+      this.query(modelName)
+        .subscribe((res) => {
+          _findModel(subject);
+        });
+    }
+    else {
+      _findModel(subject);
+    }
+
+    return subject.asObservable();
   }
 
   private next(subject: BehaviorSubject<any>): void {
@@ -89,7 +113,7 @@ export class XosModelStore implements IXosModelStoreService {
   }
 
   private loadInitialData(model: string, apiUrl?: string) {
-    // TODO provide always the apiUrl togheter with the query() params
+    // TODO provide always the apiUrl together with the query() params
     if (!angular.isDefined(apiUrl)) {
       // NOTE check what is the correct pattern to pluralize this
       apiUrl = this.storeHelpers.urlFromCoreModel(model);

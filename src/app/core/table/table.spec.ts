@@ -93,7 +93,7 @@ describe('The Xos Table component', () => {
     it('should contain 2 columns', function() {
       const th = element[0].getElementsByTagName('th');
       expect(th.length).toEqual(2);
-      expect(isolatedScope.columns.length).toEqual(2);
+      expect(isolatedScope.config.columns.length).toEqual(2);
     });
 
     it('should contain 3 rows', function() {
@@ -476,7 +476,7 @@ describe('The Xos Table component', () => {
       it('should have 3 columns', () => {
         const th = element[0].getElementsByTagName('th');
         expect(th.length).toEqual(3);
-        expect(isolatedScope.columns.length).toEqual(2);
+        expect(isolatedScope.config.columns.length).toEqual(2);
       });
 
       it('when clicking on action should invoke callback', () => {

@@ -1,6 +1,8 @@
+import {IXosModelRelation} from '../../views/crud/crud';
 export interface IXosState extends angular.ui.IState {
   data: {
-    model: string
+    model: string,
+    relations?: IXosModelRelation[]
   };
 };
 

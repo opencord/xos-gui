@@ -186,10 +186,14 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
         id: null
       },
       data: {
-        model: model.name
+        model: model.name,
       },
       component: 'xosCrud',
     };
+
+    if (angular.isDefined(model.relations)) {
+      state.data.relations = model.relations;
+    }
 
     try {
       this.XosRuntimeStates.addState(

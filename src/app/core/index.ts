@@ -32,7 +32,8 @@ angular
   .module('xosCore', [
     'ui.router',
     'toastr',
-    'ui.bootstrap.typeahead'
+    'ui.bootstrap.typeahead',
+    'ui.bootstrap.tabs'
   ])
   .config(routesConfig)
   .provider('XosRuntimeStates', XosRuntimeStates)

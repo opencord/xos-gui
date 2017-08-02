@@ -1,0 +1,7 @@
+@import './../../style/vars.scss';
+li.uib-tab {
+  &.empty > a {
+    color: $color-placeholder;
+    font-style: italic;
+  }
+}

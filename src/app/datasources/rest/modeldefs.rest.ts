@@ -16,6 +16,7 @@ export interface IXosModelDefsField {
 export interface IXosModelDefsRelation {
   model: string; // model name
   type: string; // relation type
+  on_field: string; // the field that is containing the relation
 }
 
 export interface IXosModeldef {

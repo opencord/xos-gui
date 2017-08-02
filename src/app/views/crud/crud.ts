@@ -2,34 +2,33 @@ import {IXosTableCfg} from '../../core/table/table';
 import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 import * as _ from 'lodash';
-import {IXosFormCfg} from '../../core/form/form';
 import {IXosResourceService} from '../../datasources/rest/model.rest';
 import {IStoreHelpersService} from '../../datasources/helpers/store.helpers';
 import {IXosModelDiscovererService} from '../../datasources/helpers/model-discoverer.service';
-
-export interface IXosCrudData {
-  model: string;
-  related: IXosModelRelation[];
-  xosTableCfg: IXosTableCfg;
-  xosFormCfg: IXosFormCfg;
-}
+import './crud.scss';
+import {IXosCrudRelationService} from './crud.relations.service';
 
 export interface IXosModelRelation {
   model: string;
   type: string;
+  on_field: string;
 }
 
 class CrudController {
   static $inject = [
     '$scope',
+    '$log',
     '$state',
     '$stateParams',
     'XosModelStore',
     'ConfigHelpers',
     'ModelRest',
     'StoreHelpers',
-    'XosModelDiscoverer'
+    'XosModelDiscoverer',
+    'XosCrudRelation'
   ];
+
+  // bindings
 
   public data: {model: string};
   public tableCfg: IXosTableCfg;
@@ -39,18 +38,28 @@ class CrudController {
   public title: string;
   public tableData: any[];
   public model: any;
-  public related: string[];
+  public related: {manytoone: IXosModelRelation[], onetomany: IXosModelRelation[]} = {
+    manytoone: [],
+    onetomany: []
+  };
+  public relatedModels: {manytoone: any, onetomany: any} = {
+    manytoone: {},
+    onetomany: {}
+  };
 
   constructor(
     private $scope: angular.IScope,
+    private $log: angular.ILogService,
     private $state: angular.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
     private store: IXosModelStoreService,
     private ConfigHelpers: IXosConfigHelpersService,
     private ModelRest: IXosResourceService,
     private StoreHelpers: IStoreHelpersService,
-    private XosModelDiscovererService: IXosModelDiscovererService
+    private XosModelDiscovererService: IXosModelDiscovererService,
+    private XosCrudRelation: IXosCrudRelationService
   ) {
+
     this.data = this.$state.current.data;
     this.model = this.XosModelDiscovererService.get(this.data.model);
     this.title = this.ConfigHelpers.pluralize(this.data.model);
@@ -60,8 +69,7 @@ class CrudController {
     // TODO get the proper URL from model discoverer
     this.baseUrl = '#/' + this.model.clientUrl.replace(':id?', '');
 
-
-    this.related = $state.current.data.related;
+    this.$log.debug('[XosCrud]', $state.current.data);
 
     this.tableCfg = this.model.tableCfg;
     this.formCfg = this.model.formCfg;
@@ -76,7 +84,10 @@ class CrudController {
 
             // if it is a detail page for an existing model
             if ($stateParams['id'] && $stateParams['id'] !== 'add') {
+              this.related.onetomany = _.filter($state.current.data.relations, {type: 'onetomany'});
+              this.related.manytoone = _.filter($state.current.data.relations, {type: 'manytoone'});
               this.model = _.find(this.tableData, {id: parseInt($stateParams['id'], 10)});
+              this.getRelatedModels(this.related, this.model);
             }
           });
         }
@@ -96,11 +107,59 @@ class CrudController {
     }
   }
 
-  public getRelatedItem(relation: IXosModelRelation, item: any): number {
-    if (item && angular.isDefined(item[`${relation.model.toLowerCase()}_id`])) {
-      return item[`${relation.model.toLowerCase()}_id`];
-    }
-    return 0;
+
+  public getRelatedItemId(relation: IXosModelRelation, item: any): boolean {
+    return this.XosCrudRelation.existsRelatedItem(relation, item);
+  }
+
+  public getHumanReadableOnField(r: IXosModelRelation) {
+    return this.XosCrudRelation.getHumanReadableOnField(r, this.data.model);
+  }
+
+  public getRelatedModels(relations: {manytoone: IXosModelRelation[], onetomany: IXosModelRelation[]}, item: any) {
+    this.$log.info(`[XosCrud] Managing relation for ${this.data.model}:`, relations);
+
+    // loading many to one relations (you'll get a model)
+    _.forEach(relations.manytoone, (r: IXosModelRelation) => {
+      if (!item || !item[`${r.on_field.toLowerCase()}_id`]) {
+        return;
+      }
+
+      this.$log.debug(`[XosCrud] Loading manytoone relation with ${r.model} on ${r.on_field}`);
+
+      if (!angular.isDefined(this.relatedModels.manytoone[r.model])) {
+        this.relatedModels.manytoone[r.model] = {};
+      }
+
+      this.XosCrudRelation.getModel(r, item[`${r.on_field.toLowerCase()}_id`])
+        .then(res => {
+          this.relatedModels.manytoone[r.model][r.on_field] = res;
+        })
+        .catch(err => {
+          this.$log.error(`[XosCrud] Error loading manytoone relation with ${r.model} on ${r.on_field}`, err);
+        });
+    });
+
+    // loading onetomany relations (you'll get a list of models)
+    _.forEach(relations.onetomany, (r: IXosModelRelation) => {
+      if (!item) {
+        return;
+      }
+
+      this.$log.debug(`[XosCrud] Loading onetomany relation with ${r.model} on ${r.on_field}`);
+
+      if (!angular.isDefined(this.relatedModels.onetomany[r.model])) {
+        this.relatedModels.onetomany[r.model] = {};
+      }
+
+      this.XosCrudRelation.getModels(r, item.id)
+        .then(res => {
+          this.relatedModels.onetomany[r.model][r.on_field] = res;
+        })
+        .catch(err => {
+          this.$log.error(`[XosCrud] Error loading onetomany relation with ${r.model} on ${r.on_field}`, err);
+        });
+    });
   }
 }
 

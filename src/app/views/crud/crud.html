@@ -19,29 +19,26 @@
         <hr>
     </div>
 </div>
-<div class="row" ng-show="vm.related.length > 0 && vm.model.id">
-    <div class="view-header">
-        <div class="col-lg-4">
-            <h4>Related Items: </h4>
-        </div>
-        <div class="col-lg-8 text-right">
-            <div class="btn-group">
-                <a ng-if="vm.list" ng-repeat="r in vm.related" href="#/core/{{r.model.toLowerCase()}}s/" class="btn btn-default">
-                    {{r.model}}
-                </a>
-                <a ng-if="!vm.list && vm.getRelatedItem(r, vm.model)" ng-repeat="r in vm.related" href="#/core/{{r.model.toLowerCase()}}s/{{vm.getRelatedItem(r, vm.model)}}" class="btn btn-default">
-                    {{r.model}}
-                </a>
-            </div>
-        </div>
-        <hr>
-    </div>
-</div>
 <div ng-if="vm.list">
     <xos-table config="vm.tableCfg" data="vm.tableData"></xos-table>
 </div>
 
 <div ng-if="!vm.list">
-    <!--<pre>{{vm.model | json}}</pre>-->
-    <xos-form ng-model="vm.model" config="vm.formCfg"></xos-form>
+    <uib-tabset active="active">
+        <uib-tab heading="{{vm.data.model}}">
+            <div class="panel-body">
+                <xos-form ng-model="vm.model" config="vm.formCfg"></xos-form>
+            </div>
+        </uib-tab>
+        <uib-tab ng-if="vm.getRelatedItemId(r, vm.model)" ng-repeat="r in vm.related.manytoone" heading="{{r.model}} {{vm.getHumanReadableOnField(r)}}">
+            <div class="panel-body">
+                <xos-form ng-model="vm.relatedModels.manytoone[r.model][r.on_field].model" config="vm.relatedModels.manytoone[r.model][r.on_field].formConfig"></xos-form>
+            </div>
+        </uib-tab>
+        <uib-tab classes="{{vm.relatedModels.onetomany[r.model][r.on_field].class}}" ng-if="vm.relatedModels.onetomany[r.model]" ng-repeat="r in vm.related.onetomany" heading="{{r.model}} {{vm.getHumanReadableOnField(r)}}">
+            <div class="panel-body">
+                <xos-table config="vm.relatedModels.onetomany[r.model][r.on_field].tableConfig" data="vm.relatedModels.onetomany[r.model][r.on_field].model"></xos-table>
+            </div>
+        </uib-tab>
+    </uib-tabset>
 </div>

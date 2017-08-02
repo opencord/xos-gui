@@ -127,7 +127,7 @@ class TableCtrl {
       this.currentPage = 0;
     }
 
-    this.columns = this.config.columns;
+    // this.columns = this.config.columns;
 
   }
 
