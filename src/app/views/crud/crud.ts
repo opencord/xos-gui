@@ -2,17 +2,9 @@ import {IXosTableCfg} from '../../core/table/table';
 import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 import * as _ from 'lodash';
-import {IXosFormCfg} from '../../core/form/form';
 import {IXosResourceService} from '../../datasources/rest/model.rest';
 import {IStoreHelpersService} from '../../datasources/helpers/store.helpers';
 import {IXosModelDiscovererService} from '../../datasources/helpers/model-discoverer.service';
-
-export interface IXosCrudData {
-  model: string;
-  related: IXosModelRelation[];
-  xosTableCfg: IXosTableCfg;
-  xosFormCfg: IXosFormCfg;
-}
 
 export interface IXosModelRelation {
   model: string;
@@ -22,6 +14,7 @@ export interface IXosModelRelation {
 class CrudController {
   static $inject = [
     '$scope',
+    '$log',
     '$state',
     '$stateParams',
     'XosModelStore',
@@ -31,6 +24,8 @@ class CrudController {
     'XosModelDiscoverer'
   ];
 
+  // bindings
+
   public data: {model: string};
   public tableCfg: IXosTableCfg;
   public formCfg: any;
@@ -39,10 +34,12 @@ class CrudController {
   public title: string;
   public tableData: any[];
   public model: any;
-  public related: string[];
+  public related: IXosModelRelation[];
+  public relatedModels: any = {};
 
   constructor(
     private $scope: angular.IScope,
+    private $log: angular.ILogService,
     private $state: angular.ui.IStateService,
     private $stateParams: ng.ui.IStateParamsService,
     private store: IXosModelStoreService,
@@ -51,6 +48,7 @@ class CrudController {
     private StoreHelpers: IStoreHelpersService,
     private XosModelDiscovererService: IXosModelDiscovererService
   ) {
+
     this.data = this.$state.current.data;
     this.model = this.XosModelDiscovererService.get(this.data.model);
     this.title = this.ConfigHelpers.pluralize(this.data.model);
@@ -60,8 +58,7 @@ class CrudController {
     // TODO get the proper URL from model discoverer
     this.baseUrl = '#/' + this.model.clientUrl.replace(':id?', '');
 
-
-    this.related = $state.current.data.related;
+    this.$log.debug('[XosCrud]', $state.current.data);
 
     this.tableCfg = this.model.tableCfg;
     this.formCfg = this.model.formCfg;
@@ -76,7 +73,9 @@ class CrudController {
 
             // if it is a detail page for an existing model
             if ($stateParams['id'] && $stateParams['id'] !== 'add') {
+              this.related = $state.current.data.relations;
               this.model = _.find(this.tableData, {id: parseInt($stateParams['id'], 10)});
+              this.getRelatedModels(this.related, this.model);
             }
           });
         }
@@ -96,11 +95,33 @@ class CrudController {
     }
   }
 
-  public getRelatedItem(relation: IXosModelRelation, item: any): number {
+  public getRelatedItemId(relation: IXosModelRelation, item: any): number {
     if (item && angular.isDefined(item[`${relation.model.toLowerCase()}_id`])) {
       return item[`${relation.model.toLowerCase()}_id`];
     }
+    // ids cannot be 0
     return 0;
+  }
+
+  public getRelatedModels(relations: IXosModelRelation[], item: any) {
+
+    const _getModels = (model, id) => {
+      this.store.get(model, id)
+        .subscribe(item => {
+          this.$log.debug('[XosCrud] Loaded relation:', model, item);
+          this.relatedModels[model] = {
+            model: item,
+            formConfig: this.XosModelDiscovererService.get(model).formCfg
+          };
+        });
+    };
+
+    _.forEach(relations, (r: IXosModelRelation) => {
+      if (item[`${r.model.toLowerCase()}_id`]) {
+        this.$log.debug('[XosCrud] Loading relation:', r.model, item[`${r.model.toLowerCase()}_id`]);
+        _getModels(r.model, item[`${r.model.toLowerCase()}_id`]);
+      }
+    });
   }
 }
 
