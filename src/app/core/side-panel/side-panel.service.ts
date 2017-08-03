@@ -6,6 +6,7 @@ export interface IXosSidePanelService {
   close(): void;
   injectComponent(componentName: string, attributes?: any, transclude?: string): void;
   removeInjectedComponents(): void;
+  toggleComponent(componentName: string, attributes?: any, transclude?: string): void;
 }
 
 export class XosSidePanel implements IXosSidePanelService {
@@ -14,6 +15,7 @@ export class XosSidePanel implements IXosSidePanelService {
   public sidePanelElClass = '.xos-side-panel';
   public sidePanelEl: JQuery;
   private hasComponentLoaded: boolean;
+  private componentToggle = false;
 
   constructor (
     private $rootScope: ng.IRootScopeService,
