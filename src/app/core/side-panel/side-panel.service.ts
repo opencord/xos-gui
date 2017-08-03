@@ -52,4 +52,15 @@ export class XosSidePanel implements IXosSidePanelService {
       this.hasComponentLoaded = false;
     }, 500);
   }
+
+  public toggleComponent(componentName: string, attributes?: any, transclude?: string) {
+    this.componentToggle = !this.componentToggle;
+    if (this.componentToggle) {
+      this.XosComponentInjector.injectComponent('#side-panel-container', componentName, attributes, transclude, true);
+      this.open();
+    }
+    else {
+      this.removeInjectedComponents();
+    }
+  }
 }
