@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa3479d7_f5c9525b",
+        "filename": "src/app/core/side-panel/side-panel.service.ts",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-08-03T00:20:47Z",
+      "side": 1,
+      "message": "we don\u0027t need to call this.open() as it\u0027s called by injectComponent",
+      "range": {
+        "startLine": 61,
+        "startChar": 6,
+        "endLine": 61,
+        "endChar": 18
+      },
+      "revId": "9cdd95398aad5392be505c0fbcd8d8bc7c0c0824",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
