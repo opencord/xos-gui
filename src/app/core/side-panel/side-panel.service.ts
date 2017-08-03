@@ -14,6 +14,7 @@ export class XosSidePanel implements IXosSidePanelService {
   public sidePanelElClass = '.xos-side-panel';
   public sidePanelEl: JQuery;
   private hasComponentLoaded: boolean;
+  private componentToggle = false;
 
   constructor (
     private $rootScope: ng.IRootScopeService,
@@ -51,5 +52,16 @@ export class XosSidePanel implements IXosSidePanelService {
       this.XosComponentInjector.removeInjectedComponents('#side-panel-container');
       this.hasComponentLoaded = false;
     }, 500);
+  }
+
+  public toggleComponent(componentName: string, attributes?: any, transclude?: string) {
+    this.componentToggle = !this.componentToggle;
+    if (this.componentToggle) {
+      this.XosComponentInjector.injectComponent('#side-panel-container', componentName, attributes, transclude, true);
+      this.open();
+    }
+    else {
+      this.removeInjectedComponents();
+    }
   }
 }
