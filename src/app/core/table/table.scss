@@ -33,4 +33,10 @@ table {
     z-index: 2;
   }
 
+  td.xos-table-actions {
+    a + a {
+      margin-left: $padding-base-horizontal;
+    }
+  }
+
 }
