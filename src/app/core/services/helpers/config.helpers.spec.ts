@@ -191,7 +191,9 @@ describe('The ConfigHelpers service', () => {
       expect(cfg.columns).toBeDefined();
       expect(cfg.filter).toBe('fulltext');
       expect(cfg.order).toEqual({field: 'id', reverse: false});
-      expect(cfg.actions.length).toBe(1);
+      expect(cfg.actions.length).toBe(2);
+      expect(cfg.actions[0].label).toEqual('details');
+      expect(cfg.actions[1].label).toEqual('delete');
     });
   });
 
