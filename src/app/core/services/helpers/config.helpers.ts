@@ -111,6 +111,13 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       },
       actions: [
         {
+          label: 'details',
+          icon: 'search',
+          cb: (item) => {
+            this.$state.go(this.$state.current.name, {id: item.id});
+          }
+        },
+        {
           label: 'delete',
           icon: 'remove',
           color: 'red',
