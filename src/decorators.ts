@@ -19,8 +19,8 @@
 export default function XosLogDecorator($provide: ng.auto.IProvideService) {
   $provide.decorator('$log', function($delegate: any) {
     const isLogEnabled = () => {
-      // NOTE to enable debug, in the broser console set: localStorage.debug = 'true'
-      // NOTE to disable debug, in the broser console set: localStorage.debug = 'false'
+      // NOTE to enable debug, in the browser console set: localStorage.debug = 'true'
+      // NOTE to disable debug, in the browser console set: localStorage.debug = 'false'
       return window.localStorage.getItem('debug') === 'true';
     };
     // Save the original $log.debug()
@@ -37,6 +37,11 @@ export default function XosLogDecorator($provide: ng.auto.IProvideService) {
           return;
         }
 
+        // TODO toggle events notifications
+
+
+
+        
         let args    = [].slice.call(arguments);
         let now     = new Date();
 
