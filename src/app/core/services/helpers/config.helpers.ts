@@ -34,6 +34,7 @@ export interface IXosConfigHelpersService {
   toLabels(string: string[], pluralize?: boolean): string[];
   stateFromCoreModel(name: string): string;
   stateWithParams(name: string, model: any): string;
+  relatedStateWithParams(name: string, id: string): string;
   stateWithParamsForJs(name: string, model: any): any;
 }
 
@@ -165,9 +166,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
           this.populateRelated(item, item[f.name], f);
           return item[f.name];
         };
-        col.link = item => {
-          return this.stateWithParams(f.relation.model, item);
-        };
+        col.link = item => this.relatedStateWithParams(f.relation.model, item[col.prop]);
       }
 
       if (f.name === 'backend_status') {
@@ -210,8 +209,12 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     return `${state}({id: ${model['id']}})`;
   }
 
+  public relatedStateWithParams(name: string, id: string): string {
+    const state = this.stateFromCoreModel(name);
+    return `${state}({id: ${id}})`;
+  }
+
   public stateWithParamsForJs(name: string, model: any): any {
-    // TODO test and interface
     const state = this.stateFromCoreModel(name);
     return {name: state, params: {id: model.id}};
   }
