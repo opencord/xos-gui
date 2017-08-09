@@ -22,4 +22,11 @@ xos-key-binding-panel {
   code {
     background: $background-light-color;
   }
+
+  > .row:last-child {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
 }

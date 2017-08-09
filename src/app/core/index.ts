@@ -43,6 +43,8 @@ import {PaginationFilter} from './pagination/pagination.filter';
 import {XosDebouncer} from './services/helpers/debounce.helper';
 import {ArrayToListFilter} from './table/array-to-list.filter';
 import {xosLoader} from './loader/loader';
+import {xosDebugComponent} from './debug/debug';
+import {XosDebugService} from './debug/debug.service';
 
 export const xosCore = 'xosCore';
 
@@ -63,6 +65,7 @@ angular
   .service('XosKeyboardShortcut', XosKeyboardShortcut)
   .service('XosComponentInjector', XosComponentInjector)
   .service('XosDebouncer', XosDebouncer)
+  .service('XosDebug', XosDebugService)
   .directive('xosLinkWrapper', xosLinkWrapper)
   .component('xosHeader', xosHeader)
   .component('xosFooter', xosFooter)
@@ -77,5 +80,6 @@ angular
   .component('xosValidation', xosValidation)
   .component('xosSidePanel', xosSidePanel)
   .component('xosKeyBindingPanel', xosKeyBindingPanel)
+  .component('xosDebug', xosDebugComponent)
   .filter('pagination', PaginationFilter)
   .filter('arrayToList', ArrayToListFilter);
