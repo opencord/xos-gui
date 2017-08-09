@@ -53,13 +53,14 @@ export class WebSocketEvent {
 
     this.socket = io(this.AppConfig.websocketClient);
     this.socket.on('event', (data: IWSEvent): void => {
-        this.$log.debug(`[WebSocket] Received Event for: ${data.model} [${data.msg.pk}]`);
 
         if (data.msg.changed_fields.length === 0 || _.intersection(data.msg.changed_fields, ignoredFields).length === data.msg.changed_fields.length) {
           // NOTE means that the only updated fields does not change anything in the UI, so don't send events around
           this.$log.debug(`[WebSocket] Ignoring Event for: ${data.model} [${data.msg.pk}]`);
           return;
         }
+
+        this.$log.info(`[WebSocket] Received Event for: ${data.model} [${data.msg.pk}]`);
 
         this._events.next(data);
 

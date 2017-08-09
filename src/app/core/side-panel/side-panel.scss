@@ -21,6 +21,12 @@
 $side-panel-width: 400px;
 
 xos-side-panel {
+  .full-height {
+    height: 97%;
+    & > .full-height {
+      height: 100%;
+    }
+  }
   .xos-side-panel {
     width: $side-panel-width;
     height: 100%;

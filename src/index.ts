@@ -46,6 +46,7 @@ import {xosExtender} from './app/extender/index';
 import {IXosKeyboardShortcutService} from './app/core/services/keyboard-shortcut';
 import {IXosModelDiscovererService} from './app/datasources/helpers/model-discoverer.service';
 import {xosServiceGraph} from './app/service-graph/index';
+import {IXosDebugService} from './app/core/debug/debug.service';
 
 export interface IXosAppConfig {
   apiEndpoint: string;
@@ -100,7 +101,8 @@ angular
     XosModelDiscoverer: IXosModelDiscovererService,
     AuthService: IXosAuthService,
     XosKeyboardShortcut: IXosKeyboardShortcutService,
-    PageTitle: IXosPageTitleService // NOTE this service is not used, but needs to be loaded somewhere
+    PageTitle: IXosPageTitleService, // NOTE this service is not used, but needs to be loaded somewhere
+    XosDebug: IXosDebugService
   ) => {
     // handle style configs
     $rootScope['favicon'] = `./app/images/brand/${StyleConfig.favicon}`;
@@ -136,21 +138,6 @@ angular
 
     // register keyboard shortcut
     XosKeyboardShortcut.setup();
-
-    XosKeyboardShortcut.registerKeyBinding({
-      key: 'D',
-      cb: () => {
-        if (window.localStorage.getItem('debug') === 'true') {
-          $log.info(`[XosKeyboardShortcut] Disabling debug`);
-          window.localStorage.setItem('debug', 'false');
-        }
-        else {
-          window.localStorage.setItem('debug', 'true');
-          $log.info(`[XosKeyboardShortcut] Enabling debug`);
-        }
-      },
-      description: 'Toggle debug messages in browser console'
-    }, 'global');
-
+    XosDebug.setupShortcuts();
   });
 

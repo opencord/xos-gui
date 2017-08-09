@@ -64,7 +64,7 @@ describe('The Xos Table component', () => {
 
   it('should throw an error if no config columns are specified', () => {
     function errorFunctionWrapper() {
-      // setup the parent scope
+      // setupShortcuts the parent scope
       scope = rootScope.$new();
       scope.config = 'green';
       compileElement();
@@ -334,7 +334,7 @@ describe('The Xos Table component', () => {
 
         it('should check for a formatter property', () => {
           function errorFunctionWrapper() {
-            // setup the parent scope
+            // setupShortcuts the parent scope
             scope = rootScope.$new();
             scope.config = {
               columns: [
@@ -352,7 +352,7 @@ describe('The Xos Table component', () => {
 
         it('should check that the formatter property is a function', () => {
           function errorFunctionWrapper() {
-            // setup the parent scope
+            // setupShortcuts the parent scope
             scope = rootScope.$new();
             scope.config = {
               columns: [
@@ -453,7 +453,7 @@ describe('The Xos Table component', () => {
 
       it('should check that the link property is a function', () => {
         function errorFunctionWrapper() {
-          // setup the parent scope
+          // setupShortcuts the parent scope
           scope = rootScope.$new();
           scope.config = {
             columns: [

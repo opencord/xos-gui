@@ -23,21 +23,32 @@ limitations under the License.
 </div>
 <div class="row" ng-repeat="(k, v) in vm.bindings">
     <div class="col-xs-12" ng-if="v.length > 0">
-        <h5>{{k | capitalize}}</h5>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>{{k | capitalize}}:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="binding in v" ng-if="binding.description">
+                    <td>
+                        <code class="text-center">
+                            <span ng-repeat="m in binding.modifiers">
+                                {{m}} +
+                            </span>
+                            {{binding.label.toLowerCase() || binding.key.toLowerCase()}}
+                        </code>
+                    </td>
+                    <td class="text-right">
+                        <p>{{binding.description}}</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <div class="col-xs-12" ng-repeat="binding in v" ng-if="binding.description">
-        <div class="row">
-            <div class="col-xs-5">
-                <code class="text-center">
-                    <span ng-repeat="m in binding.modifiers">
-                        {{m}} +
-                    </span>
-                    {{binding.label.toLowerCase() || binding.key.toLowerCase()}}
-                </code>
-            </div>
-            <div class="col-xs-7">
-                <p>{{binding.description}}</p>
-            </div>
-        </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <xos-debug></xos-debug>
     </div>
 </div>

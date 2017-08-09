@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2017-present Open Networking Foundation
 
@@ -15,13 +14,13 @@
  * limitations under the License.
  */
 
-
 import {IXosKeyboardShortcutService, IXosKeyboardShortcutMap} from '../services/keyboard-shortcut';
 import './key-binding-panel.scss';
 
 class XosKeyBindingPanelController {
   static $inject = ['$scope', 'XosKeyboardShortcut'];
   public bindings: IXosKeyboardShortcutMap;
+
   constructor (
     private $scope: ng.IScope,
     private XosKeyboardShortcut: IXosKeyboardShortcutService

@@ -80,7 +80,7 @@ describe('The XosKeyboardShortcut service', () => {
     service = new XosKeyboardShortcut($log, $transitions, XosSidePanel);
   });
 
-  it('should have a setup method', () => {
+  it('should have a setupShortcuts method', () => {
     expect(service.setup).toBeDefined();
   });
 

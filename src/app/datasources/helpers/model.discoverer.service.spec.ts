@@ -117,7 +117,7 @@ describe('The ModelDicoverer service', () => {
       });
   }));
 
-  it('should setup the progress bar', () => {
+  it('should setupShortcuts the progress bar', () => {
     expect(MockngProgressFactory.createInstance).toHaveBeenCalled();
     expect(MockProgressBar.setColor).toHaveBeenCalled();
   });
