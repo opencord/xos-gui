@@ -15,14 +15,18 @@
  * limitations under the License.
  */
 
-
 export default function XosLogDecorator($provide: ng.auto.IProvideService) {
   $provide.decorator('$log', function($delegate: any) {
     const isLogEnabled = () => {
-      // NOTE to enable debug, in the broser console set: localStorage.debug = 'true'
-      // NOTE to disable debug, in the broser console set: localStorage.debug = 'false'
+      // NOTE to enable debug, in the browser console set: localStorage.debug = 'true'
+      // NOTE to disable debug, in the browser console set: localStorage.debug = 'false'
       return window.localStorage.getItem('debug') === 'true';
     };
+
+    const isEventLogEnabled = () => {
+      return window.localStorage.getItem('debug-event') === 'true';
+    };
+
     // Save the original $log.debug()
     let logFn = $delegate.log;
     let infoFn = $delegate.info;
@@ -33,9 +37,20 @@ export default function XosLogDecorator($provide: ng.auto.IProvideService) {
     // create the replacement function
     const replacement = (fn) => {
       return function(){
-        if (!isLogEnabled()) {
+        // TODO
+        // Provide more structure a way to group log message and hide/show them
+        // eg: the first parameter is the group name
+
+        const msg = arguments[0];
+        if (!isLogEnabled() && msg.indexOf('WebSocket') === 0) {
           return;
         }
+
+        if (!isEventLogEnabled() && msg.indexOf('WebSocket') > 0) {
+          return;
+        }
+
+        // TODO toggle events notifications
 
         let args    = [].slice.call(arguments);
         let now     = new Date();

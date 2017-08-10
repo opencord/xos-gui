@@ -53,7 +53,7 @@ limitations under the License.
                 <xos-form ng-model="vm.relatedModels.manytoone[r.model][r.on_field].model" config="vm.relatedModels.manytoone[r.model][r.on_field].formConfig"></xos-form>
             </div>
         </uib-tab>
-        <uib-tab classes="{{vm.relatedModels.onetomany[r.model][r.on_field].class}}" ng-if="vm.relatedModels.onetomany[r.model]" ng-repeat="r in vm.related.onetomany" heading="{{r.model}} {{vm.getHumanReadableOnField(r)}}">
+        <uib-tab ng-if="vm.relatedModels.onetomany[r.model]" ng-repeat="r in vm.related.onetomany" classes="{{vm.relatedModels.onetomany[r.model][r.on_field].class}}" heading="{{r.model}} {{vm.getHumanReadableOnField(r)}}">
             <div class="panel-body">
                 <xos-table config="vm.relatedModels.onetomany[r.model][r.on_field].tableConfig" data="vm.relatedModels.onetomany[r.model][r.on_field].model"></xos-table>
             </div>

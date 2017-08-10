@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-import {IXosKeyboardShortcutService, IXosKeyboardShortcutMap} from '../services/keyboard-shortcut';
-import './key-binding-panel.scss';
+import {IXosDebugStatus, IXosDebugService} from './debug.service';
 
-class XosKeyBindingPanelController {
-  static $inject = ['$scope', 'XosKeyboardShortcut'];
-  public bindings: IXosKeyboardShortcutMap;
+class XosDebugComponentController {
+  static $inject = ['$scope', 'XosDebug'];
+  public debugStatus: IXosDebugStatus;
 
-  constructor (
+  constructor(
     private $scope: ng.IScope,
-    private XosKeyboardShortcut: IXosKeyboardShortcutService
+    private XosDebug: IXosDebugService
   ) {
-    this.bindings = this.XosKeyboardShortcut.keyMapping;
+    this.debugStatus = this.XosDebug.status;
+
+    this.$scope.$on('xos.debug.status', (e, status: IXosDebugStatus) => {
+      this.debugStatus = status;
+      this.$scope.$apply();
+    });
   }
 }
 
-export const xosKeyBindingPanel: angular.IComponentOptions = {
-  template: require('./key-binding-panel.html'),
+export const xosDebugComponent: angular.IComponentOptions = {
+  template: require('./debug.html'),
   controllerAs: 'vm',
-  controller: XosKeyBindingPanelController
+  controller: XosDebugComponentController
 };
