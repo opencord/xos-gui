@@ -77,6 +77,7 @@ class CrudController {
     private XosModelDiscovererService: IXosModelDiscovererService,
     private XosCrudRelation: IXosCrudRelationService
   ) {
+    this.$log.info('[XosCrud] Setup', $state.current.data);
 
     this.data = this.$state.current.data;
     this.model = this.XosModelDiscovererService.get(this.data.model);
@@ -87,7 +88,6 @@ class CrudController {
     // TODO get the proper URL from model discoverer
     this.baseUrl = '#/' + this.model.clientUrl.replace(':id?', '');
 
-    this.$log.debug('[XosCrud]', $state.current.data);
 
     this.tableCfg = this.model.tableCfg;
     this.formCfg = this.model.formCfg;
@@ -135,7 +135,7 @@ class CrudController {
   }
 
   public getRelatedModels(relations: {manytoone: IXosModelRelation[], onetomany: IXosModelRelation[]}, item: any) {
-    this.$log.info(`[XosCrud] Managing relation for ${this.data.model}:`, relations);
+    this.$log.debug(`[XosCrud] Managing relation for ${this.data.model}:`, relations);
 
     // loading many to one relations (you'll get a model)
     _.forEach(relations.manytoone, (r: IXosModelRelation) => {
