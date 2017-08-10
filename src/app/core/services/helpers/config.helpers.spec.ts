@@ -173,9 +173,17 @@ describe('The ConfigHelpers service', () => {
       it('should return the state for a given model', () => {
         expect(service.stateFromCoreModel('Test')).toBe('xos.core.tests');
       });
-
+    });
+    describe('stateWithParams', () => {
       it('should return the state with params for a given model', () => {
         expect(service.stateWithParams('Test', {id: 1})).toBe('xos.core.tests({id: 1})');
+      });
+      it('should return the state with params for a given relation', () => {
+        expect(service.relatedStateWithParams('Test', '1')).toBe('xos.core.tests({id: 1})');
+      });
+
+      it('should return the state with params for usage in js', () => {
+        expect(service.stateWithParamsForJs('Test', {id: 1})).toEqual({ name: 'xos.core.tests', params: Object({ id: 1 }) });
       });
     });
   });
