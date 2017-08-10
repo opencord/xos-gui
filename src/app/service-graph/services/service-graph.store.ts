@@ -68,8 +68,6 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
 
   // datastore
   private ServiceSubscription: Subscription;
-  private TenantSubscription: Subscription;
-  private SubscriberSubscription: Subscription;
   private NetworkSubscription: Subscription;
   private ServiceDependencySubscription: Subscription;
 
@@ -102,26 +100,6 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
         },
         (err) => {
           this.$log.error(`[XosServiceGraphStore] Service Observable: `, err);
-        }
-      );
-
-    this.TenantSubscription = this.XosModelStore.query('Tenant', '/core/tenants')
-      .subscribe(
-        (res) => {
-          this.combineData(res, 'tenants');
-        },
-        (err) => {
-          this.$log.error(`[XosServiceGraphStore] Tenant Observable: `, err);
-        }
-      );
-
-    this.SubscriberSubscription = this.XosModelStore.query('Tenantroot', '/core/tenantroots')
-      .subscribe(
-        (res) => {
-          this.combineData(res, 'subscribers');
-        },
-        (err) => {
-          this.$log.error(`[XosServiceGraphStore] Subscriber Observable: `, err);
         }
       );
 
