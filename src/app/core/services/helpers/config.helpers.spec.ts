@@ -76,7 +76,9 @@ const model: IXosModeldef = {
       name: 'updated',
       validators: []
     },
-  ]
+  ],
+  description: '',
+  verbose_name: ''
 };
 
 describe('The ConfigHelpers service', () => {
@@ -190,7 +192,7 @@ describe('The ConfigHelpers service', () => {
 
   describe('the modelFieldsToColumnsCfg method', () => {
     it('should return an array of columns', () => {
-      const cols = service.modelFieldsToColumnsCfg({fields: model.fields, name: 'testUrl', app: 'test'});
+      const cols = service.modelFieldsToColumnsCfg({fields: model.fields, name: 'testUrl', app: 'test', description: '', verbose_name: ''});
       expect(cols[0].label).toBe('Id');
       expect(cols[0].prop).toBe('id');
       expect(cols[0].link).toBeDefined();

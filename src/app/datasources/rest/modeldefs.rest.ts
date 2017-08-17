@@ -42,6 +42,8 @@ export interface IXosModeldef {
   relations?: IXosModelDefsRelation[];
   name: string;
   app: string;
+  description: string;
+  verbose_name: string;
 }
 
 export interface IXosModeldefsService {
