@@ -37,6 +37,8 @@ export interface IXosModel {
   clientUrl?: string; // the view url
   tableCfg?: IXosTableCfg;
   formCfg?: IXosFormCfg;
+  description: string;
+  verbose_name: string;
 }
 
 // Service
@@ -237,8 +239,9 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     const parentState: string = this.getParentStateFromModel(model);
 
     try {
+      const name = model.verbose_name ? model.verbose_name : model.name;
       this.XosNavigationService.add({
-        label: this.ConfigHelpers.pluralize(model.name),
+        label: this.ConfigHelpers.pluralize(name),
         state: stateName,
         parent: parentState
       });

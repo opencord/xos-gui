@@ -31,7 +31,9 @@ const stubModels: IXosModeldef[] = [
     ],
     relations: [],
     name: 'Node',
-    app: 'core'
+    app: 'core',
+    description: '',
+    verbose_name: ''
   },
   {
     fields: [
@@ -40,7 +42,9 @@ const stubModels: IXosModeldef[] = [
     ],
     relations: [],
     name: 'VSGTenant',
-    app: 'service.vsg'
+    app: 'service.vsg',
+    description: '',
+    verbose_name: ''
   }
 ];
 
@@ -130,7 +134,9 @@ describe('The ModelDicoverer service', () => {
     const model = {
       name: 'Node',
       app: 'core',
-      fields: []
+      fields: [],
+      description: '',
+      verbose_name: ''
     };
     expect(service.getApiUrlFromModel(model)).toBe('/core/nodes');
   });
@@ -139,7 +145,9 @@ describe('The ModelDicoverer service', () => {
     const model = {
       name: 'Tenant',
       app: 'services.test',
-      fields: []
+      fields: [],
+      description: '',
+      verbose_name: ''
     };
     expect(service.getApiUrlFromModel(model)).toBe('/test/tenants');
   });
@@ -236,6 +244,13 @@ describe('The ModelDicoverer service', () => {
     service['addNavItem']({name: 'Tenant', app: 'services.vsg'});
     expect(MockXosNavigationService.add).toHaveBeenCalledWith({
       label: 'Tenants',
+      state: 'xos.vsg.tenant',
+      parent: 'xos.vsg'
+    });
+
+    service['addNavItem']({name: 'Tenant', verbose_name: 'Verbose', app: 'services.vsg'});
+    expect(MockXosNavigationService.add).toHaveBeenCalledWith({
+      label: 'Verboses',
       state: 'xos.vsg.tenant',
       parent: 'xos.vsg'
     });

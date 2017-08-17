@@ -66,7 +66,7 @@ export class SearchService {
   public search(query: string): IXosSearchResult[] {
     this.$log.debug(`[XosSearchService] Searching for: ${query}`);
     const routes: IXosSearchResult[] = _.filter(this.states, s => {
-      return s.label.toLowerCase().indexOf(query) > -1;
+      return s.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
     }).map(r => {
       r.type = 'View';
       return r;
