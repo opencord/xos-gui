@@ -22,7 +22,7 @@ import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpe
 import * as _ from 'lodash';
 import {IXosResourceService} from '../../datasources/rest/model.rest';
 import {IStoreHelpersService} from '../../datasources/helpers/store.helpers';
-import {IXosModelDiscovererService} from '../../datasources/helpers/model-discoverer.service';
+import {IXosModelDiscovererService, IXosModel} from '../../datasources/helpers/model-discoverer.service';
 import './crud.scss';
 import {IXosCrudRelationService} from './crud.relations.service';
 
@@ -53,9 +53,12 @@ class CrudController {
   public formCfg: any;
   public baseUrl: string;
   public list: boolean;
-  public title: string;
+  public modelName: string;
+  public pluralTitle: string;
+  public singularTitle: string;
   public tableData: any[];
-  public model: any;
+  public model: any; // holds the real model
+  public modelDef: IXosModel;
   public related: {manytoone: IXosModelRelation[], onetomany: IXosModelRelation[]} = {
     manytoone: [],
     onetomany: []
@@ -80,24 +83,25 @@ class CrudController {
     this.$log.info('[XosCrud] Setup', $state.current.data);
 
     this.data = this.$state.current.data;
-    this.model = this.XosModelDiscovererService.get(this.data.model);
-    this.title = this.ConfigHelpers.pluralize(this.data.model);
+    this.modelDef = this.XosModelDiscovererService.get(this.data.model);
+    this.modelName = this.modelDef.verbose_name ? this.modelDef.verbose_name : this.modelDef.name;
+    this.pluralTitle = this.ConfigHelpers.pluralize(this.modelName);
+    this.singularTitle = this.ConfigHelpers.pluralize(this.modelName, 1);
 
     this.list = true;
 
     // TODO get the proper URL from model discoverer
-    this.baseUrl = '#/' + this.model.clientUrl.replace(':id?', '');
+    this.baseUrl = '#/' + this.modelDef.clientUrl.replace(':id?', '');
 
 
-    this.tableCfg = this.model.tableCfg;
-    this.formCfg = this.model.formCfg;
+    this.tableCfg = this.modelDef.tableCfg;
+    this.formCfg = this.modelDef.formCfg;
 
     this.store.query(this.data.model)
       .subscribe(
         (event) => {
           // NOTE Observable mess with $digest cycles, we need to schedule the expression later
           $scope.$evalAsync(() => {
-            this.title = this.ConfigHelpers.pluralize(this.data.model, event.length);
             this.tableData = event;
 
             // if it is a detail page for an existing model
