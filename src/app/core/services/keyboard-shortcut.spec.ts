@@ -157,7 +157,8 @@ describe('The XosKeyboardShortcut service', () => {
         global: [
           {
             key: 'a',
-            cb: 'cb'
+            cb: 'cb',
+            modifiers: undefined
           }
         ],
         view: []

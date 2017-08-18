@@ -16,7 +16,7 @@
 
 import {IXosDebugStatus, IXosDebugService} from './debug.service';
 
-class XosDebugComponentController {
+class XosDebugSummaryController {
   static $inject = ['$scope', 'XosDebug'];
   public debugStatus: IXosDebugStatus;
 
@@ -33,8 +33,8 @@ class XosDebugComponentController {
   }
 }
 
-export const xosDebugComponent: angular.IComponentOptions = {
-  template: require('./debug.html'),
+export const xosDebugSummary: angular.IComponentOptions = {
+  template: require('./debug-summary.html'),
   controllerAs: 'vm',
-  controller: XosDebugComponentController
+  controller: XosDebugSummaryController
 };

@@ -25,6 +25,8 @@ import {IStoreHelpersService} from '../../datasources/helpers/store.helpers';
 import {IXosModelDiscovererService} from '../../datasources/helpers/model-discoverer.service';
 import './crud.scss';
 import {IXosCrudRelationService} from './crud.relations.service';
+import {IXosDebugService, IXosDebugStatus} from '../../core/debug/debug.service';
+import {IXosKeyboardShortcutService} from '../../core/services/keyboard-shortcut';
 
 export interface IXosModelRelation {
   model: string;
@@ -43,7 +45,9 @@ class CrudController {
     'ModelRest',
     'StoreHelpers',
     'XosModelDiscoverer',
-    'XosCrudRelation'
+    'XosCrudRelation',
+    'XosDebug',
+    'XosKeyboardShortcut'
   ];
 
   // bindings
@@ -64,6 +68,7 @@ class CrudController {
     manytoone: {},
     onetomany: {}
   };
+  public debugTab: boolean;
 
   constructor(
     private $scope: angular.IScope,
@@ -75,7 +80,9 @@ class CrudController {
     private ModelRest: IXosResourceService,
     private StoreHelpers: IStoreHelpersService,
     private XosModelDiscovererService: IXosModelDiscovererService,
-    private XosCrudRelation: IXosCrudRelationService
+    private XosCrudRelation: IXosCrudRelationService,
+    private XosDebug: IXosDebugService,
+    private XosKeyboardShortcut: IXosKeyboardShortcutService
   ) {
     this.$log.info('[XosCrud] Setup', $state.current.data);
 
@@ -88,9 +95,14 @@ class CrudController {
     // TODO get the proper URL from model discoverer
     this.baseUrl = '#/' + this.model.clientUrl.replace(':id?', '');
 
-
     this.tableCfg = this.model.tableCfg;
     this.formCfg = this.model.formCfg;
+
+    this.debugTab = this.XosDebug.status.modelsTab;
+    this.$scope.$on('xos.debug.status', (e, status: IXosDebugStatus) => {
+      this.debugTab = status.modelsTab;
+      this.$scope.$apply();
+    });
 
     this.store.query(this.data.model)
       .subscribe(
@@ -122,9 +134,76 @@ class CrudController {
         const resource = this.ModelRest.getResource(endpoint);
         this.model = new resource({});
       }
+
+      this.XosKeyboardShortcut.registerKeyBinding({
+        key: 'A',
+        cb: () => this.XosDebug.toggleDebug('modelsTab'),
+        description: 'Toggle Debug tab in model details view'
+      }, 'view');
+
+      this.XosKeyboardShortcut.registerKeyBinding({
+        key: 'delete',
+        cb: () => {
+          this.$state.go(this.$state.current.name, {id: null});
+        },
+        description: 'Go back to the list view'
+      }, 'view');
+    }
+    // list page
+    else {
+      this.tableCfg.selectedRow = -1;
+
+      this.XosKeyboardShortcut.registerKeyBinding({
+        key: 'Tab',
+        cb: () => this.iterateItems(),
+        description: 'Iterate trough items in the list'
+      }, 'view');
+
+      this.XosKeyboardShortcut.registerKeyBinding({
+        key: 'Enter',
+        cb: () => {
+          if (this.tableCfg.selectedRow < 0) {
+            return;
+          }
+          this.$state.go(this.$state.current.name, {id: this.tableCfg.filteredData[this.tableCfg.selectedRow].id});
+        },
+        description: 'View details of selected item'
+      }, 'view');
+
+      this.XosKeyboardShortcut.registerKeyBinding({
+        key: 'Delete',
+        cb: () => {
+          if (this.tableCfg.selectedRow < 0) {
+            return;
+          }
+          const deleteFn = _.find(this.tableCfg.actions, {label: 'delete'});
+          deleteFn.cb(this.tableCfg.filteredData[this.tableCfg.selectedRow]);
+        },
+        description: 'View details of selected item'
+      }, 'view');
+
+      // FIXME XosKeyboardShortcut modifiers does not look to work
+      // this.XosKeyboardShortcut.registerKeyBinding({
+      //   key: 'Tab',
+      //   modifiers: ['alt'],
+      //   cb: () => {
+      //     this.tableCfg.selectedRow = -1;
+      //   },
+      //   description: 'Clear selected item'
+      // }, 'view');
     }
   }
 
+  public iterateItems() {
+    const rowCount = this.tableCfg.filteredData.length > this.tableCfg.pagination.pageSize ? this.tableCfg.pagination.pageSize : this.tableCfg.filteredData.length;
+    if ((this.tableCfg.selectedRow + 1) < rowCount) {
+      this.tableCfg.selectedRow++;
+    }
+    else {
+      this.tableCfg.selectedRow = 0;
+    }
+    this.$scope.$apply();
+  }
 
   public getRelatedItemId(relation: IXosModelRelation, item: any): boolean {
     return this.XosCrudRelation.existsRelatedItem(relation, item);

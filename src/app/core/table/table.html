@@ -14,8 +14,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-
-
 <div ng-show="vm.data.length > 0 && vm.loader == false">
     <div class="row" ng-if="vm.config.filter == 'fulltext'">
         <div class="col-xs-12">
@@ -66,7 +64,7 @@ limitations under the License.
             </tr>
         </tbody>
         <tbody>
-        <tr ng-repeat="item in vm.data | filter:vm.query | orderBy:vm.orderBy:vm.reverse | pagination:vm.currentPage * vm.config.pagination.pageSize | limitTo: (vm.config.pagination.pageSize || vm.data.length) track by $index">
+        <tr ng-class="{active: vm.config.selectedRow == $index}" ng-repeat="item in (vm.config.filteredData = (vm.data | filter:vm.query | orderBy:vm.orderBy:vm.reverse | pagination:vm.currentPage * vm.config.pagination.pageSize | limitTo: (vm.config.pagination.pageSize || vm.data.length))) track by $index">
             <td ng-repeat="col in vm.config.columns" xos-link-wrapper>
                 <span ng-if="!col.type || col.type === 'text'">{{item[col.prop]}}</span>
                 <span ng-if="col.type === 'boolean'">

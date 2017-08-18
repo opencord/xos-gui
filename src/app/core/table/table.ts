@@ -52,6 +52,8 @@ export interface IXosTableCfg {
   };
   order?: IXosTableCgfOrder;
   filter?: string;
+  selectedRow?: number;
+  filteredData?: any[];
   actions?: any[]; // TODO create interface
 }
 
@@ -144,8 +146,6 @@ class TableCtrl {
     if (this.config.pagination) {
       this.currentPage = 0;
     }
-
-    // this.columns = this.config.columns;
 
   }
 

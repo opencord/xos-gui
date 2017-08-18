@@ -19,13 +19,13 @@ import {IXosKeyboardShortcutService} from '../services/keyboard-shortcut';
 export interface IXosDebugStatus {
   global: boolean;
   events: boolean;
+  modelsTab: boolean;
 }
 
 export interface IXosDebugService {
   status: IXosDebugStatus;
   setupShortcuts(): void;
-  toggleGlobalDebug(): void;
-  toggleEventDebug(): void;
+  toggleDebug(type: 'global' | 'events' | 'modelsTab'): void;
 }
 
 export class XosDebugService implements IXosDebugService {
@@ -34,7 +34,8 @@ export class XosDebugService implements IXosDebugService {
 
   public status: IXosDebugStatus = {
     global: false,
-    events: false
+    events: false,
+    modelsTab: false
   };
 
   constructor (
@@ -42,51 +43,40 @@ export class XosDebugService implements IXosDebugService {
     private $scope: ng.IScope,
     private XosKeyboardShortcut: IXosKeyboardShortcutService
   ) {
-    const debug = window.localStorage.getItem('debug');
+    const debug = window.localStorage.getItem('debug-global');
     this.status.global = (debug === 'true');
 
-    const debugEvent = window.localStorage.getItem('debug-event');
+    const debugEvent = window.localStorage.getItem('debug-events');
     this.status.events = (debugEvent === 'true');
+
+    const debugModelsTab = window.localStorage.getItem('debug-modelsTab');
+    this.status.modelsTab = (debugModelsTab === 'true');
   }
 
   public setupShortcuts(): void {
     this.XosKeyboardShortcut.registerKeyBinding({
       key: 'D',
-      cb: () => this.toggleGlobalDebug(),
+      cb: () => this.toggleDebug('global'),
       description: 'Toggle debug messages in browser console'
     }, 'global');
 
     this.XosKeyboardShortcut.registerKeyBinding({
       key: 'E',
-      cb: () => this.toggleEventDebug(),
+      cb: () => this.toggleDebug('events'),
       description: 'Toggle debug messages for WS events in browser console'
     }, 'global');
   }
 
-  public toggleGlobalDebug(): void {
-    if (window.localStorage.getItem('debug') === 'true') {
-      this.$log.info(`[XosDebug] Disabling debug`);
-      window.localStorage.setItem('debug', 'false');
-      this.status.global = false;
+  public toggleDebug(type: 'global' | 'events' | 'modelsTab'): void {
+    if (window.localStorage.getItem(`debug-${type}`) === 'true') {
+      this.$log.info(`[XosDebug] Disabling ${type} debug`);
+      window.localStorage.setItem(`debug-${type}`, 'false');
+      this.status[type] = false;
     }
     else {
-      window.localStorage.setItem('debug', 'true');
-      this.$log.info(`[XosDebug] Enabling debug`);
-      this.status.global = true;
-    }
-    this.$scope.$broadcast('xos.debug.status', this.status);
-  }
-
-  public toggleEventDebug(): void {
-    if (window.localStorage.getItem('debug-event') === 'true') {
-      this.$log.info(`[XosDebug] Disabling debug for WS events`);
-      window.localStorage.setItem('debug-event', 'false');
-      this.status.events = false;
-    }
-    else {
-      window.localStorage.setItem('debug-event', 'true');
-      this.$log.info(`[XosDebug] Enabling debug for WS events`);
-      this.status.events = true;
+      this.$log.info(`[XosDebug] Enabling ${type} debug`);
+      window.localStorage.setItem(`debug-${type}`, 'true');
+      this.status[type] = true;
     }
     this.$scope.$broadcast('xos.debug.status', this.status);
   }

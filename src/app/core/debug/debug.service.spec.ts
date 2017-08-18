@@ -56,16 +56,16 @@ describe('The XOS Debug service', () => {
   it('should disable the global debug status', () => {
     spyOn(window.localStorage, 'getItem')
       .and.returnValue('true');
-    service.toggleGlobalDebug();
-    expect(window.localStorage.setItem).toHaveBeenCalledWith('debug', 'false');
+    service.toggleDebug('global');
+    expect(window.localStorage.setItem).toHaveBeenCalledWith('debug-global', 'false');
     expect(service.status.global).toBeFalsy();
     expect($scope.$broadcast).toHaveBeenCalledWith('xos.debug.status', service.status);
   });
   it('should enable the global debug status', () => {
     spyOn(window.localStorage, 'getItem')
       .and.returnValue('false');
-    service.toggleGlobalDebug();
-    expect(window.localStorage.setItem).toHaveBeenCalledWith('debug', 'true');
+    service.toggleDebug('global');
+    expect(window.localStorage.setItem).toHaveBeenCalledWith('debug-global', 'true');
     expect(service.status.global).toBeTruthy();
     expect($scope.$broadcast).toHaveBeenCalledWith('xos.debug.status', service.status);
   });

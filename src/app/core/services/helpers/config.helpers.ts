@@ -45,6 +45,7 @@ export interface IXosModelDefsField {
 
 export interface IXosConfigHelpersService {
   excluded_fields: string[];
+  form_excluded_fields: string[];
   modelFieldsToColumnsCfg(model: IXosModeldef): IXosTableColumn[];
   modelToTableCfg(model: IXosModeldef, modelName: string): IXosTableCfg;
   modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[];
