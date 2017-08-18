@@ -48,6 +48,11 @@ limitations under the License.
                 <xos-form ng-model="vm.model" config="vm.formCfg"></xos-form>
             </div>
         </uib-tab>
+        <uib-tab ng-if="vm.debugTab" heading="Debug">
+            <div class="panel-body">
+                <xos-debug-model ng-model="vm.model"></xos-debug-model>
+            </div>
+        </uib-tab>
         <uib-tab ng-if="vm.getRelatedItemId(r, vm.model)" ng-repeat="r in vm.related.manytoone" heading="{{r.model}} {{vm.getHumanReadableOnField(r)}}">
             <div class="panel-body">
                 <xos-form ng-model="vm.relatedModels.manytoone[r.model][r.on_field].model" config="vm.relatedModels.manytoone[r.model][r.on_field].formConfig"></xos-form>

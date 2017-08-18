@@ -43,8 +43,9 @@ import {PaginationFilter} from './pagination/pagination.filter';
 import {XosDebouncer} from './services/helpers/debounce.helper';
 import {ArrayToListFilter} from './table/array-to-list.filter';
 import {xosLoader} from './loader/loader';
-import {xosDebugComponent} from './debug/debug';
+import {xosDebugSummary} from './debug/debug-summary';
 import {XosDebugService} from './debug/debug.service';
+import {xosDebugModel} from './debug/debug-model';
 
 export const xosCore = 'xosCore';
 
@@ -80,6 +81,7 @@ angular
   .component('xosValidation', xosValidation)
   .component('xosSidePanel', xosSidePanel)
   .component('xosKeyBindingPanel', xosKeyBindingPanel)
-  .component('xosDebug', xosDebugComponent)
+  .component('xosDebugSummary', xosDebugSummary)
+  .component('xosDebugModel', xosDebugModel)
   .filter('pagination', PaginationFilter)
   .filter('arrayToList', ArrayToListFilter);

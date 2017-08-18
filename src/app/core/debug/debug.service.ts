@@ -19,6 +19,7 @@ import {IXosKeyboardShortcutService} from '../services/keyboard-shortcut';
 export interface IXosDebugStatus {
   global: boolean;
   events: boolean;
+  modelsTab: boolean;
 }
 
 export interface IXosDebugService {
@@ -34,7 +35,8 @@ export class XosDebugService implements IXosDebugService {
 
   public status: IXosDebugStatus = {
     global: false,
-    events: false
+    events: false,
+    modelsTab: false
   };
 
   constructor (
@@ -47,6 +49,9 @@ export class XosDebugService implements IXosDebugService {
 
     const debugEvent = window.localStorage.getItem('debug-event');
     this.status.events = (debugEvent === 'true');
+
+    const debugModelsTab = window.localStorage.getItem('debug-models-tab');
+    this.status.modelsTab = (debugModelsTab === 'true');
   }
 
   public setupShortcuts(): void {
@@ -60,6 +65,12 @@ export class XosDebugService implements IXosDebugService {
       key: 'E',
       cb: () => this.toggleEventDebug(),
       description: 'Toggle debug messages for WS events in browser console'
+    }, 'global');
+
+    this.XosKeyboardShortcut.registerKeyBinding({
+      key: 'A',
+      cb: () => this.toggleModelTabDebug(),
+      description: 'Toggle Debug tab in model details view'
     }, 'global');
   }
 
@@ -87,6 +98,20 @@ export class XosDebugService implements IXosDebugService {
       window.localStorage.setItem('debug-event', 'true');
       this.$log.info(`[XosDebug] Enabling debug for WS events`);
       this.status.events = true;
+    }
+    this.$scope.$broadcast('xos.debug.status', this.status);
+  }
+
+  public toggleModelTabDebug(): void {
+    if (window.localStorage.getItem('debug-models-tab') === 'true') {
+      this.$log.info(`[XosDebug] Disabling debug tab`);
+      window.localStorage.setItem('debug-models-tab', 'false');
+      this.status.modelsTab = false;
+    }
+    else {
+      window.localStorage.setItem('debug-models-tab', 'true');
+      this.$log.info(`[XosDebug] Enabling debug tab`);
+      this.status.modelsTab = true;
     }
     this.$scope.$broadcast('xos.debug.status', this.status);
   }
