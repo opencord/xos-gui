@@ -20,11 +20,11 @@ export default function XosLogDecorator($provide: ng.auto.IProvideService) {
     const isLogEnabled = () => {
       // NOTE to enable debug, in the browser console set: localStorage.debug = 'true'
       // NOTE to disable debug, in the browser console set: localStorage.debug = 'false'
-      return window.localStorage.getItem('debug') === 'true';
+      return window.localStorage.getItem('debug-global') === 'true';
     };
 
     const isEventLogEnabled = () => {
-      return window.localStorage.getItem('debug-event') === 'true';
+      return window.localStorage.getItem('debug-events') === 'true';
     };
 
     // Save the original $log.debug()
@@ -49,8 +49,6 @@ export default function XosLogDecorator($provide: ng.auto.IProvideService) {
         if (!isEventLogEnabled() && msg.indexOf('WebSocket') > 0) {
           return;
         }
-
-        // TODO toggle events notifications
 
         let args    = [].slice.call(arguments);
         let now     = new Date();
