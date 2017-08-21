@@ -68,8 +68,11 @@ export class WebSocketEvent {
         if (data.msg.object.class_names && angular.isString(data.msg.object.class_names)) {
           const models = data.msg.object.class_names.split(',');
           _.forEach(models, (m: string) => {
-            data.model = m;
-            this._events.next(data);
+            // send event only if the parent class is not the same as the model class
+            if (data.model !== m) {
+              data.model = m;
+              this._events.next(data);
+            }
           });
         }
 
