@@ -53,7 +53,7 @@ export class WebSocketEvent {
 
     this.socket = io(this.AppConfig.websocketClient);
     this.socket.on('event', (data: IWSEvent): void => {
-
+      
         if (data.msg.changed_fields.length === 0 || _.intersection(data.msg.changed_fields, ignoredFields).length === data.msg.changed_fields.length) {
           // NOTE means that the only updated fields does not change anything in the UI, so don't send events around
           this.$log.debug(`[WebSocket] Ignoring Event for: ${data.model} [${data.msg.pk}]`);
@@ -68,8 +68,11 @@ export class WebSocketEvent {
         if (data.msg.object.class_names && angular.isString(data.msg.object.class_names)) {
           const models = data.msg.object.class_names.split(',');
           _.forEach(models, (m: string) => {
-            data.model = m;
-            this._events.next(data);
+            // send event only if the parent class is not the same as the model class
+            if (data.model !== m) {
+              data.model = m;
+              this._events.next(data);
+            }
           });
         }
 
