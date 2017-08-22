@@ -81,7 +81,7 @@ describe('The ModelStore service', () => {
   });
 
   describe('when a web-socket event is received for that model', () => {
-    it('should update the collection', (done) => {
+    it('should updateNode the collection', (done) => {
       let event = 0;
       service.query('sample')
         .subscribe(
