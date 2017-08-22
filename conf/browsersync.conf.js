@@ -1,12 +1,41 @@
 const conf = require('./gulp.conf');
 
+const httpProxy = require('http-proxy');
+
+const target = process.env.PROXY || 'xos.dev:8183';
+
+const proxy = httpProxy.createProxyServer({
+  target: `http://${target}`
+});
+
+const xranProxy = httpProxy.createProxyServer({
+  target: `http://127.0.0.1:8181`
+});
+
+proxy.on('error', function(error, req, res) {
+  res.writeHead(500, {'Content-Type': 'text/plain'});
+  console.error('[Proxy]', error);
+});
+
 module.exports = function () {
   return {
     server: {
       baseDir: [
         conf.paths.tmp,
         conf.paths.src
-      ]
+      ],
+      middleware: function(req, res, next){
+        if (req.url.indexOf('progran') !== -1) {
+          proxy.web(req, res);
+        }
+        else if (req.url.indexOf('xran') !== -1) {
+          console.log(req.url);
+          xranProxy.web(req, res);
+        }
+        else{
+          next();
+        }
+      }
     },
     open: false
   };

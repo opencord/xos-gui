@@ -10,7 +10,7 @@ ENV VHOST /var/www/dist
 
 # Install nodeJs
 RUN apt-get update
-RUN apt-get install curl git bzip2 -y
+RUN apt-get install curl git bzip2 gnupg -y
 RUN curl -sL https://deb.nodesource.com/setup_4.x > install_node.sh
 RUN chmod a+x install_node.sh
 RUN ./install_node.sh
@@ -22,7 +22,11 @@ COPY ${CODE_SOURCE} ${CODE_DEST}
 # Build the app
 WORKDIR ${CODE_DEST}
 RUN npm install 
+RUN npm run typings
 RUN npm run build
+
+# expose the app port
+EXPOSE 4000
 
 # Override nginx configutaion
 RUN mv ${CODE_SOURCE}/nginx.conf /etc/nginx/conf.d/default.conf

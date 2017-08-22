@@ -6,3 +6,15 @@ html, body.blank {
 .content > div {
   opacity: 1 !important;
 }
+
+xos-form {
+  button + button {
+    margin-left: 10px;
+  }
+}
+
+.panel-filled {
+  .panel-heading {
+    border-bottom-color: #f6a821;
+  }
+}
