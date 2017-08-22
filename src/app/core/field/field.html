@@ -30,7 +30,7 @@
         </a>
       </span>
 <div
-        class="panel panel-default object-field"
+        class="panel panel-filled object-field"
         ng-if="vm.field.type == 'object' && (!vm.isEmptyObject(vm.ngModel) || !vm.isEmptyObject(vm.field.properties))"
 >
     <div class="panel-heading">{{vm.field.label}}</div>
@@ -56,7 +56,7 @@
     </div>
 </div>
 <div
-        class="panel panel-default array-field"
+        class="panel panel-filled array-field"
         ng-if="vm.field.type == 'array'">
     <div class="panel-heading">{{vm.field.label}}</div>
     <div class="panel-body selected">
