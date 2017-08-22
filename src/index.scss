@@ -6,3 +6,9 @@ html, body.blank {
 .content > div {
   opacity: 1 !important;
 }
+
+xos-form {
+  button + button {
+    margin-left: 10px;
+  }
+}
