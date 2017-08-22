@@ -1,0 +1,13 @@
+# ONOS with XOS features for docker-compose
+version: '2'
+
+services:
+
+   onos-progran:
+      image: parlakisik/progran
+      ports:
+       - "6655:6653" # OpenFlow
+       - "8103:8101" # ONOS SSH
+       - "8183:8181" # ONOS UI/API
+       - "9879:9876" # ONOS Clustering
+       - "4010:4010" # progran
