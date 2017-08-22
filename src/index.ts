@@ -15,6 +15,7 @@ import {xosCore} from './app/core/index';
 import {xosDataSources} from './app/datasources/index';
 import {xosViews} from './app/views/index';
 import {xosTemplate} from './app/template/index';
+import './app/mcord/index';
 
 import {
   interceptorConfig, userStatusInterceptor, CredentialsInterceptor,
@@ -40,7 +41,8 @@ angular
     xosViews,
     'ui.router',
     'ngResource',
-    xosTemplate // template module
+    xosTemplate, // template module
+    'mcord'
   ])
   .config(routesConfig)
   .config(interceptorConfig)

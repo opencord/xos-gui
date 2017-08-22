@@ -1,0 +1,112 @@
+$svg-bg: #24262d;
+
+$text-color: #c0c4c8;
+
+$node-bg-color: #2f323b;
+$node-stroke-color: #f6a821;
+$node-stroke-width: 2px;
+
+$link-stroke-color: #f6a821;
+$link-stroke-width: 2px;
+
+mcord-xran {
+  display: block;
+  height: 100%;
+  padding-top: 100px;
+  padding-left: 250px;
+  padding-right: 50px;
+
+  .btn-accent-active {
+    color: $svg-bg;
+    background-color: #f6a821;
+    border-color: #f6a821;
+  }
+
+  .bar-container {
+    height: 150px;
+    position: relative;
+
+    .bar {
+      height: 100%;
+      background-color: #f6a821;
+      width: 10px;
+      position: absolute;
+      bottom: 0;
+      transition: all .5s ease-in-out;
+    }
+
+    .label {
+      writing-mode: vertical-rl;
+      position: absolute;
+
+      &.left {
+        top: 0;
+        left: 10px;
+      }
+
+      &.right {
+        transform: rotate(180deg);
+        bottom: 0;
+        right: 35px;
+      }
+    }
+
+    #rightBar {
+      right: 10px;
+    }
+  }
+
+  .row + .row {
+    margin-top: 30px;
+  }
+
+  svg#xran {
+    width: 100%;
+    height: 600px;
+    //background: $svg-bg;
+
+    .node-group {
+
+      .node {
+        cursor: pointer;
+      }
+
+      .node > rect,
+      .node > circle{
+        stroke: $node-stroke-color;
+        stroke-width: $node-stroke-width;
+        fill: $node-bg-color;
+      }
+
+      .node > text {
+        fill: $text-color;
+        font-size: 20px;
+      }
+
+      .node .symbol {
+        fill-rule: evenodd;
+        stroke: #bbddff;
+        stroke-width: 4.0px;
+        fill: none;
+      }
+      .node .symbol-bg {
+        fill-rule: evenodd;
+        stroke: none;
+        fill: $svg-bg;
+      }
+
+      .node .icon {
+        stroke: $text-color;
+        fill: $text-color;
+      }
+    }
+
+    .link-group {
+      line {
+        stroke: $link-stroke-color;
+        stroke-width: $link-stroke-width;
+        cursor: pointer;
+      }
+    }
+  }
+}

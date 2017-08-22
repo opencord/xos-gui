@@ -1,0 +1,68 @@
+<!--
+Copyright 2017-present Open Networking Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="row">
+    <div class="col-xs-offset-2 col-xs-8">
+        <div class="row text-center">
+            <div class="col-xs-6">
+                <a class="btn btn-lg btn-block"
+                   ng-class="{'btn-accent': vm.config.association !== 'signal', 'btn-accent-active': vm.config.association === 'signal'}"
+                   ng-click="vm.setAssociation('signal')">
+                    Signal Based Association
+                </a>
+                <a class="btn btn-lg btn-block"
+                   ng-class="{'btn-accent': vm.config.association !== 'load', 'btn-accent-active': vm.config.association === 'load'}"
+                   ng-click="vm.setAssociation('load')">
+                    Load Based Association
+                </a>
+            </div>
+            <div class="col-xs-6">
+                <a class="btn btn-lg btn-block"
+                   ng-class="{'btn-accent': vm.config.logic, 'btn-accent-active': !vm.config.logic}"
+                   ng-click="vm.setLogic(false)">
+                    Scheduling logic: Off
+                </a>
+                <a class="btn btn-lg btn-block"
+                   ng-class="{'btn-accent': !vm.config.logic, 'btn-accent-active': vm.config.logic}"
+                   ng-click="vm.setLogic(true)">
+                    Scheduling logic: On
+                </a>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-xs-2 bar-container">
+                <div class="label left">Resource Allocation</div>
+                <div class="bar" id="leftBar"></div>
+            </div>
+            <div class="col-xs-4">
+                <ng-gauge size="150" type="full" thick="5" min="0" max="100" value="vm.gauges.left" cap="round" label="Resource Utilization"  foreground-color="#f6a821" background-color="rgba(255,255,255, 0.4)" append="%"></ng-gauge>
+            </div>
+            <div class="col-xs-4">
+                <ng-gauge size="150" type="full" thick="5" min="0" max="100" value="vm.gauges.right" cap="round" label="Resource Utilization"  foreground-color="#f6a821" background-color="rgba(255,255,255, 0.4)" append="%"></ng-gauge>
+            </div>
+            <div class="col-xs-2 bar-container">
+                <div class="label right">Resource Allocation</div>
+                <div class="bar" id="rightBar"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <svg id="xran"></svg>
+            </div>
+        </div>
+    </div>
+</div>
+
