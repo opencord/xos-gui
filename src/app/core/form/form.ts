@@ -55,7 +55,6 @@ class FormCtrl {
     }, true);
 
     this.$scope.$watch(() => this.ngModel, (model) => {
-      console.log(this.ngModel);
       // empty from old stuff
       this.formField = {};
       if (!model) {
@@ -64,7 +63,6 @@ class FormCtrl {
       let diff = _.difference(Object.keys(model), this.excludedField);
       let modelField = this.XosFormHelpers.parseModelField(diff);
       this.formField = this.XosFormHelpers.buildFormStructure(modelField, this.config.fields, model, this.config.order);
-      console.log(this.formField);
     });
 
   }
