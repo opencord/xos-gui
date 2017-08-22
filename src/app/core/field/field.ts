@@ -10,7 +10,6 @@ class FieldCtrl {
   public name: string;
   public ngModel: any;
   public getType = this.XosFormHelpers._getFieldFormat;
-  public formatLabel = this.ConfigHelpers.toLabel;
 
   constructor(
     private $attrs: ng.IAttributes,
@@ -31,6 +30,7 @@ class FieldCtrl {
       throw new Error('[xosField] Please provide a field definition');
     }
     if (!this.field.type) {
+      console.log(this.name, this.field);
       throw new Error('[xosField] Please provide a type in the field definition');
     }
     if (!this.$attrs['ngModel']) {
@@ -45,6 +45,9 @@ class FieldCtrl {
     }
 
   }
+  public formatLabel(label: string) {
+    return this.ConfigHelpers.toLabel(label);
+};
 }
 
 export const xosField: angular.IComponentOptions = {
