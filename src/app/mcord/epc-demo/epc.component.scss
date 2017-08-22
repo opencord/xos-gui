@@ -1,0 +1,60 @@
+$svg-bg: #24262d;
+
+$node-bg-color: #666;
+$node-stroke-color: #f6a821;
+$node-stroke-width: 2px;
+
+$link-stroke-color: #f6a821;
+$link-stroke-width: 2px;
+
+mcord-epc {
+  display: block;
+  height: 100%;
+  padding-top: 100px;
+  padding-left: 250px;
+  padding-right: 50px;
+
+  svg#mcord-epc {
+    width: 100%;
+    height: 1000px;
+    background: $svg-bg;
+
+    .node-group {
+
+      .node {
+        cursor: pointer;
+      }
+
+      .node > rect,
+      .node > circle{
+        stroke: $node-stroke-color;
+        stroke-width: $node-stroke-width;
+        fill: $node-bg-color;
+      }
+
+      .node > text {
+        fill: #fff;
+        font-size: 20px;
+      }
+
+      .node .symbol {
+        fill-rule: evenodd;
+        stroke: #bbddff;
+        stroke-width: 4.0px;
+        fill: none;
+      }
+      .node .symbol-bg {
+        fill-rule: evenodd;
+        stroke: none;
+        fill: $svg-bg;
+      }
+    }
+
+    .link-group {
+      line {
+        stroke: $link-stroke-color;
+        stroke-width: $link-stroke-width;
+      }
+    }
+  }
+}
