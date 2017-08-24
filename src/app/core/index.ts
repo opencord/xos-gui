@@ -46,6 +46,8 @@ import {xosLoader} from './loader/loader';
 import {xosDebugSummary} from './debug/debug-summary';
 import {XosDebugService} from './debug/debug.service';
 import {xosDebugModel} from './debug/debug-model';
+import {xosConfirm} from './confirm/confirm';
+import {XosConfirm} from './confirm/confirm.service';
 
 export const xosCore = 'xosCore';
 
@@ -67,6 +69,7 @@ angular
   .service('XosComponentInjector', XosComponentInjector)
   .service('XosDebouncer', XosDebouncer)
   .service('XosDebug', XosDebugService)
+  .service('XosConfirm', XosConfirm)
   .directive('xosLinkWrapper', xosLinkWrapper)
   .component('xosHeader', xosHeader)
   .component('xosFooter', xosFooter)
@@ -83,5 +86,6 @@ angular
   .component('xosKeyBindingPanel', xosKeyBindingPanel)
   .component('xosDebugSummary', xosDebugSummary)
   .component('xosDebugModel', xosDebugModel)
+  .component('xosConfirm', xosConfirm)
   .filter('pagination', PaginationFilter)
   .filter('arrayToList', ArrayToListFilter);
