@@ -26,6 +26,9 @@ exports.config = {
     keyboard: '../e2e/keyboard-shortcuts/*.spec.js',
     crud: '../e2e/crud/*.spec.js'
   },
+  capabilities: {
+    'browserName': 'chrome'
+  },
   onPrepare: function () {
     jasmine.getEnv().addReporter(new SpecReporter({
       spec: {
@@ -36,7 +39,6 @@ exports.config = {
   jasmineNodeOpts: {
     print: function() {},
     showColors: true, // Use colors in the command line report.
-    defaultTimeoutInterval: (parseInt(process.env.TIMEOUT, 10) + 1000) || 30 * 1000
   },
   allScriptsTimeout: parseInt(process.env.TIMEOUT, 10) || 10 * 1000
 };

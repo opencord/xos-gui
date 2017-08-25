@@ -25,6 +25,7 @@ const loginPage = require('./login.po');
 describe('XOS Login page', function() {
 
   beforeEach(() => {
+    browser.manage().deleteAllCookies();
     browser.get(`${config.url}/login`);
   });
 

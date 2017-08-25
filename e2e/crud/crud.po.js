@@ -19,19 +19,21 @@
 module.exports = new function(){
 
   // list view
-  this.tableRows = element.all(by.repeater('item in vm.data'));
-  this.tableColumn = element(by.repeater('item in vm.data').row(0))
-                      .all(by.repeater('col in vm.columns'));
+  this.tableRows = element.all(by.css('tbody > tr'));
+  this.tableColumn = element(by.css('tbody > tr:first-child'))
+                      .all(by.css('td'));
 
-  this.actionsColumn = element(by.repeater('item in vm.data').row(0))
+  this.actionsColumn = element(by.css('tbody > tr:first-child'))
     .element(by.css('td:last-child'));
 
-  this.deleteBtn = this.actionsColumn.all(by.tagName('a'));
+  this.deleteBtn = this.actionsColumn.all(by.css('a[title="delete"'));
+  this.detailBtn = this.actionsColumn.all(by.css('a[title="details"'));
 
   this.addBtn = element(by.linkText('Add'));
 
   // detail page
   this.formInputs = element.all(by.repeater('field in vm.config.inputs'));
+  this.nameInput = element.all(by.css('xos-form input')).first()
   this.formBtn = element(by.buttonText('Save'));
 
   this.nameField = element(by.css('[name="name"]'));

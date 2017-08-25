@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2017-present Open Networking Foundation
 
@@ -15,12 +14,26 @@
  * limitations under the License.
  */
 
+const gulp = require('gulp');
+const gulpProtractorAngular = require('gulp-angular-protractor');
 
-module.exports = new function(){
+const args = process.env.PT_ARGS ? process.env.PT_ARGS.split(' ') : [];
+const conf = process.env.PT_CONF || './conf/protractor.conf.jenkins.js'
 
-  this.graphTitle = element(by.css('xos-service-graph h1'));
-  this.graphSvg = element(by.css('xos-service-graph svg'));
 
-  this.summaryTitle = element(by.css('xos-dashboard > .row > .col-xs-12 > h2'));
-  this.summaryBoxes = element.all(by.css('.panel.panel-filled'));
-};
+gulp.task('protractor', callback => {
+
+  gulp
+    .src(['./e2e/**/*.js'])
+    .pipe(gulpProtractorAngular({
+      configFile: conf,
+      debug: false,
+      autoStartStopServer: true,
+      verbose: false,
+      args: args
+    }))
+    .on('error', e => {
+      console.log(e);
+    })
+    .on('end', callback);
+});

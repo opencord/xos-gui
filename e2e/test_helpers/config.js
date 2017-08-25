@@ -16,4 +16,4 @@
  */
 
 
-exports.url = process.env.UI_URL || 'http://192.168.46.100/xos/#';
+exports.url = process.env.UI_URL || 'http://127.0.0.1:4000/xos/#';

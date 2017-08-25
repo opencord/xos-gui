@@ -15,16 +15,29 @@
  * limitations under the License.
  */
 
+const SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
 exports.config = {
-  seleniumServerJar: '/home/teone/selenium/selenium-server-standalone-2.44.0.jar',
+  seleniumAddress: 'http://localhost:4444/wd/hub',
   capabilities: {
-    'browserName': 'firefox'
+    browserName: 'firefox',
+    'moz:firefoxOptions': {
+       args: [ "--headless" ]
+     }
   },
   specs: [
     '../e2e/**/*.spec.js'
   ],
+  onPrepare: function () {
+    jasmine.getEnv().addReporter(new SpecReporter({
+      spec: {
+        displayStacktrace: true
+      }
+    }));
+  },
   jasmineNodeOpts: {
-    showColors: true
+    print: function() {},
+    showColors: true,
+    allScriptsTimeout: 40000
   }
 };
