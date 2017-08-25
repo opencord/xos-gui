@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_cb223501",
+        "filename": "src/app/core/confirm/confirm.service.ts",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-08-25T16:47:46Z",
+      "side": 1,
+      "message": "cosmetic change, but being ES6 you can use the one liner: () \u003d\u003e config",
+      "range": {
+        "startLine": 43,
+        "startChar": 8,
+        "endLine": 45,
+        "endChar": 9
+      },
+      "revId": "701ea20670ec2a604a2222c8a877ff764eee2f62",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_4b7e45e6",
+        "filename": "src/app/core/confirm/confirm.service.ts",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-08-25T16:47:46Z",
+      "side": 1,
+      "message": "Can you format it like:\ncd()\n.then(() \u003d\u003e {\n  this.modalInstance.close();\n})\n.catch(err \u003d\u003e {\n  this.modalInstance.dismiss(err)\n});\n\nhaving the then/catch on separated lines makes it more readable",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 7
+      },
+      "revId": "701ea20670ec2a604a2222c8a877ff764eee2f62",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
