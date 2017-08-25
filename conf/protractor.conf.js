@@ -26,6 +26,9 @@ exports.config = {
     keyboard: '../e2e/keyboard-shortcuts/*.spec.js',
     crud: '../e2e/crud/*.spec.js'
   },
+  capabilities: {
+    'browserName': 'chrome'
+  },
   onPrepare: function () {
     jasmine.getEnv().addReporter(new SpecReporter({
       spec: {
