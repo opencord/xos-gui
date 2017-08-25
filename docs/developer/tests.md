@@ -18,20 +18,12 @@ There is a suite of basic end to test that are defined using [protractor](http:/
 
 These tests can be found in the `e2e` folder.
 
-_NOTE: Require protractor to be installed as a global module._
-
-### Setup
-```
-webdriver-manager update
-webdriver-manager start
-```
-
 ### Run the tests
 
 _Note that this tests are designed to work with the Mock R-CORD config_
 
 ```
-protractor conf/protractor.conf.js 
+npm run test:e2e
 ```
  
 Other paramenters you can pass are:
@@ -41,11 +33,5 @@ Other paramenters you can pass are:
 | UI_URL        | Address of the GUI (deaults to `http://192.168.46.100/spa/#` |
 | UI_PWD        | Password to login (needed only for remote connections)       |
 | TIMEOUT       | Time allowed for each test                                   |
- 
- #### Test suites
- 
- If you need to run test for only a particural suite you can use:
- 
- `protractor conf/protractor.conf.js --suite login`
- 
- Suites are defined in `cong/protractor.conf.js`
+| PT_ARGS		| Extra arguments for Protractor, eg: "--suite dashboard" (Suites are defined in `conf/protractor.conf.js`)     |
+| PT_CONF       | The path of the config file (eg: "./conf/protractor.conf.js")          
