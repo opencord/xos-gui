@@ -18,20 +18,12 @@ There is a suite of basic end to test that are defined using [protractor](http:/
 
 These tests can be found in the `e2e` folder.
 
-_NOTE: Require protractor to be installed as a global module._
-
-### Setup
-```
-webdriver-manager update
-webdriver-manager start
-```
-
 ### Run the tests
 
 _Note that this tests are designed to work with the Mock R-CORD config_
 
 ```
-protractor conf/protractor.conf.js 
+npm run test:e2e
 ```
  
 Other paramenters you can pass are:

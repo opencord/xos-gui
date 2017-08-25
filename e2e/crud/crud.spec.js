@@ -53,7 +53,7 @@ describe('XOS CRUD Page', function() {
         browser.get(`${config.url}/core/nodes/1`);
       });
       it('should have a form', () => {
-        expect(page.formInputs.count()).toBe(4);
+        expect(page.formInputs.count()).toBe(2);
         expect(page.formBtn.isPresent()).toBeTruthy();
       });
 
