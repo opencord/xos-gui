@@ -39,5 +39,5 @@ class XosSidePanelController {
 export const xosSidePanel: angular.IComponentOptions = {
   template: require('./side-panel.html'),
   controllerAs: 'vm',
-  controller: XosSidePanelController
+  controller: XosSidePanelController,
 };

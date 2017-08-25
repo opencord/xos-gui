@@ -18,36 +18,44 @@
 import {IXosConfirmConfig} from './confirm';
 
 export interface IXosConfirm {
+  modalInstance: any;
   open(config: IXosConfirmConfig) : void;
-  close(cb: Function) : void;
+  close(cb: any) : void;
   dismiss() : void;
 }
 
 export class XosConfirm implements IXosConfirm {
 
-  static $inject = ['$uibModal'];
+  static $inject = ['$uibModal', '$log'];
   public modalInstance;
 
   constructor(
     private $uibModal : any,
+    private $log: ng.ILogService,
   ) {
 
   }
 
   public open(config: IXosConfirmConfig) {
-
+    this.$log.debug('[XosConfirm] called open');
     this.modalInstance = this.$uibModal.open({
-      keyboard: false,
+      keyboard: true,
       component: 'xosConfirm',
       backdrop: 'static',
       resolve: {
         config: () => config
       }
     });
+
     return this.modalInstance;
   }
 
-  public close(cb: Function) {
+  public close(cb: any) {
+    // check if model instance exists
+    if (angular.isUndefined(this.modalInstance)) {
+      this.$log.debug('[XosConfirm] called close without a modalInstance');
+      return;
+    }
     cb()
       .then(() => {
         this.modalInstance.close();
