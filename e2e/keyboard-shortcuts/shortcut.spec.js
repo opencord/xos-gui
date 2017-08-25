@@ -25,7 +25,12 @@ describe('XOS Keyboard Shortcuts', function() {
     user.login();
   });
 
-  it('should open the side panel when ? is pressed', () => {
+  it('should open the side panel when / is pressed', () => {
+    page.pressKey('/');
+    expect(page.sidePanel.getAttribute('class')).toMatch('open');
+  });
+
+  xit('should open the side panel when ? is pressed', () => {
     page.pressKey('?');
     expect(page.sidePanel.getAttribute('class')).toMatch('open');
   });
