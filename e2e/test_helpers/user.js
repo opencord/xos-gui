@@ -17,6 +17,7 @@
 
 
 const fs = require('fs');
+const path = require('path');
 const config = require('./config');
 const P = require('bluebird');
 
@@ -28,7 +29,7 @@ const getPwd = () => {
     return process.env.UI_PWD;
   }
 
-  const pwdFile = fs.readFileSync('../../build/platform-install/credentials/xosadmin@opencord.org', 'utf8');
+  const pwdFile = fs.readFileSync(path.join(__dirname, '../../../../build/platform-install/credentials/xosadmin@opencord.org'), 'utf8');
   return pwdFile;
 };
 
