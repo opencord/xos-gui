@@ -51,11 +51,26 @@ const MockToastrConfig = {};
 const infoNotification = {
   model: 'TestModel',
   msg: {
-    changed_fields: ['backend_status'],
+    changed_fields: ['backend_status', 'backend_code'],
     pk: 1,
     object: {
       name: 'TestName',
-      backend_status: '0 - In Progress'
+      backend_status: 'In Progress',
+      backend_code: 0
+    }
+  }
+};
+
+const noNotification = {
+  model: 'TestModel',
+  skip_notification: true,
+  msg: {
+    changed_fields: ['backend_status', 'backend_code'],
+    pk: 1,
+    object: {
+      name: 'TestName',
+      backend_status: 'In Progress',
+      backend_code: 0
     }
   }
 };
@@ -74,6 +89,9 @@ describe('header component', () => {
       .value('toastrConfig', MockToastrConfig)
       .value('AuthService', MockAuth)
       .value('XosNavigationService', {})
+      .value('ConfigHelpers', {
+        stateWithParamsForJs: () => null
+      })
       .value('XosKeyboardShortcut', MockXosKeyboardShortcut)
       .value('StyleConfig', {
         logo: 'cord-logo.png',
@@ -92,6 +110,7 @@ describe('header component', () => {
 
     // clear notifications
     isolatedScope.notifications = [];
+    MockToastr.info.calls.reset();
   }));
 
   it('should render the appropriate logo', () => {
@@ -116,6 +135,8 @@ describe('header component', () => {
   });
 
   it('should configure toastr', () => {
+    delete MockToastrConfig['onTap'];
+
     expect(MockToastrConfig).toEqual({
       newestOnTop: false,
       positionClass: 'toast-top-right',
@@ -129,7 +150,14 @@ describe('header component', () => {
     sendEvent(infoNotification);
     scope.$digest();
 
-    expect(MockToastr.info).toHaveBeenCalledWith('Synchronization started for: TestName', 'TestModel');
+    expect(MockToastr.info).toHaveBeenCalledWith('Synchronization started for: TestName', 'TestModel', {extraData: {dest: null}});
+  });
+
+  it('should not display a toastr for a new event that use skip_notification', () => {
+    sendEvent(noNotification);
+    scope.$digest();
+
+    expect(MockToastr.info).not.toHaveBeenCalled();
   });
 
   // TODO test error and success toaster call

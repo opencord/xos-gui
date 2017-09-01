@@ -42,11 +42,12 @@ export default function XosLogDecorator($provide: ng.auto.IProvideService) {
         // eg: the first parameter is the group name
 
         const msg = arguments[0];
-        if (!isLogEnabled() && msg.indexOf('WebSocket') === 0) {
+
+        if (!isLogEnabled() && msg.indexOf('WebSocket') === -1) {
           return;
         }
 
-        if (!isEventLogEnabled() && msg.indexOf('WebSocket') > 0) {
+        if (!isEventLogEnabled() && msg.indexOf('WebSocket') > -1) {
           return;
         }
 
