@@ -26,13 +26,27 @@ import * as $ from 'jquery';
 import {IXosStyleConfig} from '../../../index';
 import {IXosSearchService, IXosSearchResult} from '../../datasources/helpers/search.service';
 import {IXosKeyboardShortcutService} from '../services/keyboard-shortcut';
+import {Subscription} from 'rxjs';
 
 export interface INotification extends IWSEvent {
   viewed?: boolean;
 }
 
 class HeaderController {
-  static $inject = ['$scope', '$rootScope', '$state', 'AuthService', 'SynchronizerStore', 'toastr', 'toastrConfig', 'XosNavigationService', 'StyleConfig', 'SearchService', 'XosKeyboardShortcut'];
+  static $inject = [
+    '$log',
+    '$scope',
+    '$rootScope',
+    '$state',
+    'AuthService',
+    'SynchronizerStore',
+    'toastr',
+    'toastrConfig',
+    'XosNavigationService',
+    'StyleConfig',
+    'SearchService',
+    'XosKeyboardShortcut'
+  ];
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
   public version: string;
@@ -42,7 +56,10 @@ class HeaderController {
   public query: string;
   public search: (query: string) => any[];
 
+  private syncStoreSubscription: Subscription;
+
   constructor(
+    private $log: ng.ILogService,
     private $scope: angular.IScope,
     private $rootScope: ng.IScope,
     private $state: IStateService,
@@ -55,17 +72,18 @@ class HeaderController {
     private SearchService: IXosSearchService,
     private XosKeyboardShortcut: IXosKeyboardShortcutService
   ) {
+
+  }
+
+  $onInit() {
+    this.$log.info('[XosHeader] Setup');
     this.version = require('../../../../package.json').version;
     angular.extend(this.toastrConfig, {
       newestOnTop: false,
       positionClass: 'toast-top-right',
       preventDuplicates: false,
       preventOpenDuplicates: false,
-      progressBar: true,
-      // autoDismiss: false,
-      // closeButton: false,
-      // timeOut: 0,
-      // tapToDismiss: false
+      progressBar: true
     });
 
     this.search = (query: string) => {
@@ -94,33 +112,46 @@ class HeaderController {
 
     this.userEmail = this.authService.getUser() ? this.authService.getUser().email : '';
 
-    this.syncStore.query()
+    this.syncStoreSubscription = this.syncStore.query()
       .subscribe(
         (event: IWSEvent) => {
-          $scope.$evalAsync(() => {
+          this.$scope.$evalAsync(() => {
             let toastrMsg: string;
             let toastrLevel: string;
-            if (event.msg.object.backend_status.indexOf('0') > -1) {
+            if (event.msg.object.backend_code === 0) {
               toastrMsg = 'Synchronization started for:';
               toastrLevel = 'info';
             }
-            else if (event.msg.object.backend_status.indexOf('1') > -1) {
+            else if (event.msg.object.backend_code === 1) {
               toastrMsg = 'Synchronization succedeed for:';
               toastrLevel = 'success';
             }
-            else if (event.msg.object.backend_status.indexOf('2') > -1) {
+            else if (event.msg.object.backend_code === 2) {
               toastrMsg = 'Synchronization failed for:';
               toastrLevel = 'error';
             }
 
             if (toastrLevel && toastrMsg) {
-              this.toastr[toastrLevel](`${toastrMsg} ${event.msg.object.name}`, event.model);
+              let model = event.msg.object.name;
+              let title = event.model;
+              if (angular.isUndefined(event.msg.object.name) || event.msg.object.name === null) {
+                model = `${event.msg.object.leaf_model_name} [${event.msg.object.id}]`;
+              }
+
+              if (!event.skip_notification) {
+                this.toastr[toastrLevel](`${toastrMsg} ${model}`, title);
+              }
             }
             // this.notifications.unshift(event);
             // this.newNotifications = this.getNewNotifications(this.notifications);
           });
         }
       );
+  }
+
+  $onDestroy() {
+    this.$log.info('[XosHeader] Teardown');
+    this.syncStoreSubscription.unsubscribe();
   }
 
   public getLogo(): string {
