@@ -36,7 +36,7 @@ export class SynchronizerStore {
         if (!e.msg || !e.msg.changed_fields) {
           return false;
         }
-        return e.msg.changed_fields.indexOf('backend_status') > -1;
+        return (e.msg.changed_fields.indexOf('backend_status') > -1 || e.msg.changed_fields.indexOf('backend_code') > -1) && !e.skip_notification;
       })
       .subscribe(
         (event: IWSEvent) => {
