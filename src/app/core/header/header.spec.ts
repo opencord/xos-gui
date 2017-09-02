@@ -55,7 +55,8 @@ const infoNotification = {
     pk: 1,
     object: {
       name: 'TestName',
-      backend_status: '0 - In Progress'
+      backend_status: 'In Progress',
+      backend_code: 0
     }
   }
 };
