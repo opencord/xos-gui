@@ -100,15 +100,15 @@ class HeaderController {
           $scope.$evalAsync(() => {
             let toastrMsg: string;
             let toastrLevel: string;
-            if (event.msg.object.backend_status.indexOf('0') > -1) {
+            if (event.msg.object.backend_code == 0) {
               toastrMsg = 'Synchronization started for:';
               toastrLevel = 'info';
             }
-            else if (event.msg.object.backend_status.indexOf('1') > -1) {
+            else if (event.msg.object.backend_code == 1) {
               toastrMsg = 'Synchronization succedeed for:';
               toastrLevel = 'success';
             }
-            else if (event.msg.object.backend_status.indexOf('2') > -1) {
+            else if (event.msg.object.backend_code == 2) {
               toastrMsg = 'Synchronization failed for:';
               toastrLevel = 'error';
             }

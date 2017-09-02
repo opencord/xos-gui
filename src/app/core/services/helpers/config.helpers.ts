@@ -89,6 +89,8 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'id',
     'policy_status',
     'backend_status',
+    'policy_code',
+    'backend_code',
   ]);
 
   constructor(
@@ -198,19 +200,21 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         col.link = item => this.relatedStateWithParams(f.relation.model, item[col.prop]);
       }
 
-      if (f.name === 'backend_status' || f.name === 'policy_status') {
+      if (f.name === 'backend_code' || f.name === 'policy_code') {
+        // compute name of status field
+        let status_field = f.name.substr(0, f.name.length - 'code'.length) + 'status';
         col.type = 'icon';
         col.hover = (item) => {
-          return item[f.name];
+          return item[status_field];
         };
         col.formatter = (item) => {
-          if (item[f.name].indexOf('1') > -1) {
+          if (item[f.name] == 1) {
             return 'check';
           }
-          if (item[f.name].indexOf('2') > -1) {
+          if (item[f.name] == 2) {
             return 'exclamation-circle';
           }
-          if (item[f.name].indexOf('0') > -1) {
+          if (item[f.name] == 0) {
             return 'clock-o';
           }
         };
