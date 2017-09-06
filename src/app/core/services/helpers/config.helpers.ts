@@ -257,7 +257,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         type: f.type,
         validators: this.formatValidators(f.validators),
         hint: f.hint,
-        default: f.default || null
+        default: this.formatDefaultValues(f.default)
       };
 
       // NOTE populate drop-downs based on relation
@@ -277,6 +277,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   }
 
   public modelToFormCfg(model: IXosModeldef): IXosFormCfg {
+
     const formCfg: IXosFormCfg = {
       formName: `${model.name}Form`,
       exclude: this.form_excluded_fields,
@@ -336,6 +337,21 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     };
 
     return formCfg;
+  }
+
+  private formatDefaultValues(val: any): any {
+
+    if (angular.isString(val)) {
+      const unquoted = val.split('"').join('').toLowerCase();
+      if (unquoted === 'true') {
+        return true;
+      }
+      else if (unquoted === 'false') {
+        return false;
+      }
+    }
+
+    return val || undefined;
   }
 
   private formatValidators(validators: IXosModelDefsFieldValidators[]): IXosFormInputValidator {
