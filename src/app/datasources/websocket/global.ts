@@ -23,6 +23,7 @@ import {IXosAppConfig} from '../../../index';
 
 export interface IWSEvent {
   model: string;
+  skip_notification?: boolean;
   msg: {
     changed_fields: string[],
     object?: any,
@@ -60,18 +61,20 @@ export class WebSocketEvent {
           return;
         }
 
-        this.$log.info(`[WebSocket] Received Event for: ${data.model} [${data.msg.pk}]`);
+        this.$log.info(`[WebSocket] Received Event for: ${data.model} [${data.msg.pk}]`, data);
 
         this._events.next(data);
 
         // NOTE update observers of parent classes
         if (data.msg.object.class_names && angular.isString(data.msg.object.class_names)) {
           const models = data.msg.object.class_names.split(',');
+          let event: IWSEvent = angular.copy(data);
           _.forEach(models, (m: string) => {
             // send event only if the parent class is not the same as the model class
-            if (data.model !== m) {
-              data.model = m;
-              this._events.next(data);
+            if (event.model !== m && m !== 'object') {
+              event.model = m;
+              event.skip_notification = true;
+              this._events.next(event);
             }
           });
         }
