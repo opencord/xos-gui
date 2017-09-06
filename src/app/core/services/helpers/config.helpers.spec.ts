@@ -211,6 +211,7 @@ describe('The ConfigHelpers service', () => {
 
       expect(cols[4]).not.toBeDefined();
     });
+
   });
 
   describe('the modelToTableCfg method', () => {
@@ -244,6 +245,26 @@ describe('The ConfigHelpers service', () => {
       expect(inputs[2].label).toBe('Else');
       expect(inputs[2].validators.min).toBe(20);
       expect(inputs[2].validators.max).toBe(40);
+    });
+
+    it('should convert boolean defaults to real booleans', () => {
+      const fields: IXosModelDefsField[] = [
+        {
+          type: 'boolean',
+          name: 'active',
+          default: '"True"',
+          validators: []
+        },
+        {
+          type: 'boolean',
+          name: 'disabled',
+          default: '"False"',
+          validators: []
+        },
+      ];
+      const form_fields = service.modelFieldToInputCfg(fields);
+      expect(form_fields[0].default).toBe(true);
+      expect(form_fields[1].default).toBe(false);
     });
   });
 

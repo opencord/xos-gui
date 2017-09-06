@@ -57,7 +57,7 @@ class FieldCtrl {
     }
 
     // NOTE set default value (if any)
-    if (this.field.default && !angular.isDefined(this.ngModel)) {
+    if (angular.isDefined(this.field.default) && angular.isUndefined(this.ngModel)) {
       if (this.field.type === 'number') {
         this.ngModel = parseInt(this.field.default, 10);
       }
