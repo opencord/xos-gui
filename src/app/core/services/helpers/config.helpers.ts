@@ -160,7 +160,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
                   // TODO understand why it does not go directly in catch
                   throw new Error();
                 }
-                this.toastr.info(`${model.name} ${obj.name} succesfully deleted`);
+                this.toastr.info(`${model.name} ${obj.name} successfully deleted`);
               })
               .catch(() => {
                 this.toastr.error(`Error while deleting ${obj.name}`);
@@ -303,7 +303,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         return;
       }
 
-      const model = angular.copy(item);
+      const itemCopy = angular.copy(item);
 
       // TODO remove ManyToMany relations and save them separately (how??)
       delete item.networks;
@@ -315,24 +315,26 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         }
       });
 
+      const itemName = (typeof(itemCopy.name) != 'undefined')? itemCopy.name : itemCopy.leaf_model_name;
+
       item.$save()
         .then((res) => {
           formCfg.feedback = {
             show: true,
-            message: `${model.name} succesfully saved`,
+            message: `${itemName} successfully saved`,
             type: 'success',
             closeBtn: true
           };
-          this.toastr.success(`${model.name} succesfully saved`);
+          this.toastr.success(`${itemName} successfully saved`);
         })
         .catch(err => {
           formCfg.feedback = {
             show: true,
-            message: `Error while saving ${model.name}: ${err.error}. ${err.specific_error || ''}`,
+            message: `Error while saving ${itemName}: ${err.error}. ${err.specific_error || ''}`,
             type: 'danger',
             closeBtn: true
           };
-          this.toastr.error(err.specific_error || '', `Error while saving ${model.name}: ${err.error}`);
+          this.toastr.error(err.specific_error || '', `Error while saving ${itemName}: ${err.error}`);
         });
     };
 
