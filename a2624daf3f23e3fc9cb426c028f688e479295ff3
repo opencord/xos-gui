@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa5d592f_1949b78b",
+        "filename": "src/app/core/services/helpers/config.helpers.ts",
+        "patchSetId": 2
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-09-06T23:07:48Z",
+      "side": 1,
+      "message": "wont\u0027t this print \"modelName undefined successfully deleted\" if obj.name is undefined?",
+      "range": {
+        "startLine": 163,
+        "startChar": 34,
+        "endLine": 163,
+        "endChar": 59
+      },
+      "revId": "a2624daf3f23e3fc9cb426c028f688e479295ff3",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa5d592f_39447b73",
+        "filename": "src/app/core/services/helpers/config.helpers.ts",
+        "patchSetId": 2
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-09-06T23:07:48Z",
+      "side": 1,
+      "message": "why not angular.isUndefined(itemCopy.name)?",
+      "range": {
+        "startLine": 318,
+        "startChar": 24,
+        "endLine": 318,
+        "endChar": 61
+      },
+      "revId": "a2624daf3f23e3fc9cb426c028f688e479295ff3",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
