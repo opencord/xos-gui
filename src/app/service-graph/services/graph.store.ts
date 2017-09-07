@@ -279,31 +279,33 @@ export class XosServiceGraphStore implements IXosServiceGraphStore {
       const links = _.reduce(data.tenants, (links: IXosServiceGraphLink[], tenant: IXosTenantModel) => {
         const sourceId = this.getSourceId(tenant);
         const targetId = this.getTargetId(tenant);
-        if (!angular.isDefined(targetId) || !angular.isDefined(sourceId)) {
-          // if the tenant is not pointing to anything, don't draw links
-          return links;
+
+        if (angular.isDefined(targetId)) {
+          const tenantToSubscriber = {
+            id: `${tenant.d3Id}_${targetId}`,
+            source: this.getNodeIndexById(tenant.d3Id, nodes),
+            target: this.getNodeIndexById(targetId, nodes),
+            model: tenant
+          };
+
+          if (angular.isDefined(tenantToSubscriber.source) && angular.isDefined(tenantToSubscriber.target)) {
+            links.push(tenantToSubscriber);
+          }
         }
 
-        const tenantToProvider = {
-          id: `${sourceId}_${tenant.d3Id}`,
-          source: this.getNodeIndexById(sourceId, nodes),
-          target: this.getNodeIndexById(tenant.d3Id, nodes),
-          model: tenant
-        };
+        if (angular.isDefined(sourceId)) {
+          const tenantToProvider = {
+            id: `${sourceId}_${tenant.d3Id}`,
+            source: this.getNodeIndexById(sourceId, nodes),
+            target: this.getNodeIndexById(tenant.d3Id, nodes),
+            model: tenant
+          };
 
-        const tenantToSubscriber = {
-          id: `${tenant.d3Id}_${targetId}`,
-          source: this.getNodeIndexById(tenant.d3Id, nodes),
-          target: this.getNodeIndexById(targetId, nodes),
-          model: tenant
-        };
+          if (angular.isDefined(tenantToProvider.source) && angular.isDefined(tenantToProvider.target)) {
+            links.push(tenantToProvider);
+          }
+        }
 
-        if (angular.isDefined(tenantToProvider.source) && angular.isDefined(tenantToProvider.target)) {
-          links.push(tenantToProvider);
-        }
-        if (angular.isDefined(tenantToSubscriber.source) && angular.isDefined(tenantToSubscriber.target)) {
-          links.push(tenantToSubscriber);
-        }
         return links;
       }, []);
 
