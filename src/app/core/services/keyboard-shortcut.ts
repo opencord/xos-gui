@@ -106,8 +106,8 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
         return;
       }
 
-      if (this.allowedModifiers.indexOf(e.key) > -1) {
-        this.addActiveModifierKey(e.key);
+      if (this.allowedModifiers.indexOf(e.key.toLowerCase()) > -1) {
+        this.addActiveModifierKey(e.key.toLowerCase());
         return;
       }
 
@@ -126,8 +126,8 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
     });
 
     $('body').on('keyup', (e) => {
-      if (this.allowedModifiers.indexOf(e.key) > -1) {
-        this.removeActiveModifierKey(e.key);
+      if (this.allowedModifiers.indexOf(e.key.toLowerCase()) > -1) {
+        this.removeActiveModifierKey(e.key.toLowerCase());
         return;
       }
     });
