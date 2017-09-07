@@ -81,8 +81,10 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'validators',
     'password',
     'backend_need_delete',
+    'backend_need_delete_policy',
     'backend_need_reap',
-    'leaf_model_name'
+    'leaf_model_name',
+    'link_deleted_count',
   ];
 
   public form_excluded_fields = this.excluded_fields.concat([
