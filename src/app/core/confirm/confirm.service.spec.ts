@@ -23,6 +23,8 @@ import {IXosConfirm, XosConfirm} from './confirm.service';
 let service: IXosConfirm;
 let modal;
 let modalInstance;
+let q;
+let scope;
 
 describe('The XosConfirm service', () => {
 
@@ -33,10 +35,14 @@ describe('The XosConfirm service', () => {
 
     angular.mock.inject((
       XosConfirm: IXosConfirm,
-      $uibModal: any
+      $uibModal: any,
+      $q: ng.IQService,
+      $rootScope: ng.IScope
     ) => {
       service = XosConfirm;
       modal = $uibModal;
+      q = $q;
+      scope = $rootScope;
     });
   });
 
@@ -54,19 +60,31 @@ describe('The XosConfirm service', () => {
         }]
       };
 
-    it('should open a modal', () => {
-      spyOn(modal, 'open');
+    it('should open the modal', () => {
+      spyOn(modal, 'open').and.returnValue('fake');
       modalInstance = service.open(test1);
       expect(modal.open).toHaveBeenCalled();
+      expect(modalInstance).toEqual('fake');
+      expect(service.modalInstance).toEqual('fake');
     });
-  });
 
-  // describe('the close method', () => {
-  //
-  // });
-  //
-  // describe('the dismiss method', () => {
-  //
-  // });
+    it('should close the modal', (done) => {
+      const p = q.defer();
+      const cb = jasmine.createSpy('cb').and.returnValue(p.promise);
+      service.modalInstance = {
+        close: jasmine.createSpy('close')
+      };
+
+      service.close(cb);
+      expect(cb).toHaveBeenCalled();
+      p.resolve();
+      scope.$apply();
+      expect(service.modalInstance.close).toHaveBeenCalled();
+      done();
+    });
+
+
+
+  });
 
 });
