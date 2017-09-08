@@ -24,7 +24,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const env = process.env.NODE_ENV || 'production';
 const brand = process.env.BRAND || 'cord';
 
 module.exports = {
@@ -80,7 +79,7 @@ module.exports = {
   },
   plugins: [
     new CopyWebpackPlugin([
-      { from: `./conf/app/app.config.${env}.js`, to: `app.config.js` },
+      { from: `./conf/app/app.config.production.js`, to: `app.config.js` },
       { from: `./conf/app/style.config.${brand}.js`, to: `style.config.js` },
     ]),
     new webpack.optimize.OccurrenceOrderPlugin(),
