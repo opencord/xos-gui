@@ -116,7 +116,7 @@ describe('The Navigation service', () => {
     service.add(testRoute);
     service.add(testRoute);
     expect($log.warn).toHaveBeenCalled();
-    expect($log.warn).toHaveBeenCalledWith(`[XosNavigation] Route with label: ${testRoute.label}, state: ${testRoute.state} and parent: ${testRoute.parent} already exist`);
+    expect($log.warn).toHaveBeenCalledWith(`[XosNavigation] Route with label: ${testRoute.label}, state: ${testRoute.state} and parent: ${testRoute.parent} already exists`);
     expect(service.query()).toEqual(defaultRoutes.concat([testRoute]));
   });
 });
