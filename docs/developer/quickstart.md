@@ -51,8 +51,8 @@ then pick any file and make a change, you'll see the GUI reload.
 
 There are two configuration file available in the application, and they depend on the environment. You can find the various possibilities in `conf/app`, and they regard application constants, such as `apiEndpoint`, or branding elements, such as `projectName`.
 
-To load a different configration file you can use two environment variables:
-- `NODE_ENV`: to configure the app constants (eg: `dev`, `production`)
+To load a different configuration file you can use two environment variables:
+- `PROXY`: you can use this variable to send request to an arbitrary XOS installation (eg: `clnode022.clemson.cloudlab.us:8080`)
 - `BRAND`: to configure style constants (eg: `cord`, `opencloud`)
 
 You can also specify a different installation of XOS as backend by using the `PROXY` environment variable.
