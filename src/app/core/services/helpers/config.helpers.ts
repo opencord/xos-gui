@@ -40,6 +40,7 @@ export interface IXosConfigHelpersService {
 
 export class ConfigHelpers implements IXosConfigHelpersService {
   static $inject = [
+    '$log',
     '$state',
     'toastr',
     'XosModelStore'];
@@ -64,6 +65,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   ];
 
   constructor(
+    private $log: ng.ILogService,
     private $state: ng.ui.IStateService,
     private toastr: ng.toastr.IToastrService,
     private XosModelStore: IXosModelStoreService
@@ -352,15 +354,25 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
   // augment a select field with related model informations
   private populateSelectField(field: IXosModelDefsField, input: IXosFormInput): void {
+
+    if (field.relation.model.indexOf('_decl') > -1) {
+      field.relation.model = field.relation.model.replace('_decl', '');
+    }
+
     this.XosModelStore.query(field.relation.model)
-      .subscribe(res => {
-        input.options = _.map(res, item => {
-          let opt = {id: item.id, label: item.humanReadableName ? item.humanReadableName : item.name};
-          if (!angular.isDefined(item.humanReadableName) && !angular.isDefined(item.name)) {
-            opt.label = item.id;
-          }
-          return opt;
-        });
-      });
+      .subscribe(
+        res => {
+          input.options = _.map(res, item => {
+            let opt = {id: item.id, label: item.humanReadableName ? item.humanReadableName : item.name};
+            if (!angular.isDefined(item.humanReadableName) && !angular.isDefined(item.name)) {
+              opt.label = item.id;
+            }
+            return opt;
+          });
+        },
+        err => {
+          this.$log.error(`[XOSConfigHelpers] Failed to build relations for ${field.relation.model}`);
+        }
+      );
   }
 }

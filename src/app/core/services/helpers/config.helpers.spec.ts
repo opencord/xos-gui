@@ -244,9 +244,10 @@ describe('The ConfigHelpers service', () => {
   });
 
   describe('the private methods', () => {
-    let modelStoreMock, toastr, auth, stateMock;
+    let modelStoreMock, toastr, auth, stateMock, logMock;
 
-    beforeEach(angular.mock.inject((_toastr_, AuthService) => {
+    beforeEach(angular.mock.inject(($log, _toastr_, AuthService) => {
+      logMock = $log;
       modelStoreMock = {
         query: () => {
           const subject = new BehaviorSubject([
@@ -277,7 +278,7 @@ describe('The ConfigHelpers service', () => {
         test: 2
       };
       it('should add the formatted data to the column definition', () => {
-        service = new ConfigHelpers(stateMock, toastr, modelStoreMock);
+        service = new ConfigHelpers(logMock, stateMock, toastr, modelStoreMock);
         service['populateRelated'](item, item.test, field);
         expect(item['test-formatted']).toBe('second');
       });
@@ -293,7 +294,7 @@ describe('The ConfigHelpers service', () => {
       };
 
       it('should add the available choice to the select', () => {
-        service = new ConfigHelpers(stateMock, toastr, modelStoreMock);
+        service = new ConfigHelpers(logMock, stateMock, toastr, modelStoreMock);
         service['populateSelectField'](field, input);
         expect(input.options).toEqual([
           {id: 1, label: 'test'},
