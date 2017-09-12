@@ -23,6 +23,7 @@ import * as _ from 'lodash';
 import {IXosFormCfg} from '../../core/form/form';
 import {IXosTableCfg} from '../../core/table/table';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
+import {Subscription} from 'rxjs';
 
 interface IXosCrudRelationBaseTabData {
   model: any;
@@ -64,7 +65,7 @@ export class XosCrudRelationService implements IXosCrudRelationService {
 
   public getModel (r: IXosModelRelation, id: string | number): Promise<IXosCrudRelationFormTabData> {
     const d = this.$q.defer();
-    this.XosModelStore.get(r.model, id)
+    const subscription: Subscription = this.XosModelStore.get(r.model, id)
       .subscribe(
         item => {
           this.$log.debug(`[XosCrud] Loaded manytoone relation with ${r.model} on ${r.on_field}`, item);
@@ -76,6 +77,8 @@ export class XosCrudRelationService implements IXosCrudRelationService {
           };
 
           d.resolve(data);
+
+          subscription.unsubscribe();
         },
         err => d.reject
       );
@@ -84,7 +87,6 @@ export class XosCrudRelationService implements IXosCrudRelationService {
 
   public getModels(r: IXosModelRelation, source_id: string | number): Promise<IXosCrudRelationTableTabData> {
     const d = this.$q.defer();
-
     this.XosModelStore.query(r.model)
       .subscribe(
         items => {

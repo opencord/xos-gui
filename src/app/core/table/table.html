@@ -28,7 +28,7 @@ limitations under the License.
         <table ng-class="vm.classes">
         <thead>
         <tr>
-            <th ng-repeat="col in vm.config.columns">
+            <th ng-repeat="col in ::vm.config.columns">
                 {{col.label}}
                 <div ng-if="vm.config.order">
                     <a href="" ng-click="vm.orderBy = col.prop; vm.reverse = false">
