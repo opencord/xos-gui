@@ -159,7 +159,7 @@ export const xosTable: angular.IComponentOptions = {
   controllerAs: 'vm',
   controller: TableCtrl,
   bindings: {
-    data: '=',
+    data: '<',
     config: '='
   }
 };

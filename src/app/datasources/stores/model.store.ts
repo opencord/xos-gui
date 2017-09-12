@@ -46,6 +46,7 @@ export class XosModelStore implements IXosModelStoreService {
   }
 
   public query(modelName: string, apiUrl?: string): Observable<any> {
+    this.$log.debug(`[XosModelStore] QUERY: ${modelName}`);
     // if there isn't already an observable for that item
     // create a new one and .next() is called by this.loadInitialData once data are received
     if (!this._collections[modelName]) {
@@ -54,6 +55,7 @@ export class XosModelStore implements IXosModelStoreService {
     }
     // else manually trigger the next with the last know value to trigger the subscribe method of who's requesting this data
     else {
+      this.$log.debug(`[XosModelStore] QUERY: Calling "next" on: ${modelName}`);
       this.efficientNext(this._collections[modelName]);
     }
 
@@ -100,28 +102,21 @@ export class XosModelStore implements IXosModelStoreService {
   }
 
   public get(modelName: string, modelId: string | number): Observable<any> {
-    const subject = new BehaviorSubject([]);
+    this.$log.debug(`[XosModelStore] GET: ${modelName} [${modelId}]`);
+    const subject = new BehaviorSubject({});
 
-    const _findModel = (subject) => {
-      this._collections[modelName]
-        .subscribe((res) => {
-          const model = _.find(res, {id: modelId});
-          if (model) {
-            subject.next(model);
-          }
-        });
-    };
+    if (angular.isString(modelId)) {
+      modelId = parseInt(modelId, 10);
+    }
 
-    if (!this._collections[modelName]) {
-      // cache the models in that collection
-      this.query(modelName)
-        .subscribe((res) => {
-          _findModel(subject);
-        });
-    }
-    else {
-      _findModel(subject);
-    }
+    this.query(modelName)
+      .subscribe((res) => {
+        const model = _.find(res, {id: modelId});
+        if (model) {
+          this.$log.debug(`[XosModelStore] GET: Calling "next" on: ${modelName} [${modelId}]`);
+          subject.next(model);
+        }
+      });
 
     return subject.asObservable();
   }

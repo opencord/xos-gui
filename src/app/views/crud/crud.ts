@@ -27,6 +27,7 @@ import './crud.scss';
 import {IXosCrudRelationService} from './crud.relations.service';
 import {IXosDebugService, IXosDebugStatus} from '../../core/debug/debug.service';
 import {IXosKeyboardShortcutService} from '../../core/services/keyboard-shortcut';
+import {Subscription} from 'rxjs';
 
 export interface IXosModelRelation {
   model: string;
@@ -73,6 +74,8 @@ class CrudController {
   };
   public debugTab: boolean;
 
+  private subscription: Subscription;
+
   constructor(
     private $scope: angular.IScope,
     private $log: angular.ILogService,
@@ -109,24 +112,6 @@ class CrudController {
       this.$scope.$apply();
     });
 
-    this.store.query(this.data.model)
-      .subscribe(
-        (event) => {
-          // NOTE Observable mess with $digest cycles, we need to schedule the expression later
-          $scope.$evalAsync(() => {
-            this.tableData = event;
-
-            // if it is a detail page for an existing model
-            if ($stateParams['id'] && $stateParams['id'] !== 'add') {
-              this.related.onetomany = _.filter($state.current.data.relations, {type: 'onetomany'});
-              this.related.manytoone = _.filter($state.current.data.relations, {type: 'manytoone'});
-              this.model = _.find(this.tableData, {id: parseInt($stateParams['id'], 10)});
-              this.getRelatedModels(this.related, this.model);
-            }
-          });
-        }
-      );
-
     // if it is a detail page
     if ($stateParams['id']) {
       this.list = false;
@@ -137,6 +122,21 @@ class CrudController {
         const endpoint = this.XosModelDiscovererService.getApiUrlFromModel(this.XosModelDiscovererService.get(this.data.model));
         const resource = this.ModelRest.getResource(endpoint);
         this.model = new resource({});
+      }
+      else {
+        this.subscription = this.store.get(this.data.model, $stateParams['id'])
+          .first(val => {
+            // NOTE emit an event only if we have an object, and only the first time we have it
+            return Object.keys(val).length > 0;
+          })
+          .subscribe(res => {
+            $scope.$evalAsync(() => {
+              this.related.onetomany = _.filter($state.current.data.relations, {type: 'onetomany'});
+              this.related.manytoone = _.filter($state.current.data.relations, {type: 'manytoone'});
+              this.model = res;
+              this.getRelatedModels(this.related, this.model);
+            });
+          });
       }
 
       this.XosKeyboardShortcut.registerKeyBinding({
@@ -195,7 +195,22 @@ class CrudController {
       //   },
       //   description: 'Clear selected item'
       // }, 'view');
+
+      this.subscription = this.store.query(this.data.model)
+        .subscribe(
+          (event) => {
+            // NOTE Observable mess with $digest cycles, we need to schedule the expression later
+            $scope.$evalAsync(() => {
+              this.tableData = event;
+            });
+          }
+        );
     }
+  }
+
+  $onDestroy() {
+    this.subscription.unsubscribe();
+    this.$log.info(`[XosCrud] Destroying component`);
   }
 
   public iterateItems() {
