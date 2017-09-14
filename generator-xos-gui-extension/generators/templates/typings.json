@@ -1,0 +1,18 @@
+{
+  "globalDependencies": {
+    "angular": "registry:dt/angular#1.5.0+20161208205636",
+    "angular-cookies": "registry:dt/angular-cookies#1.4.0+20160317120654",
+    "angular-mocks": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-mocks.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
+    "angular-resource": "registry:dt/angular-resource#1.5.0+20161114123626",
+    "angular-ui-router": "registry:dt/angular-ui-router#1.1.5+20160707113237",
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
+    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#dc9dabe74a5be62613b17a3605309783a12ff28a",
+    "jasmine-jquery": "registry:dt/jasmine-jquery#1.5.8+20161128184045",
+    "jquery": "registry:dt/jquery#1.10.0+20161119044246",
+    "require": "registry:dt/require#2.1.20+20160316155526",
+    "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654"
+  },
+  "dependencies": {
+    "angular-toastr": "registry:dt/angular-toastr#1.6.0+20160708003927"
+  }
+}
