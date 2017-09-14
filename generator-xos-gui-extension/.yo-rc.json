@@ -1,0 +1,6 @@
+{
+  "generator-xos-gui-extension": {
+    "defaultFolder": "../../xos-gui-extensions/",
+    "xos_services": "../../xos_services/"
+  }
+}
