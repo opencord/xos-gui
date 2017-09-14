@@ -1,0 +1,16 @@
+{
+  "name": "generator-xos-gui-extension",
+  "version": "1.0.0",
+  "description": "Yeoman generator for creating new XOS GUI Extensions",
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "author": "Open Networking Foundation",
+  "license": "Apache-2.0",
+  "files": [
+    "generators"
+  ],
+  "dependencies": {
+    "yeoman-generator": "^1.1.1"
+  }
+}
