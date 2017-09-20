@@ -13,9 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-
-<div class="row" ng-if="vm.ngModel[field]" ng-repeat="field in vm.debugFields">
-    <div class="col-xs-12">
+<div class="row" ng-repeat="field in vm.debugFields">
+    <div class="col-xs-12" ng-if="vm.ngModel[field] !== undefined">
         <label>{{vm.toLabel(field)}}</label>
         <pre>{{vm.parseField(field, vm.ngModel[field])}}</pre>
     </div>
