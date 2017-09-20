@@ -85,6 +85,8 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'backend_need_reap',
     'leaf_model_name',
     'link_deleted_count',
+    'policy_code',
+    'backend_code',
   ];
 
   public form_excluded_fields = this.excluded_fields.concat([
@@ -202,18 +204,21 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       }
 
       if (f.name === 'backend_status' || f.name === 'policy_status') {
+
+        const statusCol = f.name === 'backend_status' ? 'backend_code' : 'policy_code';
+
         col.type = 'icon';
         col.hover = (item) => {
           return item[f.name];
         };
         col.formatter = (item) => {
-          if (item[f.name].indexOf('1') > -1) {
+          if (parseInt(item[statusCol], 10) === 1) {
             return 'check';
           }
-          if (item[f.name].indexOf('2') > -1) {
+          if (parseInt(item[statusCol], 10) === 2) {
             return 'exclamation-circle';
           }
-          if (item[f.name].indexOf('0') > -1) {
+          if (parseInt(item[statusCol], 10) === 0) {
             return 'clock-o';
           }
         };
