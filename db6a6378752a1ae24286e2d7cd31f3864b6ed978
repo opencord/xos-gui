@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a5c5d37_73c1ebe3",
+        "filename": "generator-xos-gui-extension/generators/index.js",
+        "patchSetId": 6
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-09-26T16:59:04Z",
+      "side": 1,
+      "message": "shouldn\u0027t we let the user decide the folder? What if I want to create it somewhere else (for example inside a service folder or in the profile folder) ?\n\nIn general yeoman generator create the content in the directory were they are executed, in this case what would happen if I invoke it from somewhere else (eg: my home root) ?",
+      "range": {
+        "startLine": 53,
+        "startChar": 6,
+        "endLine": 70,
+        "endChar": 9
+      },
+      "revId": "db6a6378752a1ae24286e2d7cd31f3864b6ed978",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a5c5d37_13b06f8a",
+        "filename": "generator-xos-gui-extension/generators/index.js",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-09-26T16:59:04Z",
+      "side": 1,
+      "message": "This confuse me a lot. I think we\u0027re going down a complex way. Being the generator installed as a global tool generating the boilerplate where the generator is ran would make things simpler",
+      "range": {
+        "startLine": 79,
+        "startChar": 20,
+        "endLine": 79,
+        "endChar": 91
+      },
+      "revId": "db6a6378752a1ae24286e2d7cd31f3864b6ed978",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a5c5d37_d3a9b725",
+        "filename": "generator-xos-gui-extension/generators/index.js",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-09-26T16:59:04Z",
+      "side": 1,
+      "message": "Se previous comments, but in general is not advisable to just concatenate paths. What if \"answers.path \u003d I do not exist\"?\n\nIn node there\u0027s a path module that helps with this kind of validations.",
+      "range": {
+        "startLine": 82,
+        "startChar": 28,
+        "endLine": 82,
+        "endChar": 56
+      },
+      "revId": "db6a6378752a1ae24286e2d7cd31f3864b6ed978",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
