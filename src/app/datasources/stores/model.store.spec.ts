@@ -69,6 +69,10 @@ describe('The ModelStore service', () => {
       .service('ConfigHelpers', ConfigHelpers) // TODO mock
       .service('AuthService', AuthService)
       .constant('AppConfig', MockAppCfg)
+      .value('XosModeldefsCache', {
+        get: jasmine.createSpy('XosModeldefsCache.get').and.returnValue({}),
+        getApiUrlFromModel: jasmine.createSpy('XosModeldefsCache.getApiUrlFromModel')
+      })
       .service('XosDebouncer', XosDebouncer);
 
     angular.mock.module('ModelStore');

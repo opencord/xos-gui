@@ -24,11 +24,11 @@ import {Subscription} from 'rxjs';
 import {XosServiceGraphConfig as config} from '../../graph.config';
 import {IXosDebouncer} from '../../../core/services/helpers/debounce.helper';
 import {IXosServiceGraph, IXosServiceGraphLink, IXosServiceGraphNode} from '../../interfaces';
-import {IXosModelDiscovererService} from '../../../datasources/helpers/model-discoverer.service';
 import {IXosSidePanelService} from '../../../core/side-panel/side-panel.service';
 import {IXosGraphHelpers} from '../../services/d3-helpers/graph.helpers';
 import {IXosServiceGraphExtender, IXosServiceGraphReducer} from '../../services/graph.extender';
 import {IXosServiceInstanceGraphStore} from '../../services/service-instance.graph.store';
+import {IXosModeldefsCache} from '../../../datasources/helpers/modeldefs.service';
 
 class XosFineGrainedTenancyGraphCtrl {
   static $inject = [
@@ -59,7 +59,7 @@ class XosFineGrainedTenancyGraphCtrl {
     private $log: ng.ILogService,
     private XosServiceInstanceGraphStore: IXosServiceInstanceGraphStore,
     private XosDebouncer: IXosDebouncer,
-    private XosModelDiscoverer: IXosModelDiscovererService,
+    private XosModeldefsCache: IXosModeldefsCache,
     private XosSidePanel: IXosSidePanelService,
     private XosGraphHelpers: IXosGraphHelpers,
     private XosServiceGraphExtender: IXosServiceGraphExtender
@@ -352,7 +352,7 @@ class XosFineGrainedTenancyGraphCtrl {
         }
         selectedModel = n.id;
         const modelName = n.model['class_names'].split(',')[0];
-        const formConfig = this.XosModelDiscoverer.get(modelName).formCfg;
+        const formConfig = this.XosModeldefsCache.get(modelName).formCfg;
         const model = angular.copy(n.model);
         delete model.d3Id;
         this.XosSidePanel.injectComponent('xosForm', {config: formConfig, ngModel: model});

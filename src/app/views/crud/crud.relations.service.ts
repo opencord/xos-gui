@@ -18,12 +18,12 @@
 
 import {IXosModelRelation} from './crud';
 import {IXosModelStoreService} from '../../datasources/stores/model.store';
-import {IXosModelDiscovererService} from '../../datasources/helpers/model-discoverer.service';
 import * as _ from 'lodash';
 import {IXosFormCfg} from '../../core/form/form';
 import {IXosTableCfg} from '../../core/table/table';
 import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
 import {Subscription} from 'rxjs';
+import {IXosModeldefsCache} from '../../datasources/helpers/modeldefs.service';
 
 interface IXosCrudRelationBaseTabData {
   model: any;
@@ -51,16 +51,16 @@ export class XosCrudRelationService implements IXosCrudRelationService {
     '$log',
     '$q',
     'XosModelStore',
-    'XosModelDiscoverer',
-    'ConfigHelpers'
+    'ConfigHelpers',
+    'XosModeldefsCache'
   ];
 
   constructor (
     private $log: ng.ILogService,
     private $q: ng.IQService,
     private XosModelStore: IXosModelStoreService,
-    private XosModelDiscovererService: IXosModelDiscovererService,
-    private ConfigHelpers: IXosConfigHelpersService
+    private ConfigHelpers: IXosConfigHelpersService,
+    private XosModeldefsCache: IXosModeldefsCache
   ) {}
 
   public getModel (r: IXosModelRelation, id: string | number): Promise<IXosCrudRelationFormTabData> {
@@ -72,7 +72,7 @@ export class XosCrudRelationService implements IXosCrudRelationService {
 
           const data: IXosCrudRelationFormTabData = {
             model: item,
-            formConfig: this.XosModelDiscovererService.get(r.model).formCfg,
+            formConfig: this.XosModeldefsCache.get(r.model).formCfg,
             class: angular ? 'full' : 'empty'
           };
 
@@ -96,7 +96,7 @@ export class XosCrudRelationService implements IXosCrudRelationService {
           match[`${r.on_field.toLowerCase()}_id`] = source_id;
           const filtered = _.filter(items, match);
           // removing search bar from table
-          const tableCfg = this.XosModelDiscovererService.get(r.model).tableCfg;
+          const tableCfg = this.XosModeldefsCache.get(r.model).tableCfg;
           tableCfg.filter = null;
 
           const data: IXosCrudRelationTableTabData = {

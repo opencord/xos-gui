@@ -27,6 +27,7 @@ import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpe
 import {IXosRuntimeStatesService, IXosState} from '../../core/services/runtime-states';
 import {IXosModelStoreService} from '../stores/model.store';
 import {IXosAuthService} from '../rest/auth.rest';
+import {IXosModeldefsCache} from './modeldefs.service';
 
 export interface IXosModel {
   name: string; // the model name
@@ -44,7 +45,6 @@ export interface IXosModel {
 // Service
 export interface IXosModelDiscovererService {
   discover(): ng.IPromise<boolean>;
-  get(modelName: string): IXosModel;
   getApiUrlFromModel(model: IXosModel): string;
   areModelsLoaded(): boolean;
 }
@@ -59,9 +59,10 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     'XosNavigationService',
     'XosModelStore',
     'ngProgressFactory',
-    'AuthService'
+    'AuthService',
+    'XosModeldefsCache'
   ];
-  private xosModels: IXosModel[] = []; // list of augmented model definitions;
+
   private xosServices: string[] = []; // list of loaded services
   private progressBar;
   private modelsLoaded: boolean = false;
@@ -75,7 +76,8 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     private XosNavigationService: IXosNavigationService,
     private XosModelStore: IXosModelStoreService,
     private ngProgressFactory: any, // check for type defs
-    private AuthService: IXosAuthService
+    private AuthService: IXosAuthService,
+    private XosModeldefsCache: IXosModeldefsCache
   ) {
     this.progressBar = this.ngProgressFactory.createInstance();
     this.progressBar.setColor('#f6a821');
@@ -85,16 +87,12 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     return this.modelsLoaded;
   }
 
-  public get(modelName: string): IXosModel|null {
-    return _.find(this.xosModels, m => m.name === modelName);
-  }
-
   public getApiUrlFromModel(model: IXosModel): string {
     if (model.app === 'core') {
       return `/core/${this.ConfigHelpers.pluralize(model.name.toLowerCase())}`;
     }
     else {
-      const serviceName = this.serviceNameFromAppName(model.app);
+      const serviceName = this.XosModeldefsCache.serviceNameFromAppName(model.app);
       return `/${serviceName}/${this.ConfigHelpers.pluralize(model.name.toLowerCase())}`;
     }
   }
@@ -104,7 +102,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     this.progressBar.start();
     this.XosModelDefs.get()
       .then((modelsDef: IXosModeldef[]) => {
-
+        // TODO store modeldefs and add a method to retrieve the model definition from the name
         const pArray = [];
         _.forEach(modelsDef, (model: IXosModeldef) => {
           this.$log.debug(`[XosModelDiscovererService] Loading: ${model.name}`);
@@ -155,12 +153,8 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     return d.promise;
   }
 
-  private serviceNameFromAppName(appName: string): string {
-    return appName.replace('services.', '');
-  }
-
   private stateNameFromModel(model: IXosModel): string {
-    return `xos.${this.serviceNameFromAppName(model.app)}.${model.name.toLowerCase()}`;
+    return `xos.${this.XosModeldefsCache.serviceNameFromAppName(model.app)}.${model.name.toLowerCase()}`;
   }
 
   private getParentStateFromModel(model: IXosModel): string {
@@ -177,7 +171,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
 
   // add a service state and navigation item if it is not already there
   private addService(model: IXosModel): string {
-    const serviceName: string = this.serviceNameFromAppName(model.app);
+    const serviceName: string = this.XosModeldefsCache.serviceNameFromAppName(model.app);
     if (!_.find(this.xosServices, n => n === serviceName)) {
       const serviceState = {
         url: serviceName,
@@ -222,7 +216,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
       );
 
       // extend model
-      model.clientUrl = `${this.serviceNameFromAppName(model.app)}${clientUrl}`;
+      model.clientUrl = `${this.XosModeldefsCache.serviceNameFromAppName(model.app)}${clientUrl}`;
 
       d.resolve(model);
     } catch (e) {
@@ -300,9 +294,7 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
 
     const d = this.$q.defer();
 
-    if (!_.find(this.xosModels, m => m.name === model.name)) {
-      this.xosModels.push(model);
-    }
+    this.XosModeldefsCache.cache(model);
 
     d.resolve(model);
 
