@@ -20,7 +20,7 @@ import IDirective = angular.IDirective;
 export function xosLinkWrapper(): IDirective {
   return {
     template: `
-    <a ng-if="col.link" ui-sref="{{col.link(item)}}">
+    <a ng-if="col.link" ui-state="col.link(item).name" ui-state-params="{id: col.link(item).params.id}">
       <div ng-transclude></div>
     </a>
     <div ng-transclude ng-if="!col.link"></div>

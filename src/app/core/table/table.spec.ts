@@ -471,7 +471,10 @@ describe('The Xos Table component', () => {
 
       it('should render a link with the correct url', () => {
         let link = $('tbody tr:first-child td a', element)[0];
-        expect($(link).attr('ui-sref')).toEqual('state({id: 1})');
+        // TODO document this feature change
+        // TODO improve this test to check that we are going to state({id: 1})
+        expect($(link).attr('ui-state')).toEqual('col.link(item).name');
+        expect($(link).attr('ui-state-params')).toEqual('{id: col.link(item).params.id}');
       });
     });
 
