@@ -28,7 +28,7 @@ const XosModelStoreMock = {
   query: null
 };
 
-const XosModelDiscovererMock = {
+const XosModeldefsCacheMock = {
   get: null
 };
 
@@ -40,7 +40,7 @@ describe('The XosCrudRelation service', () => {
       .module('test', ['ui.router', 'toastr'])
       .service('XosCrudRelation', XosCrudRelationService)
       .value('XosModelStore', XosModelStoreMock)
-      .value('XosModelDiscoverer', XosModelDiscovererMock)
+      .value('XosModeldefsCache', XosModeldefsCacheMock)
       .service('ConfigHelpers', ConfigHelpers);
 
     angular.mock.module('test');
@@ -133,7 +133,7 @@ describe('The XosCrudRelation service', () => {
         subject.next(resModel);
         return subject.asObservable();
       });
-      spyOn(XosModelDiscovererMock, 'get').and.returnValue({formCfg: resFormCfg});
+      spyOn(XosModeldefsCacheMock, 'get').and.returnValue({formCfg: resFormCfg});
 
       service.getModel(relation, '5')
         .then((res: IXosCrudRelationFormTabData) => {
@@ -164,7 +164,7 @@ describe('The XosCrudRelation service', () => {
         const subject = new BehaviorSubject(resModels);
         return subject.asObservable();
       });
-      spyOn(XosModelDiscovererMock, 'get').and.returnValue({tableCfg: resTableCfg});
+      spyOn(XosModeldefsCacheMock, 'get').and.returnValue({tableCfg: resTableCfg});
 
       service.getModels(relation, 5)
         .then((res: IXosCrudRelationTableTabData) => {
@@ -196,7 +196,7 @@ describe('The XosCrudRelation service', () => {
         const subject = new BehaviorSubject(resModels);
         return subject.asObservable();
       });
-      spyOn(XosModelDiscovererMock, 'get').and.returnValue({tableCfg: resTableCfg});
+      spyOn(XosModeldefsCacheMock, 'get').and.returnValue({tableCfg: resTableCfg});
 
       service.getModels(relation, 5)
         .then((res: IXosCrudRelationTableTabData) => {

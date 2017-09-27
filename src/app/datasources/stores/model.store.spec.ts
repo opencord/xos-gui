@@ -69,6 +69,7 @@ describe('The ModelStore service', () => {
       .service('ConfigHelpers', ConfigHelpers) // TODO mock
       .service('AuthService', AuthService)
       .constant('AppConfig', MockAppCfg)
+      .value('XosModeldefsCache', {})
       .service('XosDebouncer', XosDebouncer);
 
     angular.mock.module('ModelStore');

@@ -33,6 +33,7 @@ module.exports = function () {
           proxy.web(req, res);
         }
         else if (req.url.indexOf('socket.io') !== -1) {
+          console.log(`proxy socket request: ${req.url}`);
           socketProxy.web(req, res);
         }
         else if (req.url.indexOf('extensions') !== -1) {
