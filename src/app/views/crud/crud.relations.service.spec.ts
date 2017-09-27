@@ -22,13 +22,14 @@ import {
 } from './crud.relations.service';
 import {BehaviorSubject} from 'rxjs';
 import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
+import {XosFormHelpers} from '../../core/form/form-helpers';
 
 const XosModelStoreMock = {
   get: null,
   query: null
 };
 
-const XosModelDiscovererMock = {
+const XosModeldefsCacheMock = {
   get: null
 };
 
@@ -40,8 +41,9 @@ describe('The XosCrudRelation service', () => {
       .module('test', ['ui.router', 'toastr'])
       .service('XosCrudRelation', XosCrudRelationService)
       .value('XosModelStore', XosModelStoreMock)
-      .value('XosModelDiscoverer', XosModelDiscovererMock)
-      .service('ConfigHelpers', ConfigHelpers);
+      .value('XosModeldefsCache', XosModeldefsCacheMock)
+      .service('ConfigHelpers', ConfigHelpers)
+      .service('XosFormHelpers', XosFormHelpers);
 
     angular.mock.module('test');
   });
@@ -133,7 +135,7 @@ describe('The XosCrudRelation service', () => {
         subject.next(resModel);
         return subject.asObservable();
       });
-      spyOn(XosModelDiscovererMock, 'get').and.returnValue({formCfg: resFormCfg});
+      spyOn(XosModeldefsCacheMock, 'get').and.returnValue({formCfg: resFormCfg});
 
       service.getModel(relation, '5')
         .then((res: IXosCrudRelationFormTabData) => {
@@ -164,7 +166,7 @@ describe('The XosCrudRelation service', () => {
         const subject = new BehaviorSubject(resModels);
         return subject.asObservable();
       });
-      spyOn(XosModelDiscovererMock, 'get').and.returnValue({tableCfg: resTableCfg});
+      spyOn(XosModeldefsCacheMock, 'get').and.returnValue({tableCfg: resTableCfg});
 
       service.getModels(relation, 5)
         .then((res: IXosCrudRelationTableTabData) => {
@@ -196,7 +198,7 @@ describe('The XosCrudRelation service', () => {
         const subject = new BehaviorSubject(resModels);
         return subject.asObservable();
       });
-      spyOn(XosModelDiscovererMock, 'get').and.returnValue({tableCfg: resTableCfg});
+      spyOn(XosModeldefsCacheMock, 'get').and.returnValue({tableCfg: resTableCfg});
 
       service.getModels(relation, 5)
         .then((res: IXosCrudRelationTableTabData) => {

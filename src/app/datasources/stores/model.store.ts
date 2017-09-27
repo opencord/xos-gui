@@ -59,6 +59,7 @@ export class XosModelStore implements IXosModelStoreService {
       this.efficientNext(this._collections[modelName]);
     }
 
+    // NOTE do we need to subscriber every time we query?
     this.webSocket.list()
       .filter((e: IWSEvent) => e.model === modelName)
       .subscribe(

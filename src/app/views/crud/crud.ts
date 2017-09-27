@@ -28,6 +28,7 @@ import {IXosCrudRelationService} from './crud.relations.service';
 import {IXosDebugService, IXosDebugStatus} from '../../core/debug/debug.service';
 import {IXosKeyboardShortcutService} from '../../core/services/keyboard-shortcut';
 import {Subscription} from 'rxjs';
+import {IXosModeldefsCache} from '../../datasources/helpers/modeldefs.service';
 
 export interface IXosModelRelation {
   model: string;
@@ -48,7 +49,8 @@ class CrudController {
     'XosModelDiscoverer',
     'XosCrudRelation',
     'XosDebug',
-    'XosKeyboardShortcut'
+    'XosKeyboardShortcut',
+    'XosModeldefsCache'
   ];
 
   // bindings
@@ -88,12 +90,13 @@ class CrudController {
     private XosModelDiscovererService: IXosModelDiscovererService,
     private XosCrudRelation: IXosCrudRelationService,
     private XosDebug: IXosDebugService,
-    private XosKeyboardShortcut: IXosKeyboardShortcutService
+    private XosKeyboardShortcut: IXosKeyboardShortcutService,
+    private XosModeldefsCache: IXosModeldefsCache
   ) {
     this.$log.info('[XosCrud] Setup', $state.current.data);
 
     this.data = this.$state.current.data;
-    this.modelDef = this.XosModelDiscovererService.get(this.data.model);
+    this.modelDef = this.XosModeldefsCache.get(this.data.model);
     this.modelName = this.modelDef.verbose_name ? this.modelDef.verbose_name : this.modelDef.name;
     this.pluralTitle = this.ConfigHelpers.pluralize(this.modelName);
     this.singularTitle = this.ConfigHelpers.pluralize(this.modelName, 1);
@@ -105,6 +108,18 @@ class CrudController {
 
     this.tableCfg = this.modelDef.tableCfg;
     this.formCfg = this.modelDef.formCfg;
+
+    // attach a redirect to the $save method
+    const originalSave = this.formCfg.actions[0].cb;
+    this.formCfg.actions[0].cb = (item, form: angular.IFormController) => {
+      originalSave(item, form)
+        .then(res => {
+          this.$state.go(this.$state.current, {id: res.id});
+        })
+        .catch(err => {
+          this.$log.error(`[XosCrud] Error while saving:`, item, err);
+        });
+    };
 
     this.debugTab = this.XosDebug.status.modelsTab;
     this.$scope.$on('xos.debug.status', (e, status: IXosDebugStatus) => {
@@ -119,7 +134,7 @@ class CrudController {
       // if it is the create page
       if ($stateParams['id'] === 'add') {
         // generate a resource for an empty model
-        const endpoint = this.XosModelDiscovererService.getApiUrlFromModel(this.XosModelDiscovererService.get(this.data.model));
+        const endpoint = this.XosModelDiscovererService.getApiUrlFromModel(this.XosModeldefsCache.get(this.data.model));
         const resource = this.ModelRest.getResource(endpoint);
         this.model = new resource({});
       }
