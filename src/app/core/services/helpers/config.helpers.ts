@@ -196,7 +196,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       };
 
       if (f.name === 'id' || f.name === 'name') {
-        col.link = item => this.stateWithParams(modelName, item);
+        col.link = item => this.stateWithParamsForJs(modelName, item);
       }
 
       // if the field identify a relation, create a link
