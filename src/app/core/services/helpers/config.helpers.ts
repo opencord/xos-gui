@@ -23,6 +23,7 @@ import {IXosModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosFormCfg, IXosFormInput, IXosFormInputValidator, IXosFormInputOptions} from '../../form/form';
 import {IXosModelStoreService} from '../../../datasources/stores/model.store';
 import {IXosState} from '../runtime-states';
+import {IXosFormHelpersService} from '../../form/form-helpers';
 
 export interface IXosModelDefsFieldValidators {
   name: string;
@@ -61,9 +62,12 @@ export interface IXosConfigHelpersService {
 
 export class ConfigHelpers implements IXosConfigHelpersService {
   static $inject = [
+    '$q',
     '$state',
     'toastr',
-    'XosModelStore'];
+    'XosModelStore',
+    'XosFormHelpers'
+  ];
 
   public excluded_fields = [
     'created',
@@ -96,9 +100,11 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   ]);
 
   constructor(
+    private $q: ng.IQService,
     private $state: ng.ui.IStateService,
     private toastr: ng.toastr.IToastrService,
-    private XosModelStore: IXosModelStoreService
+    private XosModelStore: IXosModelStoreService,
+    private XosFormHelpers: IXosFormHelpersService
   ) {
     pluralize.addIrregularRule('xos', 'xoses');
     pluralize.addPluralRule(/slice$/i, 'slices');
@@ -299,7 +305,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     };
 
     formCfg.actions[0].cb = (item, form: angular.IFormController) => {
-
+      const d = this.$q.defer();
       if (!form.$valid) {
         formCfg.feedback = {
           show: true,
@@ -318,8 +324,14 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
       // remove field added by xosTable
       _.forEach(Object.keys(item), prop => {
-        if (prop.indexOf('-formatted') > -1) {
+        // FIXME what _ptr fields comes from??
+        if (prop.indexOf('-formatted') > -1 || prop.indexOf('_ptr') > -1) {
           delete item[prop];
+        }
+
+        // convert dates back to UnixTime
+        if (this.XosFormHelpers._getFieldFormat(item[prop]) === 'date') {
+          item[prop] = new Date(item[prop]).getTime() / 1000;
         }
       });
 
@@ -334,6 +346,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
             closeBtn: true
           };
           this.toastr.success(`${itemName} successfully saved`);
+          d.resolve(res);
         })
         .catch(err => {
           formCfg.feedback = {
@@ -343,7 +356,10 @@ export class ConfigHelpers implements IXosConfigHelpersService {
             closeBtn: true
           };
           this.toastr.error(err.specific_error || '', `Error while saving ${itemName}: ${err.error}`);
+          d.reject(err);
         });
+
+      return d.promise;
     };
 
     return formCfg;

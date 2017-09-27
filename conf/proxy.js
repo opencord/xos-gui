@@ -20,6 +20,8 @@ const httpProxy = require('http-proxy');
 
 const target = process.env.PROXY || '192.168.46.100';
 
+console.info(`Proxying request to: ${target}`);
+
 const proxy = httpProxy.createProxyServer({
   target: `http://${target}`
 });

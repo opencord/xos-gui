@@ -18,25 +18,24 @@
 
 import {BehaviorSubject} from 'rxjs';
 import * as _ from 'lodash';
-import * as pluralize from 'pluralize';
 import {IWSEvent} from '../websocket/global';
 import {IXosResourceService} from '../rest/model.rest';
+import {IXosModeldefsCache} from './modeldefs.service';
 
 export interface IStoreHelpersService {
-  urlFromCoreModel(name: string): string;
   updateCollection(event: IWSEvent, subject: BehaviorSubject<any>): BehaviorSubject<any>;
 }
 
 export class StoreHelpers implements IStoreHelpersService {
-  static $inject = ['ModelRest'];
+  static $inject = [
+    'ModelRest',
+    'XosModeldefsCache'
+  ];
 
   constructor (
-    private modelRest: IXosResourceService
+    private modelRest: IXosResourceService,
+    private XosModeldefsCache: IXosModeldefsCache
   ) {
-  }
-
-  public urlFromCoreModel(name: string): string {
-    return `/core/${pluralize(name.toLowerCase())}`;
   }
 
   public updateCollection(event: IWSEvent, subject: BehaviorSubject<any>): BehaviorSubject<any> {
@@ -49,7 +48,8 @@ export class StoreHelpers implements IStoreHelpersService {
     const isDeleted: boolean = _.includes(event.msg.changed_fields, 'deleted');
 
     // generate a resource for the model
-    const endpoint = this.urlFromCoreModel(event.model);
+    const modelDef = this.XosModeldefsCache.get(event.model); // get the model definition
+    const endpoint = this.XosModeldefsCache.getApiUrlFromModel(modelDef);
     const resource = this.modelRest.getResource(endpoint);
     const model = new resource(event.msg.object);
 

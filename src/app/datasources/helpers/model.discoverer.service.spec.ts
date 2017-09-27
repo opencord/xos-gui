@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2017-present Open Networking Foundation
 
@@ -22,6 +21,7 @@ import 'angular-ui-router';
 import {XosModelDiscovererService, IXosModelDiscovererService} from './model-discoverer.service';
 import {IXosModeldef} from '../rest/modeldefs.rest';
 import {BehaviorSubject} from 'rxjs';
+import {XosModeldefsCache} from './modeldefs.service';
 
 const stubModels: IXosModeldef[] = [
   {
@@ -101,7 +101,8 @@ describe('The ModelDicoverer service', () => {
       .value('XosModelStore', MockXosModelStore)
       .value('ngProgressFactory', MockngProgressFactory)
       .value('XosNavigationService', MockXosNavigationService)
-      .value('AuthService', {});
+      .value('AuthService', {})
+      .service('XosModeldefsCache', XosModeldefsCache);
 
     angular.mock.module('test');
   });
@@ -150,21 +151,6 @@ describe('The ModelDicoverer service', () => {
       verbose_name: ''
     };
     expect(service.getApiUrlFromModel(model)).toBe('/test/tenants');
-  });
-
-  it('should retrieve a model definition from local cache', () => {
-    const model = {
-      name: 'Node',
-      app: 'core'
-    };
-    service['xosModels'] = [
-      model
-    ];
-    expect(service.get('Node')).toEqual(model);
-  });
-
-  it('should get the service name from the app name', () => {
-    expect(service['serviceNameFromAppName']('services.vsg')).toBe('vsg');
   });
 
   it('should get the state name from the model', () => {
@@ -276,12 +262,6 @@ describe('The ModelDicoverer service', () => {
     );
   });
 
-  it('should store the model in memory', () => {
-    service['storeModel']({name: 'Tenant'});
-    expect(service['xosModels'][0]).toEqual({name: 'Tenant'});
-    expect(service['xosModels'].length).toEqual(1);
-  });
-
   describe('when discovering models', () => {
     beforeEach(() => {
       spyOn(service, 'cacheModelEntries').and.callThrough();
@@ -296,7 +276,7 @@ describe('The ModelDicoverer service', () => {
       service.discover()
         .then((res) => {
           expect(MockProgressBar.start).toHaveBeenCalled();
-          expect(MockXosModelDefs.get).toHaveBeenCalled();
+          expect(MockXosModelDefs.get).toHaveBeenCalled(); // FIXME replace correct spy
           expect(service['cacheModelEntries'].calls.count()).toBe(2);
           expect(service['addState'].calls.count()).toBe(2);
           expect(service['addNavItem'].calls.count()).toBe(2);

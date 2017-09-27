@@ -25,11 +25,13 @@ import {BehaviorSubject} from 'rxjs';
 import {IWSEvent} from '../websocket/global';
 import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
 import {AuthService} from '../rest/auth.rest';
+import {IXosModeldefsCache} from './modeldefs.service';
 
 let service: IStoreHelpersService;
 let subject: BehaviorSubject<any>;
 let resource: ng.resource.IResourceClass<any>;
 let $resource: ng.resource.IResourceService;
+let xosModelCache: IXosModeldefsCache;
 
 describe('The StoreHelpers service', () => {
 
@@ -40,6 +42,10 @@ describe('The StoreHelpers service', () => {
       .service('ModelRest', ModelRest) // NOTE evaluate mock
       .service('StoreHelpers', StoreHelpers)
       .service('AuthService', AuthService)
+      .value('XosModeldefsCache', {
+        get: jasmine.createSpy('XosModeldefsCache.get'),
+        getApiUrlFromModel: jasmine.createSpy('XosModeldefsCache.getApiUrlFromModel')
+      })
       .value('AppConfig', {});
 
     angular.mock.module('test');
@@ -47,10 +53,12 @@ describe('The StoreHelpers service', () => {
 
   beforeEach(angular.mock.inject((
     StoreHelpers: IStoreHelpersService,
+    XosModeldefsCache: IXosModeldefsCache,
     _$resource_: ng.resource.IResourceService
   ) => {
     $resource = _$resource_;
     resource = $resource('/test');
+    xosModelCache = XosModeldefsCache;
     service = StoreHelpers;
   }));
 
@@ -58,13 +66,38 @@ describe('The StoreHelpers service', () => {
     expect(service.updateCollection).toBeDefined();
   });
 
+  describe('the updateCollection method', () => {
 
-  it('should convert a core model name in an URL', () => {
-    expect(service.urlFromCoreModel('Slice')).toBe('/core/slices');
-    expect(service.urlFromCoreModel('Xos')).toBe('/core/xoses');
-    expect(service.urlFromCoreModel('SiteRole')).toBe('/core/siteroles');
-    expect(service.urlFromCoreModel('SliceRole')).toBe('/core/sliceroles');
-    expect(service.urlFromCoreModel('SlicePrivilege')).toBe('/core/sliceprivileges');
+    beforeEach(() => {
+      subject = new BehaviorSubject([
+        new resource({id: 1, name: 'test'})
+      ]);
+
+    });
+
+    it('should get the correct url for a core model', () => {
+      const mockModelDef = {
+        name: 'Node',
+        app: 'core'
+      };
+
+      xosModelCache.get['and'].returnValue(mockModelDef);
+
+      const event: IWSEvent = {
+        model: 'TestModel',
+        msg: {
+          object: {
+            id: 1,
+            name: 'test'
+          },
+          changed_fields: ['deleted']
+        }
+      };
+
+      service.updateCollection(event, subject);
+      expect(xosModelCache.get).toHaveBeenCalledWith('TestModel');
+      expect(xosModelCache.getApiUrlFromModel).toHaveBeenCalledWith(mockModelDef);
+    });
   });
 
   describe('when updating a collection', () => {

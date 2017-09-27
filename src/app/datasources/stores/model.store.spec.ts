@@ -27,11 +27,13 @@ import {ModelRest} from '../rest/model.rest';
 import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
 import {AuthService} from '../rest/auth.rest';
 import {XosDebouncer} from '../../core/services/helpers/debounce.helper';
+import {IXosModeldefsCache} from '../helpers/modeldefs.service';
 
 let service: IXosModelStoreService;
 let httpBackend: ng.IHttpBackendService;
 let $scope;
 let WebSocket;
+let XosModeldefsCache;
 
 class MockWs {
   private _list;
@@ -69,6 +71,10 @@ describe('The ModelStore service', () => {
       .service('ConfigHelpers', ConfigHelpers) // TODO mock
       .service('AuthService', AuthService)
       .constant('AppConfig', MockAppCfg)
+      .value('XosModeldefsCache', {
+        get: jasmine.createSpy('XosModeldefsCache.get').and.returnValue({}),
+        getApiUrlFromModel: jasmine.createSpy('XosModeldefsCache.getApiUrlFromModel')
+      })
       .service('XosDebouncer', XosDebouncer);
 
     angular.mock.module('ModelStore');
@@ -78,12 +84,14 @@ describe('The ModelStore service', () => {
     XosModelStore: IXosModelStoreService,
     $httpBackend: ng.IHttpBackendService,
     _$rootScope_: ng.IRootScopeService,
-    _WebSocket_: any
+    _WebSocket_: any,
+    _XosModeldefsCache_: IXosModeldefsCache
   ) => {
     service = XosModelStore;
     httpBackend = $httpBackend;
     $scope = _$rootScope_;
     WebSocket = _WebSocket_;
+    XosModeldefsCache = _XosModeldefsCache_;
 
     // ModelRest will call the backend
     httpBackend.whenGET(`${MockAppCfg.apiEndpoint}/core/samples`)
@@ -96,6 +104,7 @@ describe('The ModelStore service', () => {
     });
 
     it('the first event should be the resource response', (done) => {
+      XosModeldefsCache.getApiUrlFromModel.and.returnValue(`/core/samples`);
       let event = 0;
       service.query('sample')
         .subscribe(collection => {
@@ -114,6 +123,7 @@ describe('The ModelStore service', () => {
   describe('the GET method', () => {
     it('should return an observable containing a single model', (done) => {
       let event = 0;
+      XosModeldefsCache.getApiUrlFromModel.and.returnValue(`/core/samples`);
       service.get('sample', queryData[1].id)
         .subscribe((model) => {
           event++;
@@ -177,6 +187,8 @@ describe('The ModelStore service', () => {
     it('should create different Subject', (done) => {
       let fevent = 0;
       let sevent = 0;
+      XosModeldefsCache.get.and.callFake(v => v);
+      XosModeldefsCache.getApiUrlFromModel.and.callFake(v => `/core/${v}s`);
       service.query('first')
         .subscribe(first => {
           fevent++;
