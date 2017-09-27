@@ -26,6 +26,7 @@ import {XosModeldefsService} from './rest/modeldefs.rest';
 import {xosCore} from '../core/index';
 import {SearchService} from './helpers/search.service';
 import {XosModelDiscovererService} from './helpers/model-discoverer.service';
+import {XosModeldefsCache} from './helpers/modeldefs.service';
 
 export const xosDataSources = 'xosDataSources';
 
@@ -34,6 +35,7 @@ angular
   .service('ModelRest', ModelRest)
   .service('AuthService', AuthService)
   .service('WebSocket', WebSocketEvent)
+  .service('XosModeldefsCache', XosModeldefsCache)
   .service('StoreHelpers', StoreHelpers)
   .service('SynchronizerStore', SynchronizerStore)
   .service('XosModelStore', XosModelStore)

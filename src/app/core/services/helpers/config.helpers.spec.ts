@@ -25,6 +25,7 @@ import {IXosModeldef} from '../../../datasources/rest/modeldefs.rest';
 import {IXosTableCfg} from '../../table/table';
 import {IXosFormInput, IXosFormCfg} from '../../form/form';
 import {BehaviorSubject} from 'rxjs';
+import {XosFormHelpers} from '../../form/form-helpers';
 
 let service: IXosConfigHelpersService;
 
@@ -95,6 +96,7 @@ describe('The ConfigHelpers service', () => {
       .value('XosModelStore', {
 
       })
+      .service('XosFormHelpers', XosFormHelpers)
       .value('$state', {
         get: () => {
           return [
@@ -283,9 +285,9 @@ describe('The ConfigHelpers service', () => {
   });
 
   describe('the private methods', () => {
-    let modelStoreMock, toastr, auth, stateMock;
+    let modelStoreMock, q, toastr, auth, stateMock, XosFormHelpersMock;
 
-    beforeEach(angular.mock.inject((_toastr_, AuthService) => {
+    beforeEach(angular.mock.inject(($q, _toastr_, AuthService, XosFormHelpers) => {
       modelStoreMock = {
         query: () => {
           const subject = new BehaviorSubject([
@@ -297,9 +299,11 @@ describe('The ConfigHelpers service', () => {
       };
       toastr = _toastr_;
       auth = AuthService;
+      XosFormHelpersMock = XosFormHelpers;
       stateMock = {
         get: ''
       };
+      q = $q;
     }));
 
     const field: IXosModelDefsField = {
@@ -316,7 +320,7 @@ describe('The ConfigHelpers service', () => {
         test: 2
       };
       it('should add the formatted data to the column definition', () => {
-        service = new ConfigHelpers(stateMock, toastr, modelStoreMock);
+        service = new ConfigHelpers(q, stateMock, toastr, modelStoreMock, XosFormHelpersMock);
         service['populateRelated'](item, item.test, field);
         expect(item['test-formatted']).toBe('second');
       });
@@ -332,7 +336,7 @@ describe('The ConfigHelpers service', () => {
       };
 
       it('should add the available choice to the select', () => {
-        service = new ConfigHelpers(stateMock, toastr, modelStoreMock);
+        service = new ConfigHelpers(q, stateMock, toastr, modelStoreMock, XosFormHelpersMock);
         service['populateSelectField'](field, input);
         expect(input.options).toEqual([
           {id: 1, label: 'test'},

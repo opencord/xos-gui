@@ -23,6 +23,7 @@ import {IWSEvent, IWSEventService} from '../websocket/global';
 import {IXosResourceService} from '../rest/model.rest';
 import {IStoreHelpersService} from '../helpers/store.helpers';
 import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
+import {IXosModeldefsCache} from '../helpers/modeldefs.service';
 
 export interface  IXosModelStoreService {
   query(model: string, apiUrl?: string): Observable<any>;
@@ -31,7 +32,14 @@ export interface  IXosModelStoreService {
 }
 
 export class XosModelStore implements IXosModelStoreService {
-  static $inject = ['$log', 'WebSocket', 'StoreHelpers', 'ModelRest', 'XosDebouncer'];
+  static $inject = [
+    '$log',
+    'WebSocket',
+    'StoreHelpers',
+    'ModelRest',
+    'XosDebouncer',
+    'XosModeldefsCache'
+  ];
   private _collections: any; // NOTE contains a map of {model: BehaviourSubject}
   private efficientNext: any; // NOTE debounce next
   constructor(
@@ -39,7 +47,8 @@ export class XosModelStore implements IXosModelStoreService {
     private webSocket: IWSEventService,
     private storeHelpers: IStoreHelpersService,
     private ModelRest: IXosResourceService,
-    private XosDebouncer: IXosDebouncer
+    private XosDebouncer: IXosDebouncer,
+    private XosModeldefsCache: IXosModeldefsCache
   ) {
     this._collections = {};
     this.efficientNext = this.XosDebouncer.debounce(this.next, 500, this, false);
@@ -59,6 +68,7 @@ export class XosModelStore implements IXosModelStoreService {
       this.efficientNext(this._collections[modelName]);
     }
 
+    // NOTE do we need to subscriber every time we query?
     this.webSocket.list()
       .filter((e: IWSEvent) => e.model === modelName)
       .subscribe(
@@ -128,8 +138,7 @@ export class XosModelStore implements IXosModelStoreService {
   private loadInitialData(model: string, apiUrl?: string) {
     // TODO provide always the apiUrl together with the query() params
     if (!angular.isDefined(apiUrl)) {
-      // NOTE check what is the correct pattern to pluralize this
-      apiUrl = this.storeHelpers.urlFromCoreModel(model);
+      apiUrl = this.XosModeldefsCache.getApiUrlFromModel(this.XosModeldefsCache.get(model));
     }
     this.ModelRest.getResource(apiUrl).query().$promise
       .then(
