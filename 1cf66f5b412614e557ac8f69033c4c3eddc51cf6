@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a5c5d37_2dcae74f",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2017-10-06T19:07:38Z",
+      "side": 1,
+      "message": "You might link here:\n\n [Mock Developer Workflow](/xos/dev/workflow_mock_single.md)\n\nrather than repeating these instructions.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 5
+      },
+      "revId": "1cf66f5b412614e557ac8f69033c4c3eddc51cf6",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a5c5d37_4db51bcc",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2017-10-06T19:07:38Z",
+      "side": 1,
+      "message": "Did you intend to have an H4 here?",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 4
+      },
+      "revId": "1cf66f5b412614e557ac8f69033c4c3eddc51cf6",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a5c5d37_0dc72347",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2017-10-06T19:07:38Z",
+      "side": 1,
+      "message": "h2 or h3?",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 3
+      },
+      "revId": "1cf66f5b412614e557ac8f69033c4c3eddc51cf6",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a5c5d37_edc3af36",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2017-10-06T19:07:38Z",
+      "side": 1,
+      "message": "Space after #\u0027s",
+      "range": {
+        "startLine": 55,
+        "startChar": 3,
+        "endLine": 55,
+        "endChar": 44
+      },
+      "revId": "1cf66f5b412614e557ac8f69033c4c3eddc51cf6",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
