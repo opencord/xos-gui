@@ -53,6 +53,13 @@ describe('The XOS Debug service', () => {
     expect(service.status.events).toBeTruthy();
   });
 
+  it('should read the notification status from localStorage', () => {
+    spyOn(window.localStorage, 'getItem')
+      .and.returnValue(null);
+    service = new XosDebugService($log, $scope, XosKeyboardShortcut);
+    expect(service.status.notifications).toBeTruthy();
+  });
+
   it('should disable the global debug status', () => {
     spyOn(window.localStorage, 'getItem')
       .and.returnValue('true');

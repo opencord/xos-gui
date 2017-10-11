@@ -24,6 +24,7 @@ import * as angular from 'angular';
 import 'angular-mocks';
 import {xosHeader, INotification} from './header';
 import {Subject} from 'rxjs';
+import {IXosDebugService} from '../debug/debug.service';
 
 let element, scope: angular.IRootScopeService, compile: ng.ICompileService, isolatedScope;
 const events = new Subject();
@@ -79,6 +80,17 @@ const MockXosKeyboardShortcut = {
   registerKeyBinding: jasmine.createSpy('registerKeyBinding')
 };
 
+const MockXosDebug: IXosDebugService = {
+  status: {
+    global: false,
+    events: false,
+    modelsTab: false,
+    notifications: true
+  },
+  setupShortcuts: jasmine.createSpy('debug.createShortcuts'),
+  toggleDebug: jasmine.createSpy('debug.toggleDebug')
+};
+
 describe('header component', () => {
   beforeEach(() => {
     angular
@@ -96,7 +108,8 @@ describe('header component', () => {
       .value('StyleConfig', {
         logo: 'cord-logo.png',
       })
-      .value('SearchService', {});
+      .value('SearchService', {})
+      .value('XosDebug', MockXosDebug);
 
     angular.mock.module('xosHeader');
   });
@@ -146,7 +159,16 @@ describe('header component', () => {
     });
   });
 
-  it('should display a toastr for a new notification', () => {
+  it('should not display a toastr for a new notification (if notifications are disabled)', () => {
+      MockXosDebug.status.notifications = false;
+      sendEvent(infoNotification);
+      scope.$digest();
+
+      expect(MockToastr.info).not.toHaveBeenCalled();
+  });
+
+  it('should display a toastr for a new notification (if notifications are enabled)', () => {
+    MockXosDebug.status.notifications = true;
     sendEvent(infoNotification);
     scope.$digest();
 
