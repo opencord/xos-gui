@@ -20,12 +20,13 @@ export interface IXosDebugStatus {
   global: boolean;
   events: boolean;
   modelsTab: boolean;
+  notifications: boolean;
 }
 
 export interface IXosDebugService {
   status: IXosDebugStatus;
   setupShortcuts(): void;
-  toggleDebug(type: 'global' | 'events' | 'modelsTab'): void;
+  toggleDebug(type: 'global' | 'events' | 'modelsTab' | 'notifications'): void;
 }
 
 export class XosDebugService implements IXosDebugService {
@@ -35,7 +36,8 @@ export class XosDebugService implements IXosDebugService {
   public status: IXosDebugStatus = {
     global: false,
     events: false,
-    modelsTab: false
+    modelsTab: false,
+    notifications: true
   };
 
   constructor (
@@ -51,6 +53,9 @@ export class XosDebugService implements IXosDebugService {
 
     const debugModelsTab = window.localStorage.getItem('debug-modelsTab');
     this.status.modelsTab = (debugModelsTab === 'true');
+
+    const notifications = window.localStorage.getItem('debug-notifications');
+    this.status.notifications = (notifications !== null ? notifications === 'true' : true);
   }
 
   public setupShortcuts(): void {
@@ -65,9 +70,15 @@ export class XosDebugService implements IXosDebugService {
       cb: () => this.toggleDebug('events'),
       description: 'Toggle debug messages for WS events in browser console'
     }, 'global');
+
+    this.XosKeyboardShortcut.registerKeyBinding({
+        key: 'S',
+        cb: () => this.toggleDebug('notifications'),
+        description: 'Toggle notifications'
+    }, 'global');
   }
 
-  public toggleDebug(type: 'global' | 'events' | 'modelsTab'): void {
+  public toggleDebug(type: 'global' | 'events' | 'modelsTab' | 'notifications'): void {
     if (window.localStorage.getItem(`debug-${type}`) === 'true') {
       this.$log.info(`[XosDebug] Disabling ${type} debug`);
       window.localStorage.setItem(`debug-${type}`, 'false');

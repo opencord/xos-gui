@@ -28,6 +28,7 @@ import {IXosSearchService, IXosSearchResult} from '../../datasources/helpers/sea
 import {IXosKeyboardShortcutService} from '../services/keyboard-shortcut';
 import {Subscription} from 'rxjs';
 import {IXosConfigHelpersService} from '../services/helpers/config.helpers';
+import {IXosDebugService} from '../debug/debug.service';
 
 export interface INotification extends IWSEvent {
   viewed?: boolean;
@@ -47,7 +48,8 @@ class HeaderController {
     'StyleConfig',
     'SearchService',
     'XosKeyboardShortcut',
-    'ConfigHelpers'
+    'ConfigHelpers',
+    'XosDebug'
   ];
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
@@ -73,7 +75,8 @@ class HeaderController {
     private StyleConfig: IXosStyleConfig,
     private SearchService: IXosSearchService,
     private XosKeyboardShortcut: IXosKeyboardShortcutService,
-    private ConfigHelpers: IXosConfigHelpersService
+    private ConfigHelpers: IXosConfigHelpersService,
+    private XosDebugService: IXosDebugService
   ) {
 
   }
@@ -122,6 +125,12 @@ class HeaderController {
       .subscribe(
         (event: IWSEvent) => {
           this.$scope.$evalAsync(() => {
+
+            if (!this.XosDebugService.status.notifications) {
+              // NOTE: notifications can be disabled
+              return;
+            }
+
 
             if (event.model === 'Diag') {
               // NOTE skip notifications for Diag model
