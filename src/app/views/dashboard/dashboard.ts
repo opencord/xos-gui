@@ -18,37 +18,53 @@
 
 import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {IXosAuthService} from '../../datasources/rest/auth.rest';
+import {Subscription} from 'rxjs/Subscription';
+
+
 class DashboardController {
-  static $inject = ['$scope', '$state', 'XosModelStore', 'AuthService'];
+  static $inject = [
+    '$log',
+    '$scope',
+    '$state',
+    'XosModelStore',
+    'AuthService'
+  ];
 
   public nodes: number;
   public slices: number;
   public instances: number;
 
+  private nodeSubscription: Subscription;
+  private sliceSubscription: Subscription;
+  private instanceSubscription: Subscription;
+
   constructor(
+    private $log: ng.ILogService,
     private $scope: ng.IScope,
     private $state: ng.ui.IStateService,
     private store: IXosModelStoreService,
     private auth: IXosAuthService
   ) {
 
+    this.$log.info(`[XosDashboardView] Setup`);
+
     if (!this.auth.isAuthenticated()) {
       this.$state.go('login');
     }
     else {
-      this.store.query('Node')
+      this.nodeSubscription = this.store.query('Node')
         .subscribe((event) => {
           this.$scope.$evalAsync(() => {
             this.nodes = event.length;
           });
         });
-      this.store.query('Instance')
+      this.instanceSubscription = this.store.query('Instance')
         .subscribe((event) => {
           this.$scope.$evalAsync(() => {
             this.instances = event.length;
           });
         });
-      this.store.query('Slice')
+      this.sliceSubscription = this.store.query('Slice')
         .subscribe((event) => {
           this.$scope.$evalAsync(() => {
             this.slices = event.length;
@@ -58,6 +74,12 @@ class DashboardController {
       this.nodes = 0;
       this.slices = 0;
     }
+  }
+
+  $onDestroy () {
+    this.nodeSubscription.unsubscribe();
+    this.instanceSubscription.unsubscribe();
+    this.sliceSubscription.unsubscribe();
   }
 }
 

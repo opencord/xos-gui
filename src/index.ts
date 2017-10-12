@@ -83,11 +83,12 @@ angular
   .component('xos', main)
   .provider('XosConfig', function(){
     // save the last visited state before reload
-    const lastVisitedUrl = window.location.hash.replace('#', '');
+    let lastVisitedUrl = window.location.hash.replace('#', '');
     this.$get = [() => {
-      return {
-        lastVisitedUrl
-      };
+      if (lastVisitedUrl === '/login' || lastVisitedUrl === '/loader') {
+        lastVisitedUrl = '/dashboard';
+      }
+      return {lastVisitedUrl};
     }] ;
     return this;
   })
@@ -129,11 +130,15 @@ angular
     // if the user is authenticated
     $log.info(`[XOS] Is user authenticated? ${AuthService.isAuthenticated()}`);
     if (AuthService.isAuthenticated()) {
+      $log.info(`[XOS] Redirect to "loader"`);
       $state.go('loader');
+      $rootScope.$apply();
     }
     else {
       AuthService.clearUser();
+      $log.info(`[XOS] Redirect to "login"`);
       $state.go('login');
+      $rootScope.$apply();
     }
 
     // register keyboard shortcut
