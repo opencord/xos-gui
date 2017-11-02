@@ -143,10 +143,6 @@ describe('header component', () => {
     // }, 'global');
   });
 
-  it('should print user email', () => {
-    expect($('.profile-address', element).text()).toBe('test@xos.us');
-  });
-
   it('should configure toastr', () => {
     delete MockToastrConfig['onTap'];
 
