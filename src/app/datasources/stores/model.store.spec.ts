@@ -28,6 +28,7 @@ import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
 import {AuthService} from '../rest/auth.rest';
 import {XosDebouncer} from '../../core/services/helpers/debounce.helper';
 import {IXosModeldefsCache} from '../helpers/modeldefs.service';
+import {XosFormHelpers} from '../../core/form/form-helpers';
 
 let service: IXosModelStoreService;
 let httpBackend: ng.IHttpBackendService;
@@ -70,6 +71,7 @@ describe('The ModelStore service', () => {
       .service('XosModelStore', XosModelStore)
       .service('ConfigHelpers', ConfigHelpers) // TODO mock
       .service('AuthService', AuthService)
+      .service('XosFormHelpers', XosFormHelpers)
       .constant('AppConfig', MockAppCfg)
       .value('XosModeldefsCache', {
         get: jasmine.createSpy('XosModeldefsCache.get').and.returnValue({}),

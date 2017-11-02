@@ -22,6 +22,7 @@ import 'angular-resource';
 import 'angular-cookies';
 import {IXosResourceService} from './model.rest';
 import {xosDataSources} from '../index';
+import {IXosFormHelpersService} from '../../core/form/form-helpers';
 
 let service: IXosResourceService;
 let resource: ng.resource.IResourceClass<any>;
@@ -34,6 +35,10 @@ const MockAppCfg = {
   websocketClient: 'http://xos-test:3000'
 };
 
+const MockFormHelpers: IXosFormHelpersService = {
+  _getFieldFormat: () => 'date'
+};
+
 describe('The ModelRest service', () => {
 
   beforeEach(angular.mock.module(xosDataSources));
@@ -41,7 +46,8 @@ describe('The ModelRest service', () => {
   beforeEach(() => {
 
     angular.module(xosDataSources)
-      .constant('AppConfig', MockAppCfg);
+      .constant('AppConfig', MockAppCfg)
+      .value('XosFormHelpers', MockFormHelpers);
 
     angular.mock.module(xosDataSources);
   });
@@ -98,5 +104,32 @@ describe('The ModelRest service', () => {
       });
     $scope.$apply();
     httpBackend.flush();
+  });
+
+  describe('when saving a model', () => {
+
+    let item, date;
+    const timestamp = 1509552402000;
+
+    beforeEach(() => {
+      httpBackend.expectPOST(`${MockAppCfg.apiEndpoint}/core/test`)
+        .respond((method, url, req) => {
+          return [200, req];
+        });
+      resource = service.getResource('/core/test');
+      date = new Date(timestamp);
+      item = new resource({date: date.toString()});
+    });
+
+    xit('should convert dates to timestamps', (done) => {
+      item.$save()
+        .then(res => {
+          expect(res.date).toEqual(timestamp);
+          done();
+        });
+      $scope.$apply();
+      httpBackend.flush();
+      done();
+    });
   });
 });
