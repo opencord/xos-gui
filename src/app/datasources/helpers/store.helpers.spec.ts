@@ -26,6 +26,7 @@ import {IWSEvent} from '../websocket/global';
 import {ConfigHelpers} from '../../core/services/helpers/config.helpers';
 import {AuthService} from '../rest/auth.rest';
 import {IXosModeldefsCache} from './modeldefs.service';
+import {XosFormHelpers} from '../../core/form/form-helpers';
 
 let service: IStoreHelpersService;
 let subject: BehaviorSubject<any>;
@@ -42,6 +43,7 @@ describe('The StoreHelpers service', () => {
       .service('ModelRest', ModelRest) // NOTE evaluate mock
       .service('StoreHelpers', StoreHelpers)
       .service('AuthService', AuthService)
+      .service('XosFormHelpers', XosFormHelpers)
       .value('XosModeldefsCache', {
         get: jasmine.createSpy('XosModeldefsCache.get'),
         getApiUrlFromModel: jasmine.createSpy('XosModeldefsCache.getApiUrlFromModel')

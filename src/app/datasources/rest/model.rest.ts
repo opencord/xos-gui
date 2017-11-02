@@ -15,37 +15,48 @@
  * limitations under the License.
  */
 
-
+import * as _ from 'lodash';
 import {IXosAppConfig} from '../../../index';
+import {IXosFormHelpersService} from '../../core/form/form-helpers';
+
 export interface IXosResourceService {
   getResource(url: string): ng.resource.IResourceClass<any>;
 }
 
 export class ModelRest implements IXosResourceService {
-  static $inject = ['$resource', 'AppConfig'];
+  static $inject = ['$resource', 'AppConfig', 'XosFormHelpers'];
 
   /** @ngInject */
   constructor(
     private $resource: ng.resource.IResourceService,
-    private AppConfig: IXosAppConfig
+    private AppConfig: IXosAppConfig,
+    private XosFormHelpers: IXosFormHelpersService
   ) {
 
   }
 
   public getResource(url: string): ng.resource.IResourceClass<ng.resource.IResource<any>> {
+    const self = this;
     const resource: angular.resource.IResourceClass<any> = this.$resource(`${this.AppConfig.apiEndpoint}${url}/:id/`, {id: '@id'}, {
       update: { method: 'PUT' },
       query: {
         method: 'GET',
         isArray: true,
         transformResponse: (res) => {
-          // FIXME chameleon return everything inside "items"
           return res.items ? res.items : res;
         }
       }
     });
 
     resource.prototype.$save = function() {
+
+      // NOTE converting dates back to timestamp
+      _.forEach(Object.keys(this), (k: string) => {
+        if (self.XosFormHelpers._getFieldFormat(this[k]) === 'date') {
+          this[k] = new Date(this[k]).getTime();
+        }
+      });
+
       if (this.id) {
         return this.$update();
       } else {

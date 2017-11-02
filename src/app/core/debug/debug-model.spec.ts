@@ -91,7 +91,7 @@ describe('The xosDebugModel component', () => {
 
       dateFields.forEach(f => {
         const date = isolatedScope.parseField(f, model[f]);
-        expect(date).toEqual('Thu Aug 17 2017 15:45:20 GMT-0700 (PDT)');
+        expect(date).toEqual(new Date(model[f] * 1000).toString());
       });
     });
 
