@@ -35,11 +35,40 @@ When changing the name of `sample-gui-extension`, you must be wary to change all
 extension folder.
 
  
-## Add an extension to a profile
+## Adding an extension to the build system
  
-To deploy your GUI extension with a cord profile you'll need to reference it in `platform-install/profile-manifests`.
+To deploy your GUI extension with a cord profile you'll need to reference it in `platform-install` and `build`.
+The following steps must be followed to ensure that your GUI extension builds correctly with XOS.
+
+### Adding the extension to `docker_images.yml`
+
+Open `cord/build/docker_images.yml`. Locate the section of the file with other GUI extensions, and add the following:
+
+```yaml
+- name: xosproject/gui-extension-sample
+    repo: sampleRepo # should match Gerrit repo name
+    path: "xos/gui" # path to find extension in the repo (i.e. sampleRepo/xos/gui/)
+```
+Please maintain ascending alphabetical order among the GUI extensions when inserting your own extension.
+
+### Adding the extension to the podconfig scenario
+
+Open the `config.yml` file of the podconfig scenario relevant to your GUI extension (e.g. cord, mock, local). 
+Locate the section titled `docker_image_whitelist` and add your GUI extension.
+
+```yaml
+docker_image_whitelist:
+# ...other docker images...
+  - "xosproject/gui-extension-rcord"
+  - "xosproject/gui-extension-sample" # extension added in alphabetical order
+  - "xosproject/gui-extension-vtr"
+# ...more docker images...
+
+```
+
+### Adding the extension to the podconfig profile manifest
  
-Open the `profile-manifest` you're working on (eg: `profile_manifests/ecord-global.yml`) and locate `enabled_gui_extensions`.
+Open the `profile-manifest` relevant to the podconfig you're working on (eg: profile_manifests/frontend.yml) and locate `enabled_gui_extensions`.
 It may appear in two forms, depending whether or not there are others loaded extensions:
 ```yaml
 enabled_gui_extensions:
@@ -51,6 +80,8 @@ or:
 enabled_gui_extensions: []
 ```
 _NOTE: if it is not there, just create it._
+
+### Change conf export settings to match extension name
 
 To add your extension, just add it to the list:
 ```yaml
