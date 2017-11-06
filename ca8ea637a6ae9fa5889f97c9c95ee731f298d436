@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a5c5d37_fb2c6e4c",
+        "filename": "src/app/core/header/header.spec.ts",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-11-06T18:17:36Z",
+      "side": 1,
+      "message": "If are not using this test we can either remove it completely or skip it: https://jasmine.github.io/2.0/introduction.html#section-13",
+      "range": {
+        "startLine": 146,
+        "startChar": 2,
+        "endLine": 148,
+        "endChar": 8
+      },
+      "revId": "ca8ea637a6ae9fa5889f97c9c95ee731f298d436",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
