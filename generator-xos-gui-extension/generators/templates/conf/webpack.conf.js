@@ -99,7 +99,10 @@ module.exports = {
       '.web.js',
       '.js',
       '.ts'
-    ]
+    ],
+    alias: {
+      "ngprogress": path.resolve(__dirname, '../node_modules/ngprogress/build/ngProgress.js')
+    }
   },
   entry: `./${conf.path.src('index')}`,
   ts: {
