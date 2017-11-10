@@ -3,6 +3,8 @@
   "dependencies": {
     "angular": "1.6.3",
     "angular-animate": "1.6.3",
+    "angular-base64": "^2.0.5",
+    "angular-chart.js": "^1.1.1",
     "angular-cookies": "1.6.3",
     "angular-resource": "1.6.3",
     "angular-toastr": "2.1.1",
@@ -15,6 +17,7 @@
     "lodash": "4.17.4",
     "ngprogress": "1.1.1",
     "oclazyload": "1.1.0",
+    "moment": "^2.19.0",
     "pluralize": "3.1.0",
     "rxjs": "5.2.0",
     "socket.io-client": "1.7.3"
