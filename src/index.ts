@@ -47,6 +47,7 @@ import {IXosKeyboardShortcutService} from './app/core/services/keyboard-shortcut
 import {IXosModelDiscovererService} from './app/datasources/helpers/model-discoverer.service';
 import {xosServiceGraph} from './app/service-graph/index';
 import {IXosDebugService} from './app/core/debug/debug.service';
+import {xosNotification} from './app/notification/index';
 
 export interface IXosAppConfig {
   apiEndpoint: string;
@@ -70,6 +71,7 @@ angular
     xosExtender,
     xosTemplate, // template module
     xosServiceGraph,
+    xosNotification,
     'ui.router',
     'ngResource',
     'ngProgress'

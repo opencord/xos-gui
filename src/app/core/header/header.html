@@ -49,9 +49,12 @@ limitations under the License.
           style="width: 275px"
           ng-model="vm.query"
           uib-typeahead="state for state in vm.search($viewValue) | limitTo:30"
-          typeahead-template-url="customTemplate.html"
+          typahead-template-url="customTemplate.html"
           typeahead-on-select="vm.routeSelected($item, $model, $label)">
       </form>
+      <div class="pull-right">
+        <a ui-sref="xos.notifications"><i class="pe pe-7s-bell text-accent" id="notifs"></i></a>
+      </div>
     </div>
   </div>
 </nav>

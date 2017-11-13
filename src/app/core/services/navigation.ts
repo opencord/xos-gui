@@ -58,6 +58,10 @@ export class IXosNavigationService {
         label: 'Service Graph',
         state: 'xos.fine-grained-graph'
       },
+      {
+        label: 'Notifications',
+        state: 'xos.notifications'
+      }
     ];
     // adding configuration defined routes
     // this.routes = StyleConfig.routes.concat(defaultRoutes).reverse();
