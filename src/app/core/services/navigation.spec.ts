@@ -71,6 +71,10 @@ describe('The Navigation service', () => {
       {
         label: 'Service Graph',
         state: 'xos.fine-grained-graph'
+      },
+      {
+        label: 'Notifications',
+        state: 'xos.notifications'
       }
     ].concat(mockRoutes);
   }));
