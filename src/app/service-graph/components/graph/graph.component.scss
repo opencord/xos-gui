@@ -19,13 +19,24 @@
 @import './../../../style/vars.scss';
 @import '../../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
 
-xos-fine-grained-tenancy-graph {
+xos-service-graph {
   display: block;
-  height: 100%;
   // background: $color-accent;
 
+  .graph-container {
+    position: relative;
+
+    .loader-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 400px;
+      width: 100%;
+    }
+  }
+
   svg {
-    height: 90%;
+    height: 400px;
     width: 100%;
     background-color: $panel-filled-bg;
     border-radius: 3px;
@@ -37,56 +48,32 @@ xos-fine-grained-tenancy-graph {
       cursor: pointer;
     }
 
-    .node .symbol {
-        fill-rule: evenodd;
-        stroke: #bbddff;
-        stroke-width: 4.0px;
-        fill: none;
+    .node > rect {
+      stroke: $color-accent;
+      fill: $background-color;
     }
-    .node .symbol-bg {
-        fill-rule: evenodd;
-        stroke: none;
-        fill: $background-color;
+
+    .node > .icon {
+      fill: $color-accent;
     }
 
     .node {
-      rect, circle {
-        stroke: $color-accent;
-        fill: $background-color;
+      >.label {
+        >text {
+          fill: #fff;
+          font-size: 20px;
+        }
+        >rect {
+          fill: $background-color;
+          stroke: #fff;
+        }
       }
-
-      &.network > circle{
-        stroke: blue;
-      }
-
-      &.tenant, &.serviceinstance > rect{
-        stroke: green;
-      }
-
-      &.subscriber > rect,
-      &.tenantroot > rect{
-        stroke: red;
-      }
-    }
-
-    .node > text {
-      fill: #fff;
-      font-size: 20px;
     }
   }
 
   .link-group {
     line {
       stroke: $color-accent;
-
-      &.ext-service-instance {
-        stroke: green;
-      }
-
-      &.ext-owner {
-        stroke: green;
-        stroke-dasharray: 5;
-      }
     }
   }
   .arrow-marker {

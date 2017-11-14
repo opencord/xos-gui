@@ -27,6 +27,7 @@ interface ISvgMarker {
 }
 
 export interface IXosServiceGraphConfig {
+  duration: number,
   force: {
     linkDistance: number;
     charge: number;
@@ -40,6 +41,7 @@ export interface IXosServiceGraphConfig {
 }
 
 export const XosServiceGraphConfig: IXosServiceGraphConfig = {
+  duration: 750,
   force: {
     linkDistance: 80,
     charge: -60,

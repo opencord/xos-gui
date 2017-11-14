@@ -26,7 +26,7 @@ module.exports = function () {
         conf.paths.tmp,
         conf.paths.src
       ],
-      middleware: function(req, res, next){
+      middleware: function(req, res, next) {
         if (
           req.url.indexOf('xosapi') !== -1
           || req.url.indexOf('socket.io') !== -1

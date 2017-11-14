@@ -1,0 +1,151 @@
+/*
+ * Copyright 2017-present Open Networking Foundation
+
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ * http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+import * as _ from 'lodash';
+import {Graph} from 'graphlib';
+import {IXosModelStoreService} from '../../datasources/stores/model.store';
+import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
+import {Subscription} from 'rxjs/Subscription';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import {IXosSgLink, IXosSgNode} from '../interfaces';
+
+
+export interface IXosGraphStore {
+  get(): Observable<Graph>;
+  nodesFromGraph(graph: Graph): IXosSgNode[];
+  linksFromGraph(graph: Graph): IXosSgLink[];
+}
+
+export class XosGraphStore implements IXosGraphStore {
+  static $inject = [
+    '$log',
+    'XosModelStore',
+    'XosDebouncer'
+  ];
+
+  // graphs
+  private serviceGraph: any;
+  private ServiceGraphSubject: BehaviorSubject<any>;
+
+  // datastore
+  private ServiceSubscription: Subscription;
+  private ServiceDependencySubscription: Subscription;
+
+  constructor (
+    private $log: ng.ILogService,
+    private XosModelStore: IXosModelStoreService,
+    private XosDebouncer: IXosDebouncer
+  ) {
+    this.$log.info('[XosGraphStore] Setup');
+
+    this.serviceGraph = new Graph();
+    this.ServiceGraphSubject = new BehaviorSubject(this.serviceGraph);
+
+    this.loadData();
+  }
+
+  public nodesFromGraph(graph: Graph): IXosSgNode[] {
+    return _.map(graph.nodes(), n => {
+      return {
+        id: n,
+        data: graph.node(n)
+      };
+    });
+  }
+
+  public linksFromGraph(graph: Graph): IXosSgLink[] {
+    const nodes = this.nodesFromGraph(graph);
+
+    // NOTE we'll need some intelligence here to differentiate between:
+    // - ServiceDependency
+    // - ServiceInstanceLinks
+    // - Owners
+
+    return _.map(graph.edges(), l => {
+      const link = graph.edge(l);
+
+      const sourceId = this.getServiceNodeId(link.subscriber_service_id);
+      const targetId = this.getServiceNodeId(link.provider_service_id);
+      return {
+        id: `${l.v}-${l.w}`,
+        source: _.findIndex(nodes, {id: sourceId}),
+        target: _.findIndex(nodes, {id: targetId}),
+        data: link
+      };
+    });
+  }
+
+  public get(): Observable<Graph> {
+    return this.ServiceGraphSubject.asObservable();
+  }
+
+  private loadData() {
+    this.loadServices();
+    this.loadServiceDependencies();
+  }
+
+  private addNode(nodeId: string, node: any) {
+    this.serviceGraph.setNode(nodeId, node);
+  }
+
+  private addEdge(sourceId: string, targetId: string, link: any) {
+    this.serviceGraph.setEdge(sourceId, targetId, link);
+  }
+
+  private getServiceNodeId(id: string): string {
+    return `service~${id}`;
+  }
+
+  // data loaders
+  private loadServices() {
+    this.ServiceSubscription = this.XosModelStore.query('Service', '/core/services')
+      .subscribe(
+        (res) => {
+          if (res.length > 0) {
+            _.forEach(res, n => {
+              const nodeId = this.getServiceNodeId(n.id);
+              this.addNode(nodeId, n);
+            });
+            this.ServiceGraphSubject.next(this.serviceGraph);
+          }
+        },
+        (err) => {
+          this.$log.error(`[XosServiceGraphStore] Service Observable: `, err);
+        }
+      );
+  }
+
+  private loadServiceDependencies() {
+    this.ServiceDependencySubscription = this.XosModelStore.query('ServiceDependency', '/core/servicedependencys')
+      .subscribe(
+        (res) => {
+          if (res.length > 0) {
+            _.forEach(res, l => {
+              const sourceId = this.getServiceNodeId(l.subscriber_service_id);
+              const targetId = this.getServiceNodeId(l.provider_service_id);
+              this.addEdge(sourceId, targetId, l);
+            });
+            this.ServiceGraphSubject.next(this.serviceGraph);
+          }
+        },
+        (err) => {
+          this.$log.error(`[XosServiceGraphStore] Service Observable: `, err);
+        }
+      );
+  }
+}
