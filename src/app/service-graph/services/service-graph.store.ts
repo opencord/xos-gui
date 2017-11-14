@@ -22,7 +22,7 @@ import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {
   IXosServiceGraph, IXosServiceModel, IXosTenantModel, IXosCoarseGraphData,
   IXosServiceGraphNode, IXosServiceGraphLink, IXosFineGrainedGraphData
-} from '../interfaces';
+} from '../interfaces.old';
 import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
 export interface IXosServiceGraphStore {
   // TODO remove, moved in a new service

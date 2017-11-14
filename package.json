@@ -13,11 +13,12 @@
     "bootstrap": "3.3.7",
     "bootstrap-sass": "3.3.7",
     "d3": "3.5.17",
+    "graphlib": "^2.1.1",
     "jquery": "3.1.1",
     "lodash": "4.17.4",
+    "moment": "^2.19.0",
     "ngprogress": "1.1.1",
     "oclazyload": "1.1.0",
-    "moment": "^2.19.0",
     "pluralize": "3.1.0",
     "rxjs": "5.2.0",
     "socket.io-client": "1.7.3"

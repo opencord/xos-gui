@@ -32,6 +32,9 @@ module.exports = function () {
         if (req.url.indexOf('xosapi') !== -1) {
           proxy.web(req, res);
         }
+        else if (req.url.indexOf('extensions') !== -1) {
+          proxy.web(req, res);
+        }
         else if (req.url.indexOf('socket.io') !== -1) {
           socketProxy.web(req, res);
         }

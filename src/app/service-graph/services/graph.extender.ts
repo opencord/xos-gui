@@ -16,7 +16,7 @@
  */
 
 
-import {IXosServiceGraph} from '../interfaces';
+import {IXosServiceGraph} from '../interfaces.old';
 
 export interface IXosServiceGraphReducers {
   coarse: IXosServiceGraphReducer[];
