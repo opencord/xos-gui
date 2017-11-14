@@ -17,27 +17,51 @@
 
 
 import * as d3 from 'd3';
+import {XosServiceGraphConfig as config} from '../../graph.config';
 
 export interface Id3BBox {
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   width: number;
   height: number;
 }
 
 export interface IXosGraphHelpers {
   parseElemClasses (classes: string): string;
+  getBBox(context: any): Id3BBox;
   getSiblingTextBBox(contex: any /* D3 this */): Id3BBox;
+  getSiblingIconBBox(contex: any /* D3 this */): Id3BBox;
+  getSiblingBBox(contex: any): Id3BBox;
 }
 
 export class XosGraphHelpers implements IXosGraphHelpers {
   public parseElemClasses (classes: string): string {
-    return classes ? classes.split(' ')
+    return angular.isDefined(classes) ? classes.split(' ')
       .map(c => `ext-${c}`)
       .join(' ') : '';
   }
 
+  public getBBox(context: any): Id3BBox {
+    return d3.select(context).node().getBBox();
+  }
+
   public getSiblingTextBBox(contex: any): Id3BBox {
-    return d3.select(contex.parentNode).select('text').node().getBBox();
+    const text: d3.Selection<any> = d3.select(contex.parentNode).select('text');
+    return text.empty() ? {width: 0, height: 0} : text.node().getBBox();
+  }
+
+  public getSiblingIconBBox(contex: any): Id3BBox {
+    return d3.select(contex.parentNode).select('path').node().getBBox();
+  }
+
+  public getSiblingBBox(contex: any): Id3BBox {
+    // NOTE consider that inside a node we can have 1 text and 1 icon
+    const textBBox: Id3BBox = this.getSiblingTextBBox(contex);
+    const iconBBox: Id3BBox = this.getSiblingIconBBox(contex);
+
+    return {
+      width: iconBBox.width + (textBBox.width ? config.node.padding + textBBox.width : 0),
+      height: iconBBox.height
+    };
   }
 }

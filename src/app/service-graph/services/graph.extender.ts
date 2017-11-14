@@ -16,7 +16,9 @@
  */
 
 
-import {IXosServiceGraph} from '../interfaces';
+
+
+import {Graph} from 'graphlib';
 
 export interface IXosServiceGraphReducers {
   coarse: IXosServiceGraphReducer[];
@@ -29,7 +31,7 @@ export interface IXosServiceGraphReducer {
 }
 
 export interface IXosServiceGraphReducerFn {
-  (graph: IXosServiceGraph): IXosServiceGraph;
+  (graph: Graph): Graph;
 }
 
 export interface IXosServiceGraphExtender {

@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2017-present Open Networking Foundation
 
@@ -15,32 +14,30 @@
  * limitations under the License.
  */
 
-
-import {xosDataSources} from '../datasources/index';
-import {XosServiceGraphStore} from './services/service-graph.store';
-import {xosCore} from '../core/index';
-import {XosCoarseTenancyGraph} from './components/coarse/coarse.component';
-import {XosFineGrainedTenancyGraph} from './components/fine-grained/fine-grained.component';
 import {XosServiceGraphExtender, IXosServiceGraphExtender} from './services/graph.extender';
-import {XosGraphHelpers} from './services/d3-helpers/graph.helpers';
-import {XosServiceInstanceGraphStore} from './services/service-instance.graph.store';
+import {XosGraphHelpers} from './services/d3-helpers/graph-elements.helpers';
+import {XosServiceGraph} from './components/graph/graph.component';
+import {XosGraphStore} from './services/graph.store';
+import {XosServiceGraphIcons} from './services/d3-helpers/graph-icons.service';
+import {XosNodePositioner} from './services/node-positioner.service';
+import {XosGraphConfig} from './services/graph.config';
+import {XosNodeRenderer} from './services/renderer/node.renderer';
+
 export const xosServiceGraph = 'xosServiceGraph';
 
 angular
-  .module(xosServiceGraph, [xosDataSources, xosCore])
-  .service('XosServiceGraphStore', XosServiceGraphStore)
-  .service('XosServiceInstanceGraphStore', XosServiceInstanceGraphStore)
+  .module(xosServiceGraph, [])
   .service('XosServiceGraphExtender', XosServiceGraphExtender)
   .service('XosGraphHelpers', XosGraphHelpers)
-  .component('xosCoarseTenancyGraph', XosCoarseTenancyGraph)
-  .component('xosFineGrainedTenancyGraph', XosFineGrainedTenancyGraph)
-  .config(($stateProvider) => {
-    $stateProvider
-      .state('xos.fine-grained-graph', {
-        url: 'tenancy-graph',
-        component: 'xosFineGrainedTenancyGraph',
-      });
-  })
-  .run(($log: ng.ILogService, XosServiceGraphExtender: IXosServiceGraphExtender) => {
+  .service('XosGraphStore', XosGraphStore)
+  .service('XosServiceGraphIcons', XosServiceGraphIcons)
+  .service('XosNodePositioner', XosNodePositioner)
+  .service('XosGraphConfig', XosGraphConfig)
+  .service('XosNodeRenderer', XosNodeRenderer)
+  .component('xosServiceGraph', XosServiceGraph)
+  .run((
+    $log: ng.ILogService,
+    XosServiceGraphExtender: IXosServiceGraphExtender
+  ) => {
     $log.info(`[${xosServiceGraph}] Module Setup`);
   });
