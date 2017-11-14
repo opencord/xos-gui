@@ -21,7 +21,7 @@ import * as d3 from 'd3';
 import * as $ from 'jquery';
 import * as _ from 'lodash';
 import {IXosServiceGraphStore} from '../../services/service-graph.store';
-import {IXosServiceGraph, IXosServiceGraphNode, IXosServiceGraphLink} from '../../interfaces';
+import {IXosServiceGraph, IXosServiceGraphNode, IXosServiceGraphLink} from '../../interfaces.old';
 import {XosServiceGraphConfig as config} from '../../graph.config';
 import {IXosDebouncer} from '../../../core/services/helpers/debounce.helper';
 import {Subscription} from 'rxjs';

@@ -22,7 +22,7 @@ import 'angular-ui-router';
 import {IXosServiceGraphStore, XosServiceGraphStore} from './service-graph.store';
 import {Subject} from 'rxjs';
 import {XosDebouncer} from '../../core/services/helpers/debounce.helper';
-import {IXosServiceGraph} from '../interfaces';
+import {IXosServiceGraph} from '../interfaces.old';
 import {XosServiceGraphExtender, IXosServiceGraphExtender} from './graph.extender';
 
 let service: IXosServiceGraphStore, extender: IXosServiceGraphExtender;

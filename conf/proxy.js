@@ -18,7 +18,7 @@
 
 const httpProxy = require('http-proxy');
 
-const target = process.env.PROXY || '192.168.46.100';
+const target = process.env.PROXY || '127.0.0.1:8080';
 
 console.info(`Proxying request to: ${target}`);
 
