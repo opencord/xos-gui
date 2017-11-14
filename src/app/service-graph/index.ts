@@ -24,6 +24,9 @@ import {XosFineGrainedTenancyGraph} from './components/fine-grained/fine-grained
 import {XosServiceGraphExtender, IXosServiceGraphExtender} from './services/graph.extender';
 import {XosGraphHelpers} from './services/d3-helpers/graph.helpers';
 import {XosServiceInstanceGraphStore} from './services/service-instance.graph.store';
+import {XosServiceGraph} from './components/graph/graph.component';
+import {XosGraphStore} from './services/graph.store';
+import {XosServiceGraphIcons} from './services/d3-helpers/graph-icons.service';
 export const xosServiceGraph = 'xosServiceGraph';
 
 angular
@@ -32,8 +35,13 @@ angular
   .service('XosServiceInstanceGraphStore', XosServiceInstanceGraphStore)
   .service('XosServiceGraphExtender', XosServiceGraphExtender)
   .service('XosGraphHelpers', XosGraphHelpers)
+  // TODO remove the old graphs
   .component('xosCoarseTenancyGraph', XosCoarseTenancyGraph)
   .component('xosFineGrainedTenancyGraph', XosFineGrainedTenancyGraph)
+
+  .component('xosServiceGraph', XosServiceGraph)
+  .service('XosGraphStore', XosGraphStore)
+  .service('XosServiceGraphIcons', XosServiceGraphIcons)
   .config(($stateProvider) => {
     $stateProvider
       .state('xos.fine-grained-graph', {
