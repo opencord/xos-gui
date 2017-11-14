@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2017-present Open Networking Foundation
 
@@ -19,16 +18,55 @@
 @import './../../../style/vars.scss';
 @import '../../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
 
-xos-fine-grained-tenancy-graph {
+$svg-size: 600px;
+
+xos-service-graph {
   display: block;
-  height: 100%;
   // background: $color-accent;
 
+  .graph-container {
+    position: relative;
+
+    .loader-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: $svg-size;
+      width: 100%;
+    }
+  }
+
   svg {
-    height: 90%;
+    height: $svg-size;
     width: 100%;
     background-color: $panel-filled-bg;
     border-radius: 3px;
+  }
+
+  .close-btn {
+    display: none;
+  }
+
+  .fullscreen {
+    svg {
+      z-index: 1040;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: $background-color;
+      transition: all .5s;
+    }
+
+    .close-btn {
+      cursor: pointer;
+      display: block;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1041;
+    }
   }
 
   .node-group {
@@ -37,56 +75,51 @@ xos-fine-grained-tenancy-graph {
       cursor: pointer;
     }
 
-    .node .symbol {
-        fill-rule: evenodd;
-        stroke: #bbddff;
-        stroke-width: 4.0px;
-        fill: none;
-    }
-    .node .symbol-bg {
-        fill-rule: evenodd;
-        stroke: none;
-        fill: $background-color;
-    }
-
-    .node {
-      rect, circle {
+    .node.service {
+      > rect {
         stroke: $color-accent;
         fill: $background-color;
       }
-
-      &.network > circle{
-        stroke: blue;
-      }
-
-      &.tenant, &.serviceinstance > rect{
-        stroke: green;
-      }
-
-      &.subscriber > rect,
-      &.tenantroot > rect{
-        stroke: red;
+      > .icon {
+        fill: $color-accent;
       }
     }
 
-    .node > text {
-      fill: #fff;
-      font-size: 20px;
+    .node.serviceinstance {
+      > rect {
+        stroke: green;
+        fill: $background-color;
+      }
+      > .icon {
+        fill: green;
+      }
+    }
+
+    .node {
+      >.label {
+        >text {
+          fill: #fff;
+        }
+        >rect {
+          fill: $background-color;
+          stroke: #fff;
+        }
+      }
     }
   }
 
   .link-group {
     line {
       stroke: $color-accent;
+    }
 
-      &.ext-service-instance {
-        stroke: green;
-      }
+    line.ownership {
+      stroke: green;
+      stroke-dasharray: 5;
+    }
 
-      &.ext-owner {
-        stroke: green;
-        stroke-dasharray: 5;
-      }
+    line.serviceinstancelink {
+      stroke: green;
     }
   }
   .arrow-marker {
