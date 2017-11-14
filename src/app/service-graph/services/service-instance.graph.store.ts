@@ -20,7 +20,7 @@ import * as _ from 'lodash';
 import {Observable, BehaviorSubject, Subscription} from 'rxjs';
 import {
   IXosServiceGraph, IXosServiceInstanceGraphData, IXosServiceGraphNode
-} from '../interfaces';
+} from '../interfaces.old';
 import {IXosDebouncer} from '../../core/services/helpers/debounce.helper';
 import {IXosModelStoreService} from '../../datasources/stores/model.store';
 import {IXosServiceGraphStore} from './service-graph.store';

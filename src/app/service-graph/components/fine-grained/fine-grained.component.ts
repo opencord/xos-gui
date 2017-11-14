@@ -23,7 +23,7 @@ import * as _ from 'lodash';
 import {Subscription} from 'rxjs';
 import {XosServiceGraphConfig as config} from '../../graph.config';
 import {IXosDebouncer} from '../../../core/services/helpers/debounce.helper';
-import {IXosServiceGraph, IXosServiceGraphLink, IXosServiceGraphNode} from '../../interfaces';
+import {IXosServiceGraph, IXosServiceGraphLink, IXosServiceGraphNode} from '../../interfaces.old';
 import {IXosSidePanelService} from '../../../core/side-panel/side-panel.service';
 import {IXosGraphHelpers} from '../../services/d3-helpers/graph.helpers';
 import {IXosServiceGraphExtender, IXosServiceGraphReducer} from '../../services/graph.extender';
