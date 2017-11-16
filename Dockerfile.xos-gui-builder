@@ -14,7 +14,7 @@
 # limitations under the License.
 
 
-# To build use: docker build -t xosproject/xos-gui-extension-builder .
+# To build use: docker build -t xosproject/xos-gui-builder:candidate .
 
 FROM node:7.9.0
 
@@ -24,15 +24,12 @@ ENV CODE_DEST /var/www
 
 RUN mkdir -p ${CODE_DEST}
 
-# Add the app deps
 COPY ${CODE_SOURCE}/package.json ${CODE_SOURCE}/typings.json ${CODE_DEST}/
 
-# Install Deps
 WORKDIR ${CODE_DEST}
 RUN npm install \
  && npm run typings
 
-# Label image
 ARG org_label_schema_schema_version=1.0
 ARG org_label_schema_name=xos-gui-extension-builder
 ARG org_label_schema_version=unknown

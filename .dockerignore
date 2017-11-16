@@ -1,2 +1,8 @@
 node_modules
+typings
+coverage
+generator-xos-gui-extension
+docs
+.tmp
+.idea
 npm-debug.log
