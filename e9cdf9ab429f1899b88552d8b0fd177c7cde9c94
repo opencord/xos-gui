@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54c9571b_8ccc096b",
+        "filename": "src/app/datasources/rest/model.rest.ts",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2017-11-21T19:36:05Z",
+      "side": 1,
+      "message": "should this commented-out code be removed?",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 48
+      },
+      "revId": "e9cdf9ab429f1899b88552d8b0fd177c7cde9c94",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
