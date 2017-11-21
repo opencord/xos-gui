@@ -24,28 +24,34 @@ import {IXosModeldefsCache} from './modeldefs.service';
 
 export interface IStoreHelpersService {
   updateCollection(event: IWSEvent, subject: BehaviorSubject<any>): BehaviorSubject<any>;
+  removeItemFromCollection(event: IWSEvent, subject: BehaviorSubject<any>): BehaviorSubject<any>;
 }
 
 export class StoreHelpers implements IStoreHelpersService {
   static $inject = [
+    '$log',
     'ModelRest',
     'XosModeldefsCache'
   ];
 
   constructor (
+    private $log: ng.ILogService,
     private modelRest: IXosResourceService,
     private XosModeldefsCache: IXosModeldefsCache
   ) {
   }
 
   public updateCollection(event: IWSEvent, subject: BehaviorSubject<any>): BehaviorSubject<any> {
+    if (event.deleted) {
+      this.$log.error('[XosStoreHelpers] updateCollection method has been called for a delete event, in this cale please use "removeItemFromCollection"', event);
+      return;
+    }
     const collection: any[] = subject.value;
     const index: number = _.findIndex(collection, (i) => {
       // NOTE evaluate to use event.msg.pk
       return i.id === event.msg.object.id;
     });
     const exist: boolean = index > -1;
-    const isDeleted: boolean = _.includes(event.msg.changed_fields, 'deleted');
 
     // generate a resource for the model
     const modelDef = this.XosModeldefsCache.get(event.model); // get the model definition
@@ -53,16 +59,12 @@ export class StoreHelpers implements IStoreHelpersService {
     const resource = this.modelRest.getResource(endpoint);
     const model = new resource(event.msg.object);
 
-    // remove
-    if (exist && isDeleted) {
-       _.remove(collection, {id: event.msg.object.id});
-     }
     // Replace item at index using native splice
-    else if (exist && !isDeleted) {
+    if (exist) {
        collection.splice(index, 1, model);
      }
-    // if the element is not deleted add it
-    else if (!exist && !isDeleted) {
+    // if the element does not exist add it
+    else {
       collection.push(model);
      }
 
@@ -70,4 +72,15 @@ export class StoreHelpers implements IStoreHelpersService {
 
     return subject;
     }
+
+  public removeItemFromCollection(event: IWSEvent, subject: BehaviorSubject<any>): BehaviorSubject<any> {
+    if (!event.deleted) {
+      this.$log.error('[XosStoreHelpers] removeItemFromCollection method has been called for an update event, in this cale please use "updateCollection"', event);
+      return;
+    }
+    const collection: any[] = subject.value;
+    _.remove(collection, {id: event.msg.object.id});
+    subject.next(collection);
+    return subject;
+  }
 }
