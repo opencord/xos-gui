@@ -64,6 +64,10 @@ export class ModelRest implements IXosResourceService {
       }
     };
 
+    // resource.prototype.$delete = function() {
+    //
+    // }
+
     return resource;
   }
 }

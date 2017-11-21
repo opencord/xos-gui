@@ -24,6 +24,7 @@ import {IXosAppConfig} from '../../../index';
 export interface IWSEvent {
   model: string;
   skip_notification?: boolean;
+  deleted?: boolean;
   msg: {
     changed_fields: string[],
     object?: any,
@@ -53,7 +54,15 @@ export class WebSocketEvent {
     const ignoredFields: string[] = ['created', 'updated', 'backend_register'];
 
     this.socket = io(this.AppConfig.websocketClient);
-    this.socket.on('event', (data: IWSEvent): void => {
+
+    this.socket.on('remove', (data: IWSEvent): void => {
+      this.$log.info(`[WebSocket] Received Remove Event for: ${data.model} [${data.msg.pk}]`, data);
+      this._events.next(data);
+
+      // TODO update observers of parent classes
+    });
+
+    this.socket.on('update', (data: IWSEvent): void => {
 
         if (data.msg.changed_fields.length === 0 || _.intersection(data.msg.changed_fields, ignoredFields).length === data.msg.changed_fields.length) {
           // NOTE means that the only updated fields does not change anything in the UI, so don't send events around

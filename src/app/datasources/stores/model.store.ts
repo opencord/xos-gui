@@ -73,7 +73,13 @@ export class XosModelStore implements IXosModelStoreService {
       .filter((e: IWSEvent) => e.model === modelName)
       .subscribe(
         (event: IWSEvent) => {
-          this.storeHelpers.updateCollection(event, this._collections[modelName]);
+          if (event.deleted) {
+            console.log('[modelstore] deleting: ', event)
+            this.storeHelpers.removeItemFromCollection(event, this._collections[modelName]);
+          }
+          else {
+            this.storeHelpers.updateCollection(event, this._collections[modelName]);
+          }
         },
         err => this.$log.error
       );

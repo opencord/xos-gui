@@ -25,6 +25,7 @@ import 'angular-mocks';
 import {xosHeader, INotification} from './header';
 import {Subject} from 'rxjs';
 import {IXosDebugService} from '../debug/debug.service';
+import {IWSEvent} from '../../datasources/websocket/global';
 
 let element, scope: angular.IRootScopeService, compile: ng.ICompileService, isolatedScope;
 const events = new Subject();
@@ -38,7 +39,9 @@ const MockStore = function() {
 };
 
 const MockToastr = {
-  info: jasmine.createSpy('info')
+  info: jasmine.createSpy('info'),
+  success: jasmine.createSpy('success'),
+  error: jasmine.createSpy('error')
 };
 
 const MockAuth = {
@@ -168,7 +171,7 @@ describe('header component', () => {
     sendEvent(infoNotification);
     scope.$digest();
 
-    expect(MockToastr.info).toHaveBeenCalledWith('Synchronization started for: TestName', 'TestModel', {extraData: {dest: null}});
+    expect(MockToastr.info).toHaveBeenCalledWith('Synchronization in progress for: TestName', 'TestModel', {extraData: {dest: null}});
   });
 
   it('should not display a toastr for a new event that use skip_notification', () => {
@@ -176,6 +179,62 @@ describe('header component', () => {
     scope.$digest();
 
     expect(MockToastr.info).not.toHaveBeenCalled();
+  });
+
+  it('should send a synchronization success notification', () => {
+    const event: IWSEvent = {
+      model: 'TestModel',
+      msg: {
+      changed_fields: ['backend_status', 'backend_code'],
+        pk: 1,
+        object: {
+          name: 'TestName',
+          backend_status: 'OK',
+          backend_code: 1
+        }
+      }
+    };
+    sendEvent(event);
+    scope.$digest();
+
+    expect(MockToastr.success).toHaveBeenCalledWith('Synchronization succedeed for: TestName', 'TestModel', {extraData: {dest: null}});
+  });
+
+  it('should send a synchronization error notification', () => {
+    const event: IWSEvent = {
+      model: 'TestModel',
+      msg: {
+        changed_fields: ['backend_status', 'backend_code'],
+        pk: 1,
+        object: {
+          name: 'TestName',
+          backend_status: 'Failed',
+          backend_code: 2
+        }
+      }
+    };
+    sendEvent(event);
+    scope.$digest();
+
+    expect(MockToastr.error).toHaveBeenCalledWith('Synchronization failed for: TestName', 'TestModel', {extraData: {dest: null}});
+  });
+
+  it('should send a removal success notification', () => {
+    const event: IWSEvent = {
+      model: 'TestModel',
+      deleted: true,
+      msg: {
+        changed_fields: ['backend_status', 'backend_code'],
+        pk: 1,
+        object: {
+          name: 'TestName'
+        }
+      }
+    };
+    sendEvent(event);
+    scope.$digest();
+
+    expect(MockToastr.info).toHaveBeenCalledWith('Deleted object: TestName', 'TestModel', {extraData: {dest: null}});
   });
 
   // TODO test error and success toaster call
