@@ -33,6 +33,7 @@ let subject: BehaviorSubject<any>;
 let resource: ng.resource.IResourceClass<any>;
 let $resource: ng.resource.IResourceService;
 let xosModelCache: IXosModeldefsCache;
+let $log: ng.ILogService;
 
 describe('The StoreHelpers service', () => {
 
@@ -54,14 +55,17 @@ describe('The StoreHelpers service', () => {
   });
 
   beforeEach(angular.mock.inject((
+
     StoreHelpers: IStoreHelpersService,
     XosModeldefsCache: IXosModeldefsCache,
-    _$resource_: ng.resource.IResourceService
+    _$resource_: ng.resource.IResourceService,
+    _$log_: ng.ILogService
   ) => {
     $resource = _$resource_;
     resource = $resource('/test');
     xosModelCache = XosModeldefsCache;
     service = StoreHelpers;
+    $log = _$log_;
   }));
 
   it('should have an update collection method', () => {
@@ -102,17 +106,35 @@ describe('The StoreHelpers service', () => {
     });
   });
 
-  describe('when updating a collection', () => {
-
+  describe('when removing an item from a collection', () => {
     beforeEach(() => {
       subject = new BehaviorSubject([
         new resource({id: 1, name: 'test'})
       ]);
     });
 
+    describe('the updateCollection method', () => {
+      beforeEach(() => {
+        spyOn($log, 'error');
+      });
+
+      it('should log an error if called with a delete event', () => {
+        const event: IWSEvent = {
+          deleted: true,
+          model: 'Deleted',
+          msg: {
+            changed_fields: []
+          }
+        };
+        service.updateCollection(event, subject);
+        expect($log.error).toHaveBeenCalled();
+      });
+    });
+
     it('should remove a model if it has been deleted', () => {
       const event: IWSEvent = {
         model: 'Test',
+        deleted: true,
         msg: {
           object: {
             id: 1,
@@ -121,8 +143,34 @@ describe('The StoreHelpers service', () => {
           changed_fields: ['deleted']
         }
       };
-      service.updateCollection(event, subject);
+      service.removeItemFromCollection(event, subject);
       expect(subject.value.length).toBe(0);
+    });
+  });
+
+  describe('when updating a collection', () => {
+
+    beforeEach(() => {
+      subject = new BehaviorSubject([
+        new resource({id: 1, name: 'test'})
+      ]);
+    });
+
+    describe('the removeItemFromCollection method', () => {
+      beforeEach(() => {
+        spyOn($log, 'error');
+      });
+
+      it('should log an error if called with an update event', () => {
+        const event: IWSEvent = {
+          model: 'Deleted',
+          msg: {
+            changed_fields: []
+          }
+        };
+        service.removeItemFromCollection(event, subject);
+        expect($log.error).toHaveBeenCalled();
+      });
     });
 
     it('should update a model if it has been updated', () => {

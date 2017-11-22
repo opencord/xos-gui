@@ -171,7 +171,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
                   // TODO understand why it does not go directly in catch
                   throw new Error();
                 }
-                this.toastr.info(`${model.name} ${objName} successfully deleted`);
+                this.toastr.info(`Requested removal for ${model.name} ${objName}`);
               })
               .catch(() => {
                 this.toastr.error(`Error while deleting ${objName}`);

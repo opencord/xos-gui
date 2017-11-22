@@ -134,29 +134,38 @@ class HeaderController {
 
             if (event.model === 'Diag') {
               // NOTE skip notifications for Diag model
+              // this should not arrive, but a check won't harm
               return;
             }
 
+            const isRemoval: boolean = event.deleted || false;
+
             let toastrMsg: string;
             let toastrLevel: string;
-            if (event.msg.object.backend_code === 0) {
-              toastrMsg = 'Synchronization started for:';
+            if (!isRemoval) {
+              if (event.msg.object.backend_code === 0) {
+                toastrMsg = 'Synchronization in progress for:';
+                toastrLevel = 'info';
+              }
+              else if (event.msg.object.backend_code === 1) {
+                toastrMsg = 'Synchronization succedeed for:';
+                toastrLevel = 'success';
+              }
+              else if (event.msg.object.backend_code === 2) {
+                toastrMsg = 'Synchronization failed for:';
+                toastrLevel = 'error';
+              }
+            }
+            else {
+              toastrMsg = 'Deleted object:';
               toastrLevel = 'info';
-            }
-            else if (event.msg.object.backend_code === 1) {
-              toastrMsg = 'Synchronization succedeed for:';
-              toastrLevel = 'success';
-            }
-            else if (event.msg.object.backend_code === 2) {
-              toastrMsg = 'Synchronization failed for:';
-              toastrLevel = 'error';
             }
 
             if (toastrLevel && toastrMsg) {
               let modelName = event.msg.object.name;
               let modelClassName = event.model;
               if (angular.isUndefined(event.msg.object.name) || event.msg.object.name === null) {
-                modelName = `${event.msg.object.leaf_model_name} [${event.msg.object.id}]`;
+                modelName = `${modelClassName} [${event.msg.object.id}]`;
               }
 
               const dest = this.ConfigHelpers.stateWithParamsForJs(modelClassName, event.msg.object);
