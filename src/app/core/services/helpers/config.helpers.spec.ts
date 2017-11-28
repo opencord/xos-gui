@@ -344,6 +344,48 @@ describe('The ConfigHelpers service', () => {
         ]);
       });
     });
+
+    describe('the removeExtraFields method', () => {
+      beforeEach(() => {
+        service = new ConfigHelpers(q, stateMock, toastr, modelStoreMock, XosFormHelpersMock);
+      });
+
+      it('should remove properties not defined in xProto', () => {
+        const model: IXosModeldef = {
+          name: 'Test',
+          app: 'test',
+          fields: [
+            {
+              type: 'number',
+              name: 'foo',
+              validators: []
+            },
+            {
+              type: 'string',
+              name: 'bar',
+              validators: [
+                {
+                  bool_value: true,
+                  name: 'required'
+                }
+              ]
+            }
+          ],
+          description: '',
+          verbose_name: ''
+        };
+
+        const item: any = {
+          foo: 1,
+          bar: 'existing',
+          baz: 'remove me'
+        };
+
+        const res = service['removeExtraFields'](item, model);
+
+        expect(res).not.toHaveProp('baz');
+      });
+    });
   });
 });
 
