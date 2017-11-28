@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1c817bf_d75060b3",
+        "filename": "conf/proxy.js",
+        "patchSetId": 9
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2017-11-28T17:55:52Z",
+      "side": 1,
+      "message": "what does this hardcoded address represent?",
+      "range": {
+        "startLine": 21,
+        "startChar": 37,
+        "endLine": 21,
+        "endChar": 51
+      },
+      "revId": "2a39ffd40e31a395cccbb4f09d7ade88b7143d15",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
