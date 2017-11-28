@@ -46,6 +46,30 @@
       "revId": "2a39ffd40e31a395cccbb4f09d7ade88b7143d15",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "882e605b_f2fc1840",
+        "filename": "conf/proxy.js",
+        "patchSetId": 9
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2017-11-28T18:06:44Z",
+      "side": 1,
+      "message": "forgot to say, can be ovverridden by starting the dev environment with \"PROXY\u003dmyip npm start\"",
+      "parentUuid": "b1c817bf_d75060b3",
+      "range": {
+        "startLine": 21,
+        "startChar": 37,
+        "endLine": 21,
+        "endChar": 51
+      },
+      "revId": "2a39ffd40e31a395cccbb4f09d7ade88b7143d15",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
