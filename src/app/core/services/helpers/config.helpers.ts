@@ -319,13 +319,6 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       // remove fields added by the GUI
       item = this.removeExtraFields(item, model);
 
-      _.forEach(Object.keys(item), prop => {
-        // convert dates back to UnixTime
-        if (this.XosFormHelpers._getFieldFormat(item[prop]) === 'date') {
-          item[prop] = new Date(item[prop]).getTime() / 1000;
-        }
-      });
-
       const itemCopy = angular.copy(item);
       const itemName = (angular.isUndefined(itemCopy.name)) ? model.name : itemCopy.name;
 
@@ -341,13 +334,14 @@ export class ConfigHelpers implements IXosConfigHelpersService {
           d.resolve(res);
         })
         .catch(err => {
+          const errorMsg = err.specific_error || err.error || 'Internal Server Error';
           formCfg.feedback = {
             show: true,
-            message: `Error while saving ${itemName}: ${err.error}. ${err.specific_error || ''}`,
+            message: `Error while saving ${itemName}: ${errorMsg}.`,
             type: 'danger',
             closeBtn: true
           };
-          this.toastr.error(err.specific_error || '', `Error while saving ${itemName}: ${err.error}`);
+          this.toastr.error(err.specific_error || '', `Error while saving ${itemName}: ${errorMsg}`);
           d.reject(err);
         });
 

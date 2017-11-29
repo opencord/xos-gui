@@ -50,10 +50,10 @@ export class ModelRest implements IXosResourceService {
 
     resource.prototype.$save = function() {
 
-      // NOTE converting dates back to timestamp
+      // NOTE converting dates back to timestamp (safety check, dates should not arrive to the client)
       _.forEach(Object.keys(this), (k: string) => {
         if (self.XosFormHelpers._getFieldFormat(this[k]) === 'date') {
-          this[k] = new Date(this[k]).getTime();
+          this[k] = new Date(this[k]).getTime() / 1000;
         }
       });
 
