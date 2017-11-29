@@ -76,6 +76,8 @@ class CrudController {
   };
   public debugTab: boolean;
 
+  public getRelatedModels = _.memoize(this._getRelatedModels);
+
   private subscription: Subscription;
 
   constructor(
@@ -109,18 +111,6 @@ class CrudController {
     this.tableCfg = this.modelDef.tableCfg;
     this.formCfg = this.modelDef.formCfg;
 
-    // attach a redirect to the $save method
-    const originalSave = this.formCfg.actions[0].cb;
-    this.formCfg.actions[0].cb = (item, form: angular.IFormController) => {
-      originalSave(item, form)
-        .then(res => {
-          this.$state.go(this.$state.current, {id: res.id});
-        })
-        .catch(err => {
-          this.$log.error(`[XosCrud] Error while saving:`, item, err);
-        });
-    };
-
     this.debugTab = this.XosDebug.status.modelsTab;
     this.$scope.$on('xos.debug.status', (e, status: IXosDebugStatus) => {
       this.debugTab = status.modelsTab;
@@ -137,13 +127,21 @@ class CrudController {
         const endpoint = this.XosModelDiscovererService.getApiUrlFromModel(this.XosModeldefsCache.get(this.data.model));
         const resource = this.ModelRest.getResource(endpoint);
         this.model = new resource({});
+
+        // attach a redirect to the $save method
+        const originalSave = angular.copy(this.formCfg.actions[0].cb);
+        this.formCfg.actions[0].cb = (item, form: angular.IFormController) => {
+          originalSave(item, form)
+            .then(res => {
+              this.$state.go(this.$state.current, {id: res.id});
+            })
+            .catch(err => {
+              this.$log.error(`[XosCrud] Error while saving:`, item, err);
+            });
+        };
       }
       else {
         this.subscription = this.store.get(this.data.model, $stateParams['id'])
-          .first(val => {
-            // NOTE emit an event only if we have an object, and only the first time we have it
-            return Object.keys(val).length > 0;
-          })
           .subscribe(res => {
             $scope.$evalAsync(() => {
               this.related.onetomany = _.filter($state.current.data.relations, {type: 'onetomany'});
@@ -201,16 +199,6 @@ class CrudController {
         description: 'View details of selected item'
       }, 'view');
 
-      // FIXME XosKeyboardShortcut modifiers does not look to work
-      // this.XosKeyboardShortcut.registerKeyBinding({
-      //   key: 'Tab',
-      //   modifiers: ['alt'],
-      //   cb: () => {
-      //     this.tableCfg.selectedRow = -1;
-      //   },
-      //   description: 'Clear selected item'
-      // }, 'view');
-
       this.subscription = this.store.query(this.data.model)
         .subscribe(
           (event) => {
@@ -224,7 +212,9 @@ class CrudController {
   }
 
   $onDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.$log.info(`[XosCrud] Destroying component`);
   }
 
@@ -247,7 +237,7 @@ class CrudController {
     return this.XosCrudRelation.getHumanReadableOnField(r, this.data.model);
   }
 
-  public getRelatedModels(relations: {manytoone: IXosModelRelation[], onetomany: IXosModelRelation[]}, item: any) {
+  private _getRelatedModels(relations: {manytoone: IXosModelRelation[], onetomany: IXosModelRelation[]}, item: any) {
     this.$log.debug(`[XosCrud] Managing relation for ${this.data.model}:`, relations);
 
     // loading many to one relations (you'll get a model)
