@@ -316,25 +316,17 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
         return;
       }
+      // remove fields added by the GUI
+      item = this.removeExtraFields(item, model);
 
-      const itemCopy = angular.copy(item);
-
-      // TODO remove ManyToMany relations and save them separately (how??)
-      delete item.networks;
-
-      // remove field added by xosTable
       _.forEach(Object.keys(item), prop => {
-        // FIXME what _ptr fields comes from??
-        if (prop.indexOf('-formatted') > -1 || prop.indexOf('_ptr') > -1) {
-          delete item[prop];
-        }
-
         // convert dates back to UnixTime
         if (this.XosFormHelpers._getFieldFormat(item[prop]) === 'date') {
           item[prop] = new Date(item[prop]).getTime() / 1000;
         }
       });
 
+      const itemCopy = angular.copy(item);
       const itemName = (angular.isUndefined(itemCopy.name)) ? model.name : itemCopy.name;
 
       item.$save()
@@ -363,6 +355,16 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     };
 
     return formCfg;
+  }
+
+  private removeExtraFields(item: any, modelDef: IXosModeldef) {
+    _.forEach(Object.keys(item), prop => {
+      const hasField = _.findIndex(modelDef.fields, {name: prop}) > -1;
+      if (!hasField) {
+        delete item[prop];
+      }
+    });
+    return item;
   }
 
   private formatDefaultValues(val: any): any {
