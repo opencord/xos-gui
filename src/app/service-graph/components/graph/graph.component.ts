@@ -87,6 +87,10 @@ class XosServiceGraphCtrl {
       this.$log.info(`[XosServiceGraph] Received event: xos.sg.update`);
       this.renderGraph(this.graph);
     });
+
+    $(window).resize(() => {
+      this.renderGraph(this.graph);
+    });
   }
 
   $onDestroy() {

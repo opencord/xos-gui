@@ -43,7 +43,8 @@ describe('The XosNodePositioner service', () => {
   beforeEach(() => {
     angular.module('XosNodePositioner', [])
       .service('XosNodePositioner', XosNodePositioner)
-      .value('ModelRest', mockModelRest);
+      .value('ModelRest', mockModelRest)
+      .value('XosConfirm', {});
 
     angular.mock.module('XosNodePositioner');
   });
@@ -120,6 +121,32 @@ describe('The XosNodePositioner service', () => {
         expect(positioned[1].y).toBe(30);
         expect(positioned[2].x).toBe(200);
         expect(positioned[2].y).toBe(60);
+        done();
+      });
+
+    scope.$apply();
+  });
+
+  it('should set unpositioned nodes at the top', (done) => {
+    const svg = {width: 300, height: 200};
+    const nodes = [
+      {data: {name: 'a'}},
+      {data: {name: 'b'}},
+      {data: {name: 'c'}, type: 'service'},
+      {data: {name: 'd'}, type: 'service'}
+    ];
+    constraints = '["a", "b"]';
+
+    service.positionNodes(svg, nodes)
+      .then((positioned) => {
+        expect(positioned[0].x).toBe(100);
+        expect(positioned[0].y).toBe(100);
+        expect(positioned[1].x).toBe(200);
+        expect(positioned[1].y).toBe(100);
+        expect(positioned[2].x).toBe(100);
+        expect(positioned[2].y).toBe(150);
+        expect(positioned[3].x).toBe(200);
+        expect(positioned[3].y).toBe(150);
         done();
       });
 
