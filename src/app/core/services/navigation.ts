@@ -35,8 +35,6 @@ export interface IXosNavigationService {
   add(route: IXosNavigationRoute): void;
 }
 
-// TODO support 3rd level to group service model under "Services"
-
 export class IXosNavigationService {
   static $inject = ['$log', 'StyleConfig'];
   private routes: IXosNavigationRoute[];
@@ -53,11 +51,7 @@ export class IXosNavigationService {
       {
         label: 'Core',
         state: 'xos.core'
-      },
-      {
-        label: 'Service Graph',
-        state: 'xos.fine-grained-graph'
-      },
+      }
     ];
     // adding configuration defined routes
     // this.routes = StyleConfig.routes.concat(defaultRoutes).reverse();
