@@ -19,9 +19,9 @@ limitations under the License.
     <h4>{{vm.config.header}}</h4>
 </div>
 <div class="modal-body" ng-show="vm.config.text">
-    {{vm.config.text}}
+    <div ng-bind-html="vm.config.text"></div>
 </div>
 <div class="modal-footer">
-    <a class="btn btn-default" ng-click="vm.dismiss()">Cancel</a>
+    <a class="btn btn-default" ng-click="vm.dismiss()">Close</a>
     <a class="btn" ng-class="action.class" ng-repeat="action in vm.config.actions" ng-click="vm.close(action.cb())">{{action.label}}</a>
 </div>

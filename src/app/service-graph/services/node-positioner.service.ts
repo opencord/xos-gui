@@ -18,6 +18,7 @@
 import * as _ from 'lodash';
 import {IXosResourceService} from '../../datasources/rest/model.rest';
 import {IXosSgNode} from '../interfaces';
+import {IXosConfirm} from '../../core/confirm/confirm.service';
 
 export interface IXosNodePositioner {
   positionNodes(svg: {width: number, height: number}, nodes: any[]): ng.IPromise<IXosSgNode[]>;
@@ -27,50 +28,69 @@ export class XosNodePositioner implements IXosNodePositioner {
   static $inject = [
     '$log',
     '$q',
-    'ModelRest'
+    'ModelRest',
+    'XosConfirm'
   ];
 
   constructor (
     private $log: ng.ILogService,
     private $q: ng.IQService,
     private ModelRest: IXosResourceService,
+    private XosConfirm: IXosConfirm
   ) {
     this.$log.info('[XosNodePositioner] Setup');
   }
 
-  public positionNodes(svg: {width: number, height: number}, nodes: any[]): ng.IPromise<IXosSgNode[]> {
+  public positionNodes(svg: {width: number, height: number}, nodes: IXosSgNode[]): ng.IPromise<IXosSgNode[]> {
 
-    // TODO refactor naming in this loop to make it clearer
     const d =  this.$q.defer();
 
     this.getConstraints()
       .then(constraints => {
         const hStep = this.getHorizontalStep(svg.width, constraints);
-        const positionConstraints = _.reduce(constraints, (all: any, c: string | string[], i: number) => {
-          let pos: {x: number, y: number, fixed: boolean} = {
-            x: svg.width / 2,
-            y: svg.height / 2,
-            fixed: true
-          };
+        const positionConstraints = _.reduce(constraints, (all: any, horizontalConstraint: string | string[], i: number) => {
           // NOTE it's a single element, leave it in the middle
-          if (angular.isString(c)) {
-            pos.x = (i + 1) * hStep;
-            all[c] = pos;
+          if (angular.isString(horizontalConstraint)) {
+            all[horizontalConstraint] = {
+              x: (i + 1) * hStep,
+              y: svg.height / 2,
+              fixed: true
+            };
           }
           else {
-            const verticalConstraints = c;
+            const verticalConstraints = horizontalConstraint;
             const vStep = this.getVerticalStep(svg.height, verticalConstraints);
-            _.forEach(verticalConstraints, (c: string, v: number) => {
-              if (angular.isString(c)) {
-                let p = angular.copy(pos);
-                p.x = (i + 1) * hStep;
-                p.y = (v + 1) * vStep;
-                all[c] = p;
+            _.forEach(verticalConstraints, (verticalConstraint: string, v: number) => {
+              if (angular.isString(verticalConstraint)) {
+                all[verticalConstraint] = {
+                  x: (i + 1) * hStep,
+                  y: (v + 1) * vStep,
+                  fixed: true
+                };
               }
             });
           }
           return all;
         }, {});
+
+        // find the nodes that don't have a position defined and put them at the top
+        const allNodes = _.reduce(nodes, (all: string[], n: IXosSgNode) => {
+          if (n.type === 'service') {
+            all.push(n.data.name);
+          }
+          return all;
+        }, []);
+        const positionedNodes = Object.keys(positionConstraints);
+        const unpositionedNodes = _.difference(allNodes, positionedNodes);
+
+        _.forEach(unpositionedNodes, (node: string, i: number) => {
+          const hStep = this.getHorizontalStep(svg.width, unpositionedNodes);
+          positionConstraints[node] = {
+            x: (i + 1) * hStep,
+            y: svg.height - 50,
+            fixed: true
+          };
+        });
 
         d.resolve(_.map(nodes, n => {
           return angular.merge(n, positionConstraints[n.data.name]);
@@ -90,6 +110,17 @@ export class XosNodePositioner implements IXosNodePositioner {
         d.resolve(JSON.parse(res[0].constraints));
       })
       .catch(e => {
+        this.XosConfirm.open({
+          header: 'Error in graph constraints config',
+          text: `
+            There was an error in the settings you provided as graph constraints. 
+            Please check the declaration of the <code>"Graph Constraints"</code> model. <br/> 
+            The error was: <br/><br/>
+            <code>${e}</code>
+            <br/><br/>
+            Please fix it to see the graph.`,
+          actions: []
+        });
         d.reject(e);
       });
     return d.promise;

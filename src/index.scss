@@ -73,3 +73,8 @@ ui-view, xos, .wrapper, .content, .content > .container-fluid, [ui-view] {
 .alert-danger {
   @include alert-variant($background-dark-color, $alert-danger-text, $alert-danger-border);
 }
+
+.modal-backdrop.in {
+  filter: alpha(opacity=50);
+  opacity: .5;
+}

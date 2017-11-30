@@ -22,7 +22,7 @@ interface Id3Element {
 
 export interface IXosSgNode extends Id3Element {
   id: string;
-  data: any; // this can be a Service, ServiceInstance or Instance
+  data: IXosBaseModel; // this can be a Service, ServiceInstance or Instance
 
   // do we need those?
   type: string;

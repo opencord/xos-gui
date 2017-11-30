@@ -31,6 +31,7 @@ import {XosFormHelpers} from './form/form-helpers';
 import {xosForm} from './form/form';
 import {xosField} from './field/field';
 import 'angular-toastr';
+import 'angular-sanitize';
 import {xosAlert} from './alert/alert';
 import {xosValidation} from './validation/validation';
 import {xosSidePanel} from './side-panel/side-panel';
@@ -53,10 +54,11 @@ export const xosCore = 'xosCore';
 
 angular
   .module('xosCore', [
+    'ngSanitize',
     'ui.router',
     'toastr',
     'ui.bootstrap.typeahead',
-    'ui.bootstrap.tabs'
+    'ui.bootstrap.tabs',
   ])
   .config(routesConfig)
   .provider('XosRuntimeStates', XosRuntimeStates)

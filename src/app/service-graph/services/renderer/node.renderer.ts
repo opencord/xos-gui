@@ -50,15 +50,13 @@ export class XosNodeRenderer {
       .selectAll('g.node')
       .data(nodes, n => n.id);
 
-    node
-      .call(this.drag);
-
     const entering = node.enter()
       .append('g')
       .attr({
         id: n => n.id,
         class: n => `node ${n.type} ${this.XosGraphHelpers.parseElemClasses(n.d3Class)}`,
-      });
+      })
+      .call(this.drag);
 
     this.renderServiceNodes(entering.filter('.service'));
     this.renderServiceInstanceNodes(entering.filter('.serviceinstance'));
