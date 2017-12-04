@@ -17,14 +17,20 @@
 const gulp = require('gulp');
 const gulpProtractorAngular = require('gulp-angular-protractor');
 
+const args = process.env.PT_ARGS ? process.env.PT_ARGS.split(' ') : [];
+const conf = process.env.PT_CONF || './conf/protractor.conf.jenkins.js'
+
+
 gulp.task('protractor', callback => {
+
   gulp
     .src(['./e2e/**/*.js'])
     .pipe(gulpProtractorAngular({
-      configFile: './conf/protractor.conf.js',
+      configFile: conf,
       debug: false,
       autoStartStopServer: true,
-      verbose: false
+      verbose: false,
+      args: args
     }))
     .on('error', e => {
       console.log(e);

@@ -19,8 +19,29 @@
 const user = require('../test_helpers/user');
 const page = require('./crud.po');
 const config = require('../test_helpers/config');
+const backend = require('../test_helpers/backend');
+
+let testNode;
 
 describe('XOS CRUD Page', function() {
+
+  beforeAll((done) => {
+    const nodesUrl = `/xosapi/v1/core/nodes`;
+
+    const _testNode = {
+      name: 'test-p',
+      site_deployment_id: 1
+    }
+
+    backend.deleteAllModels(nodesUrl)
+    .then(() => {
+      return backend.createModel(nodesUrl, _testNode)
+    })
+    .then((node) => {
+      testNode = node;
+      done();
+    })
+  });
 
   beforeEach((done) => {
     user.login()
@@ -34,9 +55,10 @@ describe('XOS CRUD Page', function() {
       browser.get(`${config.url}/core/nodes/`);
     });
     it('should have a table', () => {
-      expect(page.tableRows.count()).toBe(2);
-      expect(page.tableColumn.count()).toBe(4);
-      expect(page.deleteBtn.count()).toBe(1); // per row
+      expect(page.tableRows.count()).toBe(1);
+      expect(page.tableColumn.count()).toBe(6);
+      expect(page.deleteBtn.count()).toBe(1);
+      expect(page.detailBtn.count()).toBe(1);
     });
 
     it('should have an add button', () => {
@@ -50,10 +72,11 @@ describe('XOS CRUD Page', function() {
 
     describe('for an existing model', () => {
       beforeEach(() => {
-        browser.get(`${config.url}/core/nodes/1`);
+        browser.get(`${config.url}/core/nodes/${testNode.id}`);
       });
-      it('should have a form', () => {
+      it('should load the correct model', () => {
         expect(page.formInputs.count()).toBe(2);
+        expect(page.nameInput.getAttribute('value')).toBe(testNode.name);
         expect(page.formBtn.isPresent()).toBeTruthy();
       });
 

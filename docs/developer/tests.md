@@ -33,11 +33,5 @@ Other paramenters you can pass are:
 | UI_URL        | Address of the GUI (deaults to `http://192.168.46.100/spa/#` |
 | UI_PWD        | Password to login (needed only for remote connections)       |
 | TIMEOUT       | Time allowed for each test                                   |
- 
- #### Test suites
- 
- If you need to run test for only a particural suite you can use:
- 
- `protractor conf/protractor.conf.js --suite login`
- 
- Suites are defined in `cong/protractor.conf.js`
+| PT_ARGS		| Extra arguments for Protractor, eg: "--suite dashboard" (Suites are defined in `conf/protractor.conf.js`)     |
+| PT_CONF       | The path of the config file (eg: "./conf/protractor.conf.js")          

@@ -86,6 +86,8 @@
     "postcss-loader": "0.8.2",
     "protractor": "^5.1.2",
     "remap-istanbul": "0.9.5",
+    "request": "2.83.0",
+    "request-promise": "^4.2.2",
     "resolve-url-loader": "1.6.1",
     "sass-loader": "3.2.3",
     "style-loader": "0.13.2",
