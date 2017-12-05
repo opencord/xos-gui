@@ -16,11 +16,9 @@
 
 import * as $ from 'jquery';
 import {IXosKeyboardShortcutService} from '../../core/services/keyboard-shortcut';
-import {IXosSgConfig} from '../interfaces';
 import {IXosGraphStore} from './graph.store';
 
 export interface IXosGraphConfig {
-  getUserConfig(): IXosSgConfig;
   setupKeyboardShortcuts(): void;
   toggleFullscreen(): void;
 }
@@ -36,12 +34,6 @@ export class XosGraphConfig {
     'XosGraphStore'
   ];
 
-  private defaultUserConfig: IXosSgConfig = {
-    labels: false
-  };
-
-  private userConfig: IXosSgConfig = this.defaultUserConfig;
-
   constructor (
     private $log: ng.ILogService,
     private $cookies: ng.cookies.ICookiesService,
@@ -50,8 +42,6 @@ export class XosGraphConfig {
     private XosKeyboardShortcut: IXosKeyboardShortcutService,
     private XosGraphStore: IXosGraphStore
   ) {
-    this.userConfig = this.getUserConfig();
-
 
   }
 
@@ -89,14 +79,5 @@ export class XosGraphConfig {
       // NOTE wait for the CSS transition to complete before repositioning
       this.$rootScope.$broadcast('xos.sg.update');
     }, 500);
-  }
-
-  public getUserConfig(): IXosSgConfig {
-    let config = this.$cookies.get('xos-service-graph-user-config');
-    if (!config || config.length === 0) {
-      this.$cookies.put('xos-service-graph-user-config', JSON.stringify(this.defaultUserConfig));
-      config = this.$cookies.get('xos-service-graph-user-config');
-    }
-    return JSON.parse(config);
   }
 }
