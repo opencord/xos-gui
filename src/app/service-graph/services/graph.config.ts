@@ -34,6 +34,19 @@ export class XosGraphConfig {
     'XosGraphStore'
   ];
 
+  private instanceEnabled = false;
+  private instanceBinding = {
+    key: 'i',
+    modifiers: ['shift'],
+    cb: () => {
+      // NOTE anytime the graph change the observable is updated,
+      // no need to manually retrigger here
+      this.XosGraphStore.toggleInstances();
+    },
+    label: 'i',
+    description: 'Toggle Instances'
+  };
+
   constructor (
     private $log: ng.ILogService,
     private $cookies: ng.cookies.ICookiesService,
@@ -64,13 +77,13 @@ export class XosGraphConfig {
       key: 's',
       modifiers: ['shift'],
       cb: () => {
-        // NOTE anytime the graph change the observable is updated,
-        // no need to manually retrigger here
         this.XosGraphStore.toggleServiceInstances();
+        this.toggleInstanceShortcuts();
       },
       label: 's',
       description: 'Toggle ServiceInstances'
     });
+
   }
 
   public toggleFullscreen() {
@@ -79,5 +92,16 @@ export class XosGraphConfig {
       // NOTE wait for the CSS transition to complete before repositioning
       this.$rootScope.$broadcast('xos.sg.update');
     }, 500);
+  }
+
+  private toggleInstanceShortcuts(): void {
+    if (!this.instanceEnabled) {
+      this.XosKeyboardShortcut.registerKeyBinding(this.instanceBinding);
+    }
+    else {
+      this.XosKeyboardShortcut.removeKeyBinding(this.instanceBinding);
+    }
+
+    this.instanceEnabled = !this.instanceEnabled;
   }
 }
