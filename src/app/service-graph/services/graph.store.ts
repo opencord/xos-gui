@@ -30,6 +30,8 @@ export interface IXosGraphStore {
   nodesFromGraph(graph: Graph): IXosSgNode[];
   linksFromGraph(graph: Graph): IXosSgLink[];
   toggleServiceInstances(): Graph;
+  toggleInstances(): Graph;
+  toggleNetwork(): Graph;
 }
 
 export class XosGraphStore implements IXosGraphStore {
@@ -41,16 +43,22 @@ export class XosGraphStore implements IXosGraphStore {
 
   // state
   private serviceInstanceShown: boolean = false;
+  private instanceShown: boolean = false;
+  private networkShown: boolean = false;
 
   // graphs
   private serviceGraph: any;
   private ServiceGraphSubject: BehaviorSubject<any>;
 
   // datastore
+  private InstanceSubscription: Subscription;
+  private NetworkSubscription: Subscription;
+  private PortSubscription: Subscription;
   private ServiceSubscription: Subscription;
   private ServiceDependencySubscription: Subscription;
   private ServiceInstanceSubscription: Subscription;
   private ServiceInstanceLinkSubscription: Subscription;
+  private TenantWithContainerSubscription: Subscription;
 
   // debounced
   private efficientNext = this.XosDebouncer.debounce(this.callNext, 500, this, false);
@@ -76,6 +84,7 @@ export class XosGraphStore implements IXosGraphStore {
   public nodesFromGraph(graph: Graph): IXosSgNode[] {
     return _.map(graph.nodes(), (n: string) => {
       const nodeData = graph.node(n);
+
       return {
         id: n,
         type: this.getModelType(nodeData),
@@ -87,16 +96,9 @@ export class XosGraphStore implements IXosGraphStore {
   public linksFromGraph(graph: Graph): IXosSgLink[] {
     const nodes = this.nodesFromGraph(graph);
 
-    // NOTE we'll need some intelligence here to differentiate between:
-    // - ServiceDependency
-    // - ServiceInstanceLinks
-    // - Owners
-
     return _.map(graph.edges(), l => {
       const link = graph.edge(l);
       const linkType = this.getModelType(link);
-
-      // FIXME consider ownership links
       let sourceId, targetId;
 
       switch (linkType) {
@@ -105,17 +107,28 @@ export class XosGraphStore implements IXosGraphStore {
           targetId = this.getServiceId(link.provider_service_id);
           break;
         case 'serviceinstancelink':
+          // NOTE ServiceInstanceLink can actually also connect to a service and a network
           sourceId = this.getServiceInstanceId(link.subscriber_service_instance_id);
           targetId = this.getServiceInstanceId(link.provider_service_instance_id);
           break;
         case 'ownership':
           sourceId = this.getServiceId(link.service);
           targetId = this.getServiceInstanceId(link.service_instance);
+          break;
+        case 'instance_ownership':
+          sourceId = this.getServiceInstanceId(link.id);
+          targetId = this.getInstanceId(link.instance_id);
+          break;
+        case 'port':
+          sourceId = this.getInstanceId(link.instance_id);
+          targetId = this.getNetworkId(link.network_id);
+          break;
       }
 
       // NOTE help while debugging
       if (!sourceId || !targetId) {
         this.$log.warn(`Link ${l.v}-${l.w} has missing source or target:`, l, link);
+        // TODO return null and then filter out so that we don't break the rendering
       }
 
       return {
@@ -136,6 +149,18 @@ export class XosGraphStore implements IXosGraphStore {
 
       // remove nodes from the graph
       this.removeElementsFromGraph('serviceinstance'); // NOTE links are automatically removed by the graph library
+
+      if (this.instanceShown) {
+        // NOTE if we remove ServiceInstances we also need to remove Instances
+        this.removeElementsFromGraph('instance');
+        this.instanceShown = false;
+      }
+
+      if (this.networkShown) {
+        // NOTE if we remove ServiceInstances we also need to remove Networks
+        this.removeElementsFromGraph('network');
+        this.networkShown = false;
+      }
     }
     else {
       // NOTE subscribe to ServiceInstance and ServiceInstanceLink observables
@@ -143,6 +168,43 @@ export class XosGraphStore implements IXosGraphStore {
       this.loadServiceInstanceLinks();
     }
     this.serviceInstanceShown = !this.serviceInstanceShown;
+    return this.serviceGraph;
+  }
+
+  public toggleInstances(): Graph {
+    if (this.instanceShown) {
+
+      this.InstanceSubscription.unsubscribe();
+      this.TenantWithContainerSubscription.unsubscribe();
+
+      this.removeElementsFromGraph('instance'); // NOTE links are automatically removed by the graph library
+
+      if (this.networkShown) {
+        // NOTE if we remove Instances we also need to remove Networks
+        this.removeElementsFromGraph('network');
+        this.networkShown = false;
+      }
+    }
+    else {
+      this.loadInstances();
+      this.loadInstanceLinks();
+    }
+    this.instanceShown = !this.instanceShown;
+    return this.serviceGraph;
+  }
+
+  public toggleNetwork() {
+    if (this.networkShown) {
+      this.NetworkSubscription.unsubscribe();
+      this.PortSubscription.unsubscribe();
+      this.removeElementsFromGraph('network');
+    }
+    else {
+      this.loadNetworks();
+      this.loadPorts(); // Ports define the connection of an Instance to a Network
+    }
+
+    this.networkShown = !this.networkShown;
     return this.serviceGraph;
   }
 
@@ -194,6 +256,22 @@ export class XosGraphStore implements IXosGraphStore {
     this.serviceGraph.setEdge(sourceId, targetId, link);
   }
 
+  private addInstanceOwner(tenantWithContainer: any) {
+    // NOTE some TenantWithContainer don't have an instance
+    if (tenantWithContainer.instance_id) {
+      const sourceId = this.getServiceInstanceId(tenantWithContainer.id);
+      const targetId = this.getInstanceId(tenantWithContainer.instance_id);
+      this.serviceGraph.setEdge(sourceId, targetId, angular.merge(tenantWithContainer, {type: 'instance_ownership'}));
+    }
+  }
+
+  private addNetworkLink(port: any) {
+    // ports are connected to 1 Instance and 1 Network
+    const sourceId = this.getInstanceId(port.instance_id);
+    const targetId = this.getNetworkId(port.network_id);
+    this.serviceGraph.setEdge(sourceId, targetId, angular.merge(port, {type: 'port'}));
+  }
+
   private removeElementsFromGraph(type: string) {
     _.forEach(this.serviceGraph.nodes(), (n: string) => {
       const node = this.serviceGraph.node(n);
@@ -209,7 +287,7 @@ export class XosGraphStore implements IXosGraphStore {
   // helpers
   private getModelType(node: IXosBaseModel): string {
     if (node.type) {
-      // NOTE we'll add "ownership" links
+      // NOTE handling "ownership" links
       return node.type;
     }
     return node.class_names.split(',')[0].toLowerCase();
@@ -223,6 +301,14 @@ export class XosGraphStore implements IXosGraphStore {
     return `serviceinstance~${id}`;
   }
 
+  private getInstanceId(id: number): string {
+    return `instance~${id}`;
+  }
+
+  private getNetworkId(id: number): string {
+    return `network~${id}`;
+  }
+
   private getNodeId(node: IXosBaseModel): string {
 
     const nodeType = this.getModelType(node);
@@ -231,6 +317,10 @@ export class XosGraphStore implements IXosGraphStore {
         return this.getServiceId(node.id);
       case 'serviceinstance':
         return this.getServiceInstanceId(node.id);
+      case 'instance':
+        return this.getInstanceId(node.id);
+      case 'network':
+        return this.getNetworkId(node.id);
     }
   }
 
@@ -299,6 +389,74 @@ export class XosGraphStore implements IXosGraphStore {
         },
         (err) => {
           this.$log.error(`[XosServiceGraphStore] ServiceInstanceLinks Observable: `, err);
+        }
+      );
+  }
+
+  private loadInstances() {
+    this.InstanceSubscription = this.XosModelStore.query('Instance', '/core/instances')
+      .subscribe(
+        (res) => {
+          if (res.length > 0) {
+            _.forEach(res, n => {
+              this.addNode(n);
+            });
+            this.efficientNext(this.ServiceGraphSubject, this.serviceGraph);
+          }
+        },
+        (err) => {
+          this.$log.error(`[XosServiceGraphStore] Instance Observable: `, err);
+        }
+      );
+  }
+
+  private loadInstanceLinks() {
+    this.TenantWithContainerSubscription = this.XosModelStore.query('TnantWithContainer', '/core/tenantwithcontainers')
+      .subscribe(
+        (res) => {
+          if (res.length > 0) {
+            _.forEach(res, n => {
+              this.addInstanceOwner(n);
+            });
+            this.efficientNext(this.ServiceGraphSubject, this.serviceGraph);
+          }
+        },
+        (err) => {
+          this.$log.error(`[XosServiceGraphStore] Instance Observable: `, err);
+        }
+      );
+  }
+
+  private loadNetworks() {
+    this.NetworkSubscription = this.XosModelStore.query('Network', '/core/networks')
+      .subscribe(
+        (res) => {
+          if (res.length > 0) {
+            _.forEach(res, n => {
+              this.addNode(n);
+            });
+            this.efficientNext(this.ServiceGraphSubject, this.serviceGraph);
+          }
+        },
+        (err) => {
+          this.$log.error(`[XosServiceGraphStore] Network Observable: `, err);
+        }
+      );
+  }
+
+  private loadPorts() {
+    this.PortSubscription = this.XosModelStore.query('Port', '/core/ports')
+      .subscribe(
+        (res) => {
+          if (res.length > 0) {
+            _.forEach(res, n => {
+              this.addNetworkLink(n);
+            });
+            this.efficientNext(this.ServiceGraphSubject, this.serviceGraph);
+          }
+        },
+        (err) => {
+          this.$log.error(`[XosServiceGraphStore] Network Observable: `, err);
         }
       );
   }

@@ -73,12 +73,12 @@ xos-service-graph {
 
     .node {
       cursor: pointer;
+      fill: $background-color;
     }
 
     .node.service {
       > rect {
         stroke: $color-accent;
-        fill: $background-color;
       }
       > .icon {
         fill: $color-accent;
@@ -87,11 +87,28 @@ xos-service-graph {
 
     .node.serviceinstance {
       > rect {
-        stroke: green;
-        fill: $background-color;
+        stroke: $serviceinstances-fg;
       }
       > .icon {
-        fill: green;
+        fill: $serviceinstances-fg;
+      }
+    }
+
+    .node.instance {
+      > rect {
+        stroke: $instances-fg;
+      }
+      > .icon {
+        fill: $instances-fg;
+      }
+    }
+
+    .node.network {
+      > rect {
+        stroke: $networks-fg;
+      }
+      > .icon {
+        fill: $networks-fg;
       }
     }
 
@@ -114,12 +131,21 @@ xos-service-graph {
     }
 
     line.ownership {
-      stroke: green;
+      stroke: $serviceinstances-fg;
       stroke-dasharray: 5;
     }
 
     line.serviceinstancelink {
-      stroke: green;
+      stroke: $serviceinstances-fg;
+    }
+
+    line.instance_ownership {
+      stroke: $instances-fg;
+      stroke-dasharray: 5;
+    }
+
+    line.port {
+      stroke: $networks-fg;
     }
   }
   .arrow-marker {

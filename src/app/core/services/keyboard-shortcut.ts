@@ -23,6 +23,7 @@ import {IXosSidePanelService} from '../side-panel/side-panel.service';
 export interface IXosKeyboardShortcutService {
   keyMapping: IXosKeyboardShortcutMap;
   registerKeyBinding(binding: IXosKeyboardShortcutBinding, target?: string);
+  removeKeyBinding(binding: IXosKeyboardShortcutBinding);
   setup(): void;
 }
 
@@ -64,8 +65,14 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
   public baseBindings: IXosKeyboardShortcutBinding[] = [
     {
       key: 'slash',
-      label: '/',
+      label: '/ or ?',
       description: 'Toggle Shortcut Panel',
+      cb: this.toggleKeyBindingPanel,
+    },
+    {
+      // NOTE this is the ? code
+      key: 'slash',
+      modifiers: ['shift'],
       cb: this.toggleKeyBindingPanel,
     },
     {
@@ -102,6 +109,7 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
     $('body').on('keydown', (e) => {
 
       const pressedKey = this.whatKey(e.which);
+      this.$log.debug(`[XosKeyboardShortcut] Pressed key: ${pressedKey}`);
       if (!pressedKey) {
         return;
       }
@@ -147,6 +155,18 @@ export class XosKeyboardShortcut implements IXosKeyboardShortcutService {
 
     this.$log.debug(`[XosKeyboardShortcut] Registering binding for key: ${binding.key}`);
     this.keyMapping[target].push(binding);
+  }
+
+  public removeKeyBinding(binding: IXosKeyboardShortcutBinding): void {
+    if (_.find(this.keyMapping.global, {key: binding.key, modifiers: binding.modifiers})) {
+      _.remove(this.keyMapping.global, {key: binding.key, modifiers: binding.modifiers});
+    }
+    else if (_.find(this.keyMapping.view, {key: binding.key, modifiers: binding.modifiers})) {
+      _.remove(this.keyMapping.view, {key: binding.key, modifiers: binding.modifiers});
+    }
+    else {
+      this.$log.warn(`[XosKeyboardShortcut] Trying to remove a shortcut for key "${binding.key}" but it was not registered`);
+    }
   }
 
   private addActiveModifierKey(key: string) {

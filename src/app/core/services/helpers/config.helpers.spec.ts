@@ -187,7 +187,7 @@ describe('The ConfigHelpers service', () => {
       });
 
       it('should return the state with params for usage in js', () => {
-        expect(service.stateWithParamsForJs('Test', {id: 1})).toEqual({ name: 'xos.core.tests', params: Object({ id: 1 }) });
+        expect(service.stateWithParamsForJs('Test', 1)).toEqual({ name: 'xos.core.tests', params: Object({ id: 1 }) });
       });
     });
   });

@@ -196,7 +196,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       };
 
       if (f.name === 'id' || f.name === 'name') {
-        col.link = item => this.stateWithParamsForJs(modelName, item);
+        col.link = item => this.stateWithParamsForJs(modelName, item.id);
       }
 
       // if the field identify a relation, create a link
@@ -206,7 +206,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
           this.populateRelated(item, item[f.name], f);
           return item[f.name];
         };
-        col.link = item => this.relatedStateWithParams(f.relation.model, item[col.prop]);
+        col.link = item => this.stateWithParamsForJs(f.relation.model, item[col.prop]);
       }
 
       if (f.name === 'backend_status' || f.name === 'policy_status') {
@@ -257,9 +257,9 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     return `${state}({id: ${id}})`;
   }
 
-  public stateWithParamsForJs(name: string, model: any): any {
+  public stateWithParamsForJs(name: string, id: number): any {
     const state = this.stateFromCoreModel(name);
-    return {name: state, params: {id: model.id}};
+    return {name: state, params: {id: id}};
   }
 
   public modelFieldToInputCfg(fields: IXosModelDefsField[]): IXosFormInput[] {
