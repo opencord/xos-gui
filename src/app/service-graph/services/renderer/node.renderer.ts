@@ -60,6 +60,7 @@ export class XosNodeRenderer {
 
     this.renderServiceNodes(entering.filter('.service'));
     this.renderServiceInstanceNodes(entering.filter('.serviceinstance'));
+    this.renderInstanceNodes(entering.filter('.instance'));
 
     node.exit().remove();
   }
@@ -104,6 +105,26 @@ export class XosNodeRenderer {
 
     this.positionServiceInstanceNodeGroup(nodes);
     this.handleLabels(nodes); // eventually improve, padding top is wrong
+  }
+
+  private renderInstanceNodes(nodes: d3.selection) {
+    nodes
+      .append('rect')
+      .attr({
+        rx: config.node.radius,
+        ry: config.node.radius
+      });
+
+    nodes
+      .append('path')
+      .attr({
+        d: this.XosServiceGraphIcons.get('instance').path,
+        transform: this.XosServiceGraphIcons.get('instance').transform,
+        class: 'icon'
+      });
+
+    this.positionServiceNodeGroup(nodes);
+    this.handleLabels(nodes);
   }
 
   private positionServiceNodeGroup(nodes: d3.selection) {

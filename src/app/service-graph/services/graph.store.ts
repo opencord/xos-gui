@@ -30,6 +30,7 @@ export interface IXosGraphStore {
   nodesFromGraph(graph: Graph): IXosSgNode[];
   linksFromGraph(graph: Graph): IXosSgLink[];
   toggleServiceInstances(): Graph;
+  toggleInstances(): Graph;
 }
 
 export class XosGraphStore implements IXosGraphStore {
@@ -41,12 +42,14 @@ export class XosGraphStore implements IXosGraphStore {
 
   // state
   private serviceInstanceShown: boolean = false;
+  private instanceShown: boolean = false;
 
   // graphs
   private serviceGraph: any;
   private ServiceGraphSubject: BehaviorSubject<any>;
 
   // datastore
+  private InstanceSubscription: Subscription;
   private ServiceSubscription: Subscription;
   private ServiceDependencySubscription: Subscription;
   private ServiceInstanceSubscription: Subscription;
@@ -86,11 +89,6 @@ export class XosGraphStore implements IXosGraphStore {
 
   public linksFromGraph(graph: Graph): IXosSgLink[] {
     const nodes = this.nodesFromGraph(graph);
-
-    // NOTE we'll need some intelligence here to differentiate between:
-    // - ServiceDependency
-    // - ServiceInstanceLinks
-    // - Owners
 
     return _.map(graph.edges(), l => {
       const link = graph.edge(l);
@@ -143,6 +141,19 @@ export class XosGraphStore implements IXosGraphStore {
       this.loadServiceInstanceLinks();
     }
     this.serviceInstanceShown = !this.serviceInstanceShown;
+    return this.serviceGraph;
+  }
+
+  public toggleInstances(): Graph {
+    if (this.instanceShown) {
+
+      this.InstanceSubscription.unsubscribe();
+
+      this.removeElementsFromGraph('instance'); // NOTE links are automatically removed by the graph library
+    }
+    else {
+      this.loadInstances();
+    }
     return this.serviceGraph;
   }
 
@@ -209,7 +220,7 @@ export class XosGraphStore implements IXosGraphStore {
   // helpers
   private getModelType(node: IXosBaseModel): string {
     if (node.type) {
-      // NOTE we'll add "ownership" links
+      // NOTE handling "ownership" links
       return node.type;
     }
     return node.class_names.split(',')[0].toLowerCase();
@@ -223,6 +234,10 @@ export class XosGraphStore implements IXosGraphStore {
     return `serviceinstance~${id}`;
   }
 
+  private getInstanceId(id: number): string {
+    return `instance~${id}`;
+  }
+
   private getNodeId(node: IXosBaseModel): string {
 
     const nodeType = this.getModelType(node);
@@ -231,6 +246,8 @@ export class XosGraphStore implements IXosGraphStore {
         return this.getServiceId(node.id);
       case 'serviceinstance':
         return this.getServiceInstanceId(node.id);
+      case 'instance':
+        return this.getInstanceId(node.id);
     }
   }
 
@@ -299,6 +316,23 @@ export class XosGraphStore implements IXosGraphStore {
         },
         (err) => {
           this.$log.error(`[XosServiceGraphStore] ServiceInstanceLinks Observable: `, err);
+        }
+      );
+  }
+
+  private loadInstances() {
+    this.InstanceSubscription = this.XosModelStore.query('Instance', '/core/instances')
+      .subscribe(
+        (res) => {
+          if (res.length > 0) {
+            _.forEach(res, n => {
+              this.addNode(n);
+            });
+            this.efficientNext(this.ServiceGraphSubject, this.serviceGraph);
+          }
+        },
+        (err) => {
+          this.$log.error(`[XosServiceGraphStore] Instance Observable: `, err);
         }
       );
   }

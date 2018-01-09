@@ -71,6 +71,19 @@ export class XosGraphConfig {
       label: 's',
       description: 'Toggle ServiceInstances'
     });
+
+    // TODO enable this shortcut only if ServiceInstances are displayed
+    this.XosKeyboardShortcut.registerKeyBinding({
+      key: 'i',
+      modifiers: ['shift'],
+      cb: () => {
+        // NOTE anytime the graph change the observable is updated,
+        // no need to manually retrigger here
+        this.XosGraphStore.toggleInstances();
+      },
+      label: 'i',
+      description: 'Toggle Instances'
+    });
   }
 
   public toggleFullscreen() {

@@ -73,12 +73,12 @@ xos-service-graph {
 
     .node {
       cursor: pointer;
+      fill: $background-color;
     }
 
     .node.service {
       > rect {
         stroke: $color-accent;
-        fill: $background-color;
       }
       > .icon {
         fill: $color-accent;
@@ -87,11 +87,19 @@ xos-service-graph {
 
     .node.serviceinstance {
       > rect {
-        stroke: green;
-        fill: $background-color;
+        stroke: $serviceinstances-fg;
       }
       > .icon {
-        fill: green;
+        fill: $serviceinstances-fg;
+      }
+    }
+
+    .node.instance {
+      > rect {
+        stroke: $instances-fg;
+      }
+      > .icon {
+        fill: $instances-fg;
       }
     }
 
