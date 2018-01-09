@@ -195,4 +195,65 @@ describe('The XosKeyboardShortcut service', () => {
       expect(logSpy).toHaveBeenCalledWith('[XosKeyboardShortcut] A shortcut for key "a" has already been registered');
     });
   });
+
+  describe('the removeKeyBinding method', () => {
+
+    const globalBinding = {
+      key: 'g',
+      cb: 'callback',
+      modifiers: null
+    };
+
+    const viewBinding = {
+      key: 'v',
+      cb: 'callback',
+      modifiers: null
+    };
+
+    const missingBinding = {
+      key: 'b',
+      cb: 'callback',
+      modifiers: null
+    };
+
+    beforeEach(() => {
+      service['keyMapping'] = {
+        global: [
+          {
+            key: 'g',
+            cb: 'cb',
+            modifiers: null
+          }
+        ],
+        view: [
+          {
+            key: 'v',
+            cb: 'cb',
+            modifiers: null
+          }
+        ]
+      };
+    });
+
+    it(' should remove an existing global keybinding', () => {
+      service.removeKeyBinding(globalBinding);
+      expect(logSpy).not.toHaveBeenCalled();
+      expect(service['keyMapping']['global'].length).toBe(0);
+      expect(service['keyMapping']['view'].length).toBe(1);
+    });
+
+    it(' should remove an existing view keybinding', () => {
+      service.removeKeyBinding(viewBinding);
+      expect(logSpy).not.toHaveBeenCalled();
+      expect(service['keyMapping']['global'].length).toBe(1);
+      expect(service['keyMapping']['view'].length).toBe(0);
+    });
+
+    it('should not raise if removing a missing keybing', () => {
+      service.removeKeyBinding(missingBinding);
+      expect(service['keyMapping']['global'].length).toBe(1);
+      expect(service['keyMapping']['view'].length).toBe(1);
+      expect(logSpy).toHaveBeenCalledWith('[XosKeyboardShortcut] Trying to remove a shortcut for key "b" but it was not registered');
+    });
+  });
 });

@@ -10,6 +10,8 @@ the available information by pressing:
 
 - `Shift + f` toggle fullscreen mode
 - `Shift + s` to add `ServiceInstances` to the graph
+- `Shift + i` to add `Instances` to the graph (this require `ServiceInstances` to be shown)
+- `Shift + n` to add `Networks` to the graph (this require `Instances` to be shown)
 
 ## Define the position of the Services in the graph
 

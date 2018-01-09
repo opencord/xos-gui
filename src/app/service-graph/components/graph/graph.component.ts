@@ -74,7 +74,6 @@ class XosServiceGraphCtrl {
         graph => {
           this.graph = graph;
           if (this.graph.nodes().length > 0) {
-            this.loader = false;
             this.renderGraph(this.graph);
           }
         },
@@ -154,6 +153,7 @@ class XosServiceGraphCtrl {
 
     this.XosNodePositioner.positionNodes(svgDim, nodes)
       .then((nodes: IXosSgNode[]) => {
+        this.loader = false;
 
         this.forceLayout
           .nodes(nodes)
