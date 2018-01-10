@@ -22,6 +22,7 @@ import {XosServiceGraphIcons} from './services/d3-helpers/graph-icons.service';
 import {XosNodePositioner} from './services/node-positioner.service';
 import {XosGraphConfig} from './services/graph.config';
 import {XosNodeRenderer} from './services/renderer/node.renderer';
+import {XosServiceGraphLegend} from './components/graph-legend/graph-legend.component';
 
 export const xosServiceGraph = 'xosServiceGraph';
 
@@ -35,6 +36,7 @@ angular
   .service('XosGraphConfig', XosGraphConfig)
   .service('XosNodeRenderer', XosNodeRenderer)
   .component('xosServiceGraph', XosServiceGraph)
+  .component('xosServiceGraphLegend', XosServiceGraphLegend)
   .run((
     $log: ng.ILogService,
     XosServiceGraphExtender: IXosServiceGraphExtender

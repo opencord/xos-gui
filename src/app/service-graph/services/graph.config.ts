@@ -17,6 +17,7 @@
 import * as $ from 'jquery';
 import {IXosKeyboardShortcutService} from '../../core/services/keyboard-shortcut';
 import {IXosGraphStore} from './graph.store';
+import {IXosSidePanelService} from '../../core/side-panel/side-panel.service';
 
 export interface IXosGraphConfig {
   setupKeyboardShortcuts(): void;
@@ -30,6 +31,7 @@ export class XosGraphConfig {
     '$cookies',
     '$rootScope',
     '$timeout',
+    'XosSidePanel',
     'XosKeyboardShortcut',
     'XosGraphStore'
   ];
@@ -66,6 +68,7 @@ export class XosGraphConfig {
     private $cookies: ng.cookies.ICookiesService,
     private $rootScope: ng.IRootScopeService,
     private $timeout: ng.ITimeoutService,
+    private XosSidePanel: IXosSidePanelService,
     private XosKeyboardShortcut: IXosKeyboardShortcutService,
     private XosGraphStore: IXosGraphStore
   ) {
@@ -77,6 +80,16 @@ export class XosGraphConfig {
     this.$log.info(`[XosGraphConfig] Setting up keyboard shortcuts`);
 
     // Setup keyboard shortcuts
+    this.XosKeyboardShortcut.registerKeyBinding({
+      key: 'h',
+      modifiers: ['shift'],
+      cb: () => {
+        this.XosSidePanel.toggleComponent('xosServiceGraphLegend');
+      },
+      label: 'h',
+      description: 'Toggle Graph Legend'
+    });
+
     this.XosKeyboardShortcut.registerKeyBinding({
       key: 'f',
       modifiers: ['shift'],
