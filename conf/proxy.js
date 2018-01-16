@@ -23,7 +23,8 @@ const target = process.env.PROXY || '127.0.0.1:8080';
 console.info(`Proxying request to: ${target}`);
 
 const proxy = httpProxy.createProxyServer({
-  target: `http://${target}`
+  target: `http://${target}`,
+  ws: true
 });
 
 proxy.on('error', function(error, req, res) {
