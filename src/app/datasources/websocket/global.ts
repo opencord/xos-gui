@@ -36,10 +36,11 @@ export interface IWSEventService {
   list(): Observable<IWSEvent>;
 }
 
-export class WebSocketEvent {
+export class WebSocketEvent implements IWSEventService {
 
   static $inject = [
     'AppConfig',
+    'SocketIo',
     '$log'
   ];
 
@@ -48,18 +49,26 @@ export class WebSocketEvent {
   private socket;
   constructor(
     private AppConfig: IXosAppConfig,
+    private SocketIo: any,
     private $log: ng.ILogService
   ) {
     // NOTE list of field that are not useful to the UI
-    const ignoredFields: string[] = ['created', 'updated', 'backend_register'];
+    const ignoredFields: string[] = ['created', 'updated', 'backend_register', 'backend_status', 'policy_status'];
 
-    this.socket = io(this.AppConfig.websocketClient);
+    this.socket = this.SocketIo.socket;
 
     this.socket.on('remove', (data: IWSEvent): void => {
       this.$log.info(`[WebSocket] Received Remove Event for: ${data.model} [${data.msg.pk}]`, data);
+
+      if (data.model.indexOf('_decl') > -1) {
+        // the GUI doesn't know about _decl models,
+        // send the event for the actual model
+        data.model = data.model.replace('_decl', '');
+      }
       this._events.next(data);
 
-      // TODO update observers of parent classes
+      // NOTE update observers of parent classes
+      this.updateParentClasses(data);
     });
 
     this.socket.on('update', (data: IWSEvent): void => {
@@ -74,22 +83,57 @@ export class WebSocketEvent {
         this._events.next(data);
 
         // NOTE update observers of parent classes
-        if (data.msg.object.class_names && angular.isString(data.msg.object.class_names)) {
-          const models = data.msg.object.class_names.split(',');
-          let event: IWSEvent = angular.copy(data);
-          _.forEach(models, (m: string) => {
-            // send event only if the parent class is not the same as the model class
-            if (event.model !== m && m !== 'object') {
-              event.model = m;
-              event.skip_notification = true;
-              this._events.next(event);
-            }
-          });
-        }
+        this.updateParentClasses(data);
 
       });
     }
-    list() {
+
+    public list() {
       return this._events.asObservable();
     }
+
+    private updateParentClasses(data: IWSEvent) {
+      if (data.msg.object.class_names && angular.isString(data.msg.object.class_names)) {
+        const models = data.msg.object.class_names.split(',');
+        let event: IWSEvent = angular.copy(data);
+        _.forEach(models, (m: string) => {
+
+          switch (m) {
+            case 'object':
+            case 'XOSBase':
+            case 'Model':
+            case 'PlModelMixIn':
+            case 'AttributeMixin':
+              // do not send events for classes that we don't care about
+              break;
+            default:
+              if (m.indexOf('_decl') > -1 || event.model === m) {
+                // do not send events for _decl classes
+                // or if the parent class is the same as the model class
+                return;
+              }
+
+              event.model = m;
+              event.skip_notification = true;
+              this._events.next(event);
+          }
+        });
+      }
+    }
+}
+
+export class SocketIoService {
+
+  static $inject = [
+    'AppConfig'
+  ];
+
+  public socket;
+
+  constructor(
+    private AppConfig: IXosAppConfig,
+    private $log: ng.ILogService
+  ) {
+    this.socket = io(this.AppConfig.websocketClient);
+  }
 }
