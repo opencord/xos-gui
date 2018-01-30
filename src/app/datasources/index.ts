@@ -18,7 +18,7 @@
 
 import {ModelRest} from './rest/model.rest';
 import {AuthService} from './rest/auth.rest';
-import {WebSocketEvent} from './websocket/global';
+import {SocketIoService, WebSocketEvent} from './websocket/global';
 import {XosModelStore} from './stores/model.store';
 import {StoreHelpers} from './helpers/store.helpers';
 import {SynchronizerStore} from './stores/synchronizer.store';
@@ -34,6 +34,7 @@ angular
   .module(xosDataSources, ['ngCookies', 'ngResource', xosCore])
   .service('ModelRest', ModelRest)
   .service('AuthService', AuthService)
+  .service('SocketIo', SocketIoService)
   .service('WebSocket', WebSocketEvent)
   .service('XosModeldefsCache', XosModeldefsCache)
   .service('StoreHelpers', StoreHelpers)
