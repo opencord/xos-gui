@@ -70,4 +70,5 @@ will position the nodes as:
 ## Events listened by the Service Graph
 
 * `xos.sg.update` will render the graph again
+* `xos.sg.stateChange` will listen for changes in the state machine
 
