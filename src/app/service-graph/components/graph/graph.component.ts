@@ -28,6 +28,7 @@ import {IXosNodePositioner} from '../../services/node-positioner.service';
 import {IXosNodeRenderer} from '../../services/renderer/node.renderer';
 import {IXosSgLink, IXosSgNode} from '../../interfaces';
 import {IXosGraphConfig} from '../../services/graph.config';
+import {GraphStates, IXosGraphStateMachine} from '../../services/graph-state-machine';
 
 class XosServiceGraphCtrl {
   static $inject = [
@@ -38,13 +39,17 @@ class XosServiceGraphCtrl {
     'XosServiceGraphIcons',
     'XosNodePositioner',
     'XosNodeRenderer',
-    'XosGraphConfig'
+    'XosGraphConfig',
+    'XosGraphStateMachine'
   ];
 
+  // graph status
+  public currentState: number;
   public loader: boolean = true;
 
   private GraphSubscription: Subscription;
   private graph: any; // this is the Graph instance
+
 
   // graph element
   private svg;
@@ -60,9 +65,12 @@ class XosServiceGraphCtrl {
     private XosServiceGraphIcons: IXosServiceGraphIcons,
     private XosNodePositioner: IXosNodePositioner,
     private XosNodeRenderer: IXosNodeRenderer,
-    private XosGraphConfig: IXosGraphConfig
+    private XosGraphConfig: IXosGraphConfig,
+    public XosGraphStateMachine: IXosGraphStateMachine
   ) {
     this.$log.info('[XosServiceGraph] Component setup');
+
+    this.currentState = this.XosGraphStateMachine.getCurrentState();
 
     this.XosGraphConfig.setupKeyboardShortcuts();
 
@@ -74,6 +82,7 @@ class XosServiceGraphCtrl {
         graph => {
           this.graph = graph;
           if (this.graph.nodes().length > 0) {
+            this.$log.info('[XosServiceGraph] Rendering graph: ', this.graph.nodes(), this.graph.edges());
             this.renderGraph(this.graph);
           }
         },
@@ -85,6 +94,13 @@ class XosServiceGraphCtrl {
     this.$scope.$on('xos.sg.update', () => {
       this.$log.info(`[XosServiceGraph] Received event: xos.sg.update`);
       this.renderGraph(this.graph);
+    });
+
+    this.$scope.$on('xos.sg.stateChange', (event, state: number) => {
+      this.$log.info(`[XosServiceGraph] Received event: xos.sg.stateChange. New state is ${state}`);
+      this.$scope.$applyAsync(() => {
+        this.currentState = state;
+      });
     });
 
     $(window).resize(() => {
@@ -100,17 +116,34 @@ class XosServiceGraphCtrl {
     this.XosGraphConfig.toggleFullscreen();
   }
 
+  public toggleModel(modelName: string): void {
+    switch (modelName) {
+      case 'services':
+        this.XosGraphStateMachine.go(GraphStates.Services);
+        break;
+      case 'serviceinstances':
+        this.XosGraphStateMachine.go(GraphStates.ServiceInstances);
+        break;
+      case 'instances':
+        this.XosGraphStateMachine.go(GraphStates.Instances);
+        break;
+      case 'networks':
+        this.XosGraphStateMachine.go(GraphStates.Networks);
+        break;
+    }
+  }
+
   private setupSvg() {
     this.svg = d3.select('xos-service-graph svg');
 
     this.linkGroup = this.svg.append('g')
       .attr({
-        class: 'link-group'
+        'class': 'link-group'
       });
 
     this.nodeGroup = this.svg.append('g')
       .attr({
-        class: 'node-group'
+        'class': 'node-group'
       });
   }
 
@@ -147,6 +180,7 @@ class XosServiceGraphCtrl {
   }
 
   private renderGraph(graph: any) {
+
     let nodes: IXosSgNode[] = this.XosGraphStore.nodesFromGraph(graph);
     let links = this.XosGraphStore.linksFromGraph(graph);
     const svgDim = this.getSvgDimensions();
@@ -190,7 +224,7 @@ class XosServiceGraphCtrl {
     entering.append('line')
       .attr({
         id: n => n.id,
-        class: n => n.type
+        'class': n => n.type
       });
 
     link.exit().remove();

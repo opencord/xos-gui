@@ -27,7 +27,6 @@ interface ITestXosGraphStore extends IXosGraphStore {
 
   // state
   serviceGraph: Graph;
-  serviceInstanceShown: boolean;
 
   // private methods
   getNodeId: any;
@@ -35,7 +34,6 @@ interface ITestXosGraphStore extends IXosGraphStore {
   addNode: any;
   addEdge: any;
   nodesFromGraph: any;
-  toggleServiceInstances: any;
 
   // observables
   ServiceInstanceSubscription: any;
@@ -269,7 +267,26 @@ describe('The XosGraphStore service', () => {
     });
   });
 
-  describe(`the toggleServiceInstances method`, () => {
+  describe('the addServiceInstance method', () => {
+    beforeEach(() => {
+      MockModelStore.query.calls.reset();
+    });
+
+    it('should add them to the graph', () => {
+      console.log(service.serviceGraph.nodes().length);
+      console.log(service.serviceGraph.edges().length);
+      service.addServiceInstances();
+      expect(MockModelStore.query).toHaveBeenCalledWith(`ServiceInstance`, '/core/serviceinstances');
+      expect(MockModelStore.query).toHaveBeenCalledWith(`ServiceInstanceLink`, '/core/serviceinstancelinks');
+      expect(service.ServiceInstanceSubscription).toBeDefined();
+      expect(service.ServiceInstanceLinkSubscription).toBeDefined();
+      console.log(service.serviceGraph.nodes().length);
+      console.log(service.serviceGraph.edges().length);
+      // TODO wait for the Observable to return and check the graph
+    });
+  });
+
+  xdescribe(`the toggleServiceInstances method`, () => {
     describe('when they are disabled', () => {
 
       beforeEach(() => {
