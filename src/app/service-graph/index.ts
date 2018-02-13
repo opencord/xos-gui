@@ -23,6 +23,7 @@ import {XosNodePositioner} from './services/node-positioner.service';
 import {XosGraphConfig} from './services/graph.config';
 import {XosNodeRenderer} from './services/renderer/node.renderer';
 import {XosServiceGraphLegend} from './components/graph-legend/graph-legend.component';
+import {XosGraphStateMachine} from './services/graph-state-machine';
 
 export const xosServiceGraph = 'xosServiceGraph';
 
@@ -34,6 +35,7 @@ angular
   .service('XosServiceGraphIcons', XosServiceGraphIcons)
   .service('XosNodePositioner', XosNodePositioner)
   .service('XosGraphConfig', XosGraphConfig)
+  .service('XosGraphStateMachine', XosGraphStateMachine)
   .service('XosNodeRenderer', XosNodeRenderer)
   .component('xosServiceGraph', XosServiceGraph)
   .component('xosServiceGraphLegend', XosServiceGraphLegend)

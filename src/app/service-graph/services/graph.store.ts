@@ -29,9 +29,12 @@ export interface IXosGraphStore {
   get(): Observable<Graph>;
   nodesFromGraph(graph: Graph): IXosSgNode[];
   linksFromGraph(graph: Graph): IXosSgLink[];
-  toggleServiceInstances(): Graph;
-  toggleInstances(): Graph;
-  toggleNetwork(): Graph;
+  addServiceInstances(): Graph;
+  removeServiceInstances(): Graph;
+  addInstances(): Graph;
+  removeInstances(): Graph;
+  addNetworks(): Graph;
+  removeNetworks(): Graph;
 }
 
 export class XosGraphStore implements IXosGraphStore {
@@ -40,11 +43,6 @@ export class XosGraphStore implements IXosGraphStore {
     'XosModelStore',
     'XosDebouncer'
   ];
-
-  // state
-  private serviceInstanceShown: boolean = false;
-  private instanceShown: boolean = false;
-  private networkShown: boolean = false;
 
   // graphs
   private serviceGraph: any;
@@ -141,70 +139,47 @@ export class XosGraphStore implements IXosGraphStore {
     });
   }
 
-  public toggleServiceInstances(): Graph {
-    if (this.serviceInstanceShown) {
-      // NOTE remove subscriptions
-      this.ServiceInstanceSubscription.unsubscribe();
-      this.ServiceInstanceLinkSubscription.unsubscribe();
-
-      // remove nodes from the graph
-      this.removeElementsFromGraph('serviceinstance'); // NOTE links are automatically removed by the graph library
-
-      if (this.instanceShown) {
-        // NOTE if we remove ServiceInstances we also need to remove Instances
-        this.removeElementsFromGraph('instance');
-        this.instanceShown = false;
-      }
-
-      if (this.networkShown) {
-        // NOTE if we remove ServiceInstances we also need to remove Networks
-        this.removeElementsFromGraph('network');
-        this.networkShown = false;
-      }
-    }
-    else {
-      // NOTE subscribe to ServiceInstance and ServiceInstanceLink observables
-      this.loadServiceInstances();
-      this.loadServiceInstanceLinks();
-    }
-    this.serviceInstanceShown = !this.serviceInstanceShown;
+  public addServiceInstances(): Graph {
+    this.loadServiceInstances();
+    this.loadServiceInstanceLinks();
     return this.serviceGraph;
   }
 
-  public toggleInstances(): Graph {
-    if (this.instanceShown) {
+  public removeServiceInstances(): Graph {
+    // NOTE remove subscriptions
+    this.ServiceInstanceSubscription.unsubscribe();
+    this.ServiceInstanceLinkSubscription.unsubscribe();
 
-      this.InstanceSubscription.unsubscribe();
-      this.TenantWithContainerSubscription.unsubscribe();
-
-      this.removeElementsFromGraph('instance'); // NOTE links are automatically removed by the graph library
-
-      if (this.networkShown) {
-        // NOTE if we remove Instances we also need to remove Networks
-        this.removeElementsFromGraph('network');
-        this.networkShown = false;
-      }
-    }
-    else {
-      this.loadInstances();
-      this.loadInstanceLinks();
-    }
-    this.instanceShown = !this.instanceShown;
+    // remove nodes from the graph
+    this.removeElementsFromGraph('serviceinstance');
     return this.serviceGraph;
   }
 
-  public toggleNetwork() {
-    if (this.networkShown) {
-      this.NetworkSubscription.unsubscribe();
-      this.PortSubscription.unsubscribe();
-      this.removeElementsFromGraph('network');
-    }
-    else {
-      this.loadNetworks();
-      this.loadPorts(); // Ports define the connection of an Instance to a Network
-    }
+  public addInstances(): Graph {
+    this.loadInstances();
+    this.loadInstanceLinks();
+    return this.serviceGraph;
+  }
 
-    this.networkShown = !this.networkShown;
+  public removeInstances(): Graph {
+    this.InstanceSubscription.unsubscribe();
+    this.TenantWithContainerSubscription.unsubscribe();
+
+    this.removeElementsFromGraph('instance');
+
+    return this.serviceGraph;
+  }
+
+  public addNetworks(): Graph {
+    this.loadNetworks();
+    this.loadPorts();
+    return this.serviceGraph;
+  }
+
+  public removeNetworks(): Graph {
+    this.NetworkSubscription.unsubscribe();
+    this.PortSubscription.unsubscribe();
+    this.removeElementsFromGraph('network');
     return this.serviceGraph;
   }
 

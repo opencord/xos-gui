@@ -27,7 +27,6 @@ interface ITestXosGraphStore extends IXosGraphStore {
 
   // state
   serviceGraph: Graph;
-  serviceInstanceShown: boolean;
 
   // private methods
   getNodeId: any;
@@ -35,7 +34,6 @@ interface ITestXosGraphStore extends IXosGraphStore {
   addNode: any;
   addEdge: any;
   nodesFromGraph: any;
-  toggleServiceInstances: any;
 
   // observables
   ServiceInstanceSubscription: any;
@@ -269,66 +267,57 @@ describe('The XosGraphStore service', () => {
     });
   });
 
-  describe(`the toggleServiceInstances method`, () => {
-    describe('when they are disabled', () => {
+  describe('the addServiceInstance method', () => {
+    beforeEach(() => {
+      MockModelStore.query.calls.reset();
+    });
 
-      beforeEach(() => {
-        MockModelStore.query.calls.reset();
+    it('should add them to the graph', () => {
+      service.addServiceInstances();
+      expect(MockModelStore.query).toHaveBeenCalledWith(`ServiceInstance`, '/core/serviceinstances');
+      expect(MockModelStore.query).toHaveBeenCalledWith(`ServiceInstanceLink`, '/core/serviceinstancelinks');
+      expect(service.ServiceInstanceSubscription).toBeDefined();
+      expect(service.ServiceInstanceLinkSubscription).toBeDefined();
+      // TODO wait for the Observable to return and check the graph
+    });
+  });
+
+  describe('the removeServiceInstance method', () => {
+    beforeEach(() => {
+      service.ServiceInstanceSubscription = {
+        unsubscribe: jasmine.createSpy('ServiceInstanceSubscription')
+      };
+      service.ServiceInstanceLinkSubscription = {
+        unsubscribe: jasmine.createSpy('ServiceInstanceLinkSubscription')
+      };
+
+      service.serviceGraph = new Graph();
+
+      services.forEach(s => {
+        service.addNode(s);
       });
 
-      it('should fetch them', () => {
-        service.toggleServiceInstances();
-        expect(service.serviceInstanceShown).toBeTruthy();
-        expect(MockModelStore.query).toHaveBeenCalledWith(`ServiceInstance`, '/core/serviceinstances');
-        expect(MockModelStore.query).toHaveBeenCalledWith(`ServiceInstanceLink`, '/core/serviceinstancelinks');
-        expect(service.ServiceInstanceSubscription).toBeDefined();
-        expect(service.ServiceInstanceLinkSubscription).toBeDefined();
+      serviceInstances.forEach(si => {
+        service.addNode(si);
+      });
+
+      serviceInstanceLinks.forEach(sil => {
+        service.addEdge(sil);
       });
     });
 
-    describe('when they are enabled', () => {
-      beforeEach(() => {
-        service.ServiceInstanceSubscription = {
-          unsubscribe: jasmine.createSpy('ServiceInstanceSubscription')
-        };
-        service.ServiceInstanceLinkSubscription = {
-          unsubscribe: jasmine.createSpy('ServiceInstanceLinkSubscription')
-        };
-        service.serviceInstanceShown = true;
-      });
+    it('should cancel subscriptions', () => {
+      service.removeServiceInstances();
+      expect(service.ServiceInstanceSubscription.unsubscribe).toHaveBeenCalled();
+      expect(service.ServiceInstanceLinkSubscription.unsubscribe).toHaveBeenCalled();
+    });
 
-      it('should cancel subscriptions', () => {
-        service.toggleServiceInstances();
-        expect(service.serviceInstanceShown).toBeFalsy();
-        expect(service.ServiceInstanceSubscription.unsubscribe).toHaveBeenCalled();
-        expect(service.ServiceInstanceLinkSubscription.unsubscribe).toHaveBeenCalled();
-      });
-
-      describe('and loaded in the graph', () => {
-        beforeEach(() => {
-          service.serviceGraph = new Graph();
-
-          services.forEach(s => {
-            service.addNode(s);
-          });
-
-          serviceInstances.forEach(si => {
-            service.addNode(si);
-          });
-
-          serviceInstanceLinks.forEach(sil => {
-            service.addEdge(sil);
-          });
-        });
-        it('should remove ServiceInstance and related nodes/edges from the graph', () => {
-          let filteredGraph = service.toggleServiceInstances();
-          expect(service.serviceInstanceShown).toBeFalsy();
-          expect(filteredGraph.nodes().length).toBe(2);
-          expect(filteredGraph.edges().length).toBe(0);
-          expect(service.serviceGraph.nodes().length).toBe(2);
-          expect(service.serviceGraph.edges().length).toBe(0);
-        });
-      });
+    it('should remove ServiceInstance and related nodes/edges from the graph', () => {
+      let filteredGraph = service.removeServiceInstances();
+      expect(filteredGraph.nodes().length).toBe(2);
+      expect(filteredGraph.edges().length).toBe(0);
+      expect(service.serviceGraph.nodes().length).toBe(2);
+      expect(service.serviceGraph.edges().length).toBe(0);
     });
   });
 });

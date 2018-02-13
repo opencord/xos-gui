@@ -22,4 +22,26 @@ limitations under the License.
   </div>
   <a ng-click="vm.closeFullscreen()" class="close-btn"><i class="fa fa-times"></i></a>
   <svg></svg>
+  <div class="row">
+    <div class="col-md-3">
+      <a ng-click="vm.toggleModel('services')" ng-class="{active: vm.currentState >= 0}" class="btn btn-block btn-accent">
+        <span>Services</span>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <a ng-click="vm.toggleModel('serviceinstances')" ng-class="{active: vm.currentState >= 1}" class="btn btn-block btn-accent">
+        <span>Service Instances</span>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <a ng-click="vm.toggleModel('instances')" ng-class="{active: vm.currentState >= 2}" class="btn btn-block btn-accent">
+        <span>Instances</span>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <a ng-click="vm.toggleModel('networks')" ng-class="{active: vm.currentState >= 3}" class="btn btn-block btn-accent">
+        <span>Networks</span>
+      </a>
+    </div>
+  </div>
 </div>

@@ -16,8 +16,8 @@
 
 import * as $ from 'jquery';
 import {IXosKeyboardShortcutService} from '../../core/services/keyboard-shortcut';
-import {IXosGraphStore} from './graph.store';
 import {IXosSidePanelService} from '../../core/side-panel/side-panel.service';
+import {GraphStates, IXosGraphStateMachine} from './graph-state-machine';
 
 export interface IXosGraphConfig {
   setupKeyboardShortcuts(): void;
@@ -33,35 +33,8 @@ export class XosGraphConfig {
     '$timeout',
     'XosSidePanel',
     'XosKeyboardShortcut',
-    'XosGraphStore'
+    'XosGraphStateMachine'
   ];
-
-  private instanceEnabled = false;
-  private instanceBinding = {
-    key: 'i',
-    modifiers: ['shift'],
-    cb: () => {
-      // NOTE anytime the graph change the observable is updated,
-      // no need to manually retrigger here
-      this.XosGraphStore.toggleInstances();
-      this.toggleNetworkShortcuts();
-    },
-    label: 'i',
-    description: 'Toggle Instances'
-  };
-
-  private networkEnabled = false;
-  private networkBinding = {
-    key: 'n',
-    modifiers: ['shift'],
-    cb: () => {
-      // NOTE anytime the graph change the observable is updated,
-      // no need to manually retrigger here
-      this.XosGraphStore.toggleNetwork();
-    },
-    label: 'n',
-    description: 'Toggle Networks'
-  };
 
   constructor (
     private $log: ng.ILogService,
@@ -70,7 +43,7 @@ export class XosGraphConfig {
     private $timeout: ng.ITimeoutService,
     private XosSidePanel: IXosSidePanelService,
     private XosKeyboardShortcut: IXosKeyboardShortcutService,
-    private XosGraphStore: IXosGraphStore
+    private XosGraphStateMachine: IXosGraphStateMachine
   ) {
 
   }
@@ -101,14 +74,43 @@ export class XosGraphConfig {
     });
 
     this.XosKeyboardShortcut.registerKeyBinding({
+      key: 'c',
+      modifiers: ['shift'],
+      cb: () => {
+        this.XosGraphStateMachine.go(GraphStates.Services);
+      },
+      label: 'c',
+      description: 'Clean the Service graph'
+    });
+
+    this.XosKeyboardShortcut.registerKeyBinding({
       key: 's',
       modifiers: ['shift'],
       cb: () => {
-        this.XosGraphStore.toggleServiceInstances();
-        this.toggleInstanceShortcuts();
+        this.XosGraphStateMachine.go(GraphStates.ServiceInstances);
       },
       label: 's',
-      description: 'Toggle ServiceInstances'
+      description: 'Show ServiceInstances'
+    });
+
+    this.XosKeyboardShortcut.registerKeyBinding({
+      key: 'i',
+      modifiers: ['shift'],
+      cb: () => {
+        this.XosGraphStateMachine.go(GraphStates.Instances);
+      },
+      label: 'i',
+      description: 'Show Instances'
+    });
+
+    this.XosKeyboardShortcut.registerKeyBinding({
+      key: 'n',
+      modifiers: ['shift'],
+      cb: () => {
+        this.XosGraphStateMachine.go(GraphStates.Networks);
+      },
+      label: 'n',
+      description: 'Show Networks'
     });
 
   }
@@ -119,27 +121,5 @@ export class XosGraphConfig {
       // NOTE wait for the CSS transition to complete before repositioning
       this.$rootScope.$broadcast('xos.sg.update');
     }, 500);
-  }
-
-  private toggleInstanceShortcuts(): void {
-    if (!this.instanceEnabled) {
-      this.XosKeyboardShortcut.registerKeyBinding(this.instanceBinding);
-    }
-    else {
-      this.XosKeyboardShortcut.removeKeyBinding(this.instanceBinding);
-      this.XosKeyboardShortcut.removeKeyBinding(this.networkBinding);
-    }
-    this.instanceEnabled = !this.instanceEnabled;
-  }
-
-  private toggleNetworkShortcuts(): void {
-    if (!this.networkEnabled) {
-      this.XosKeyboardShortcut.registerKeyBinding(this.networkBinding);
-    }
-    else {
-      this.XosKeyboardShortcut.removeKeyBinding(this.networkBinding);
-    }
-
-    this.networkEnabled = !this.networkEnabled;
   }
 }
