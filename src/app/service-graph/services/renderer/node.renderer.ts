@@ -100,7 +100,18 @@ export class XosNodeRenderer {
     nodes
       .append('path')
       .attr({
-        d: this.XosServiceGraphIcons.get('serviceinstance').path,
+        d: (d: IXosSgNode) => {
+
+          if (d.data.leaf_model_name === 'ProgranServiceInstance') {
+            return this.XosServiceGraphIcons.get('profile').path;
+          }
+
+          if (d.data.leaf_model_name === 'MCordSubscriberInstance') {
+            return this.XosServiceGraphIcons.get('mobile').path;
+          }
+
+          return this.XosServiceGraphIcons.get('serviceinstance').path;
+        },
         class: 'icon'
       });
 
@@ -180,6 +191,7 @@ export class XosNodeRenderer {
       const icon = node.select('path');
       const bbox = self.XosGraphHelpers.getSiblingIconBBox(rect.node());
       const size = _.max([bbox.width, bbox.height]); // NOTE we need it to be a square
+
       rect
         .attr({
           width: size + config.node.padding,

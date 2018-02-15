@@ -93,6 +93,12 @@ export class XosNodePositioner implements IXosNodePositioner {
         });
 
         d.resolve(_.map(nodes, n => {
+
+          if (!n.data) {
+            this.$log.warn(`[XosNodePositioner] This node has no data: `, n);
+            return n;
+          }
+
           return angular.merge(n, positionConstraints[n.data.name]);
         }));
       })
