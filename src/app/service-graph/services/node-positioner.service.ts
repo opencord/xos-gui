@@ -73,15 +73,15 @@ export class XosNodePositioner implements IXosNodePositioner {
           return all;
         }, {});
 
-        // find the nodes that don't have a position defined and put them at the top
-        const allNodes = _.reduce(nodes, (all: string[], n: IXosSgNode) => {
+        // find the nodes that don't have a position defined and put them at the bottom
+        const allServiceNodes = _.reduce(nodes, (all: string[], n: IXosSgNode) => {
           if (n.type === 'service') {
             all.push(n.data.name);
           }
           return all;
         }, []);
         const positionedNodes = Object.keys(positionConstraints);
-        const unpositionedNodes = _.difference(allNodes, positionedNodes);
+        const unpositionedNodes = _.difference(allServiceNodes, positionedNodes);
 
         _.forEach(unpositionedNodes, (node: string, i: number) => {
           const hStep = this.getHorizontalStep(svg.width, unpositionedNodes);

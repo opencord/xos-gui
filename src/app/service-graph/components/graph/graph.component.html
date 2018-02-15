@@ -22,7 +22,7 @@ limitations under the License.
   </div>
   <a ng-click="vm.closeFullscreen()" class="close-btn"><i class="fa fa-times"></i></a>
   <svg></svg>
-  <div class="row">
+  <div class="row" ng-if="!vm.loader">
     <div class="col-md-3">
       <a ng-click="vm.toggleModel('services')" ng-class="{active: vm.currentState >= 0}" class="btn btn-block btn-accent">
         <span>Services</span>

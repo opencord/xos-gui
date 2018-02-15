@@ -18,6 +18,7 @@ import './graph.component.scss';
 
 import * as d3 from 'd3';
 import * as $ from 'jquery';
+import * as _ from 'lodash';
 
 import {IXosGraphStore} from '../../services/graph.store';
 import {Subscription} from 'rxjs/Subscription';
@@ -188,6 +189,24 @@ class XosServiceGraphCtrl {
     this.XosNodePositioner.positionNodes(svgDim, nodes)
       .then((nodes: IXosSgNode[]) => {
         this.loader = false;
+
+        // NOTE keep the position for the nodes that already in the graph
+        nodes = _.map(nodes, (n: IXosSgNode) => {
+
+          if (n.id === 'undefined') {
+            // FIXME why the fabric ONOS app is not displayed and the VTN ONOS app is???
+            console.warn(n);
+          }
+
+          const previousVal = _.find(this.forceLayout.nodes(), {id: n.id});
+
+          if (previousVal) {
+            n.x = previousVal.x;
+            n.y = previousVal.y;
+            n.fixed = previousVal.fixed;
+          }
+          return n;
+        });
 
         this.forceLayout
           .nodes(nodes)
