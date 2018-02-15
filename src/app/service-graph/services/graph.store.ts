@@ -195,6 +195,7 @@ export class XosGraphStore implements IXosGraphStore {
   // graph operations
   private addNode(node: IXosBaseModel) {
     const nodeId = this.getNodeId(node);
+
     this.serviceGraph.setNode(nodeId, node);
 
     const nodeType = this.getModelType(node);
@@ -261,10 +262,33 @@ export class XosGraphStore implements IXosGraphStore {
 
   // helpers
   private getModelType(node: IXosBaseModel): string {
+    if (!node) {
+      this.$log.warn(`[XosGraphStore] Someone called getModelType with an empty model: ${node}`);
+      return 'missing-node';
+    }
+
     if (node.type) {
       // NOTE handling "ownership" links
       return node.type;
     }
+
+    if (node.class_names.indexOf('ServiceInstance,') > -1 ) {
+      return 'serviceinstance';
+    }
+
+    if (node.class_names.indexOf('Service,') > -1 ) {
+      return 'service';
+    }
+
+    if (node.class_names.indexOf('Instance,') > -1 ) {
+      return 'instance';
+    }
+
+    if (node.class_names.indexOf('Network,') > -1 ) {
+      return 'network';
+    }
+
+    this.$log.warn(`[XosGraphStore] Unkown model type: ${node.class_names}`);
     return node.class_names.split(',')[0].toLowerCase();
   }
 
@@ -287,6 +311,7 @@ export class XosGraphStore implements IXosGraphStore {
   private getNodeId(node: IXosBaseModel): string {
 
     const nodeType = this.getModelType(node);
+
     switch (nodeType) {
       case 'service':
         return this.getServiceId(node.id);
