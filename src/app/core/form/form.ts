@@ -56,6 +56,7 @@ export interface IXosFormInput {
   name: string;
   label: string;
   type: string; // options are: [date, boolean, number, email, string, select],
+  read_only: boolean;
   hint?: string;
   validators: IXosFormInputValidator;
   options?: IXosFormInputOptions[];

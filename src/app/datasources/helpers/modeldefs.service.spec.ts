@@ -43,8 +43,8 @@ describe('The XosModeldefsCache service', () => {
 
     const modelDef: IXosModel = {
       fields: [
-        {name: 'id', type: 'number'},
-        {name: 'foo', type: 'string'}
+        {name: 'id', type: 'number', read_only: false},
+        {name: 'foo', type: 'string', read_only: false}
       ],
       relations: [],
       name: 'Node',

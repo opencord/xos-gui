@@ -34,6 +34,7 @@ export interface IXosModelDefsFieldValidators {
 export interface IXosModelDefsField {
   name: string;
   type: string;
+  read_only: boolean;
   validators?: IXosModelDefsFieldValidators[];
   hint?: string;
   relation?: {
@@ -271,7 +272,8 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         type: f.type,
         validators: this.formatValidators(f.validators),
         hint: f.hint,
-        default: this.formatDefaultValues(f.default)
+        default: this.formatDefaultValues(f.default),
+        read_only: f.read_only
       };
 
       // NOTE populate drop-downs based on relation

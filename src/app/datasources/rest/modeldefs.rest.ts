@@ -19,18 +19,6 @@
 import {IXosModelDefsField} from '../../core/services/helpers/config.helpers';
 import {IXosAppConfig} from '../../../index';
 
-// Models interfaces
-export interface IXosModelDefsField {
-  name: string;
-  type: string;
-  validators?: any;
-  hint?: string;
-  relation?: {
-    model: string;
-    type: string;
-  };
-}
-
 export interface IXosModelDefsRelation {
   model: string; // model name
   type: string; // relation type

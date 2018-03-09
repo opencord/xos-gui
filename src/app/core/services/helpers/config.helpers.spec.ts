@@ -36,7 +36,8 @@ const model: IXosModeldef = {
     {
       type: 'number',
       name: 'id',
-      validators: []
+      validators: [],
+      read_only: false
     },
     {
       type: 'string',
@@ -46,7 +47,8 @@ const model: IXosModeldef = {
           bool_value: true,
           name: 'required'
         }
-      ]
+      ],
+      read_only: false
     },
     {
       type: 'string',
@@ -56,7 +58,8 @@ const model: IXosModeldef = {
           int_value: 30,
           name: 'maxlength'
         }
-      ]
+      ],
+      read_only: false
     },
     {
       type: 'number',
@@ -70,12 +73,14 @@ const model: IXosModeldef = {
           int_value: 40,
           name: 'max'
         }
-      ]
+      ],
+      read_only: false
     },
     {
       type: 'date',
       name: 'updated',
-      validators: []
+      validators: [],
+      read_only: false
     },
   ],
   description: '',
@@ -255,13 +260,15 @@ describe('The ConfigHelpers service', () => {
           type: 'boolean',
           name: 'active',
           default: '"True"',
-          validators: []
+          validators: [],
+          read_only: false
         },
         {
           type: 'boolean',
           name: 'disabled',
           default: '"False"',
-          validators: []
+          validators: [],
+          read_only: false
         },
       ];
       const form_fields = service.modelFieldToInputCfg(fields);
@@ -312,7 +319,8 @@ describe('The ConfigHelpers service', () => {
       relation: {
         model: 'Test',
         type: 'many_to_one'
-      }
+      },
+      read_only: false
     };
 
     describe('the populateRelated method', () => {
@@ -332,7 +340,8 @@ describe('The ConfigHelpers service', () => {
         name: 'test',
         label: 'Test',
         type: 'select',
-        validators: {}
+        validators: {},
+        read_only: false
       };
 
       it('should add the available choice to the select', () => {
@@ -358,7 +367,8 @@ describe('The ConfigHelpers service', () => {
             {
               type: 'number',
               name: 'foo',
-              validators: []
+              validators: [],
+              read_only: false
             },
             {
               type: 'string',
@@ -368,7 +378,8 @@ describe('The ConfigHelpers service', () => {
                   bool_value: true,
                   name: 'required'
                 }
-              ]
+              ],
+              read_only: false
             }
           ],
           description: '',
