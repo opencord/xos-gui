@@ -102,13 +102,15 @@ describe('The Xos Form component', () => {
           name: 'id',
           label: 'Id:',
           type: 'number',
-          validators: {}
+          validators: {},
+          read_only: false
         },
         {
           name: 'first_name',
           label: 'Name:',
           type: 'text',
-          validators: {}
+          validators: {},
+          read_only: false
         },
         {
           name: 'email',
@@ -116,19 +118,22 @@ describe('The Xos Form component', () => {
           type: 'email',
           validators: {
             required: true
-          }
+          },
+          read_only: false
         },
         {
           name: 'birthDate',
           label: 'DOB:',
           type: 'date',
-          validators: {}
+          validators: {},
+          read_only: false
         },
         {
           name: 'enabled',
           label: 'Status:',
           type: 'boolean',
-          validators: {}
+          validators: {},
+          read_only: false
         },
         {
           name: 'role',
@@ -138,7 +143,8 @@ describe('The Xos Form component', () => {
             {id: 1, label: 'user'},
             {id: 2, label: 'admin'}
           ],
-          validators: {}
+          validators: {},
+          read_only: false
         }
       ];
 

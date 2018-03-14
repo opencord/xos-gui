@@ -18,6 +18,12 @@
 
 @import "../../style/vars";
 
-span.required {
+span.required,
+span.read-only {
   color: $color-accent;
+}
+
+span.read-only {
+  vertical-align: super;
+  font-size: 70%;
 }

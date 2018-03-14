@@ -19,11 +19,11 @@
 // TODO test me hard!!!
 
 import * as _ from 'lodash';
-import {IXosModeldefsService, IXosModeldef, IXosModelDefsField, IXosModelDefsRelation} from '../rest/modeldefs.rest';
+import {IXosModeldefsService, IXosModeldef, IXosModelDefsRelation} from '../rest/modeldefs.rest';
 import {IXosTableCfg} from '../../core/table/table';
 import {IXosFormCfg} from '../../core/form/form';
 import {IXosNavigationService} from '../../core/services/navigation';
-import {IXosConfigHelpersService} from '../../core/services/helpers/config.helpers';
+import {IXosConfigHelpersService, IXosModelDefsField} from '../../core/services/helpers/config.helpers';
 import {IXosRuntimeStatesService, IXosState} from '../../core/services/runtime-states';
 import {IXosModelStoreService} from '../stores/model.store';
 import {IXosAuthService} from '../rest/auth.rest';

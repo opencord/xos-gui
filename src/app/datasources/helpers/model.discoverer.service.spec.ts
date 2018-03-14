@@ -26,8 +26,8 @@ import {XosModeldefsCache} from './modeldefs.service';
 const stubModels: IXosModeldef[] = [
   {
     fields: [
-      {name: 'id', type: 'number'},
-      {name: 'foo', type: 'string'}
+      {name: 'id', type: 'number', read_only: false},
+      {name: 'foo', type: 'string', read_only: false}
     ],
     relations: [],
     name: 'Node',
@@ -37,8 +37,8 @@ const stubModels: IXosModeldef[] = [
   },
   {
     fields: [
-      {name: 'id', type: 'number'},
-      {name: 'bar', type: 'string'}
+      {name: 'id', type: 'number', read_only: false},
+      {name: 'bar', type: 'string', read_only: false}
     ],
     relations: [],
     name: 'VSGTenant',
