@@ -19,17 +19,27 @@
 const httpProxy = require('http-proxy');
 
 const target = process.env.PROXY || '127.0.0.1:9101';
+const wsTarget = process.env.WS || '127.0.0.1:3000';
 
 const proxy = httpProxy.createProxyServer({
   target: `http://${target}`,
   ws: true
 });
-
 proxy.on('error', function(error, req, res) {
   res.writeHead(500, {'Content-Type': 'text/plain'});
   console.error('[Proxy]', error);
 });
 
+const wsProxy = httpProxy.createProxyServer({
+  target: `http://${wsTarget}`,
+  ws: true
+});
+wsProxy.on('error', function(error, req, res) {
+  res.writeHead(500, {'Content-Type': 'text/plain'});
+  console.error('[Proxy]', error);
+});
+
 module.exports = {
-  proxy
+  proxy,
+  wsProxy
 };

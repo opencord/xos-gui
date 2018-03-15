@@ -50,6 +50,8 @@ export class XosNodeRenderer {
       .selectAll('g.node')
       .data(nodes, n => n.id);
 
+    console.log(nodes, node.enter(), node.exit())
+
     const entering = node.enter()
       .append('g')
       .attr({

@@ -22,6 +22,7 @@ import {IXosGraphStore, XosGraphStore} from './graph.store';
 import {Subject} from 'rxjs/Subject';
 import {Graph} from 'graphlib';
 import {XosDebouncer} from '../../core/services/helpers/debounce.helper';
+import {IWSEvent} from '../../datasources/websocket/global';
 
 interface ITestXosGraphStore extends IXosGraphStore {
 
@@ -94,6 +95,7 @@ const subject_services = new Subject();
 const subject_servicedependency = new Subject();
 const subject_serviceinstances = new Subject();
 const subject_serviceinstancelinks = new Subject();
+const subject_websocket = new Subject();
 
 let MockModelStore = {
   query: jasmine.createSpy('XosModelStore.query')
@@ -113,6 +115,11 @@ let MockModelStore = {
     })
 };
 
+let MockWebSocket = {
+  list: jasmine.createSpy('WebSocket.list')
+    .and.returnValue(subject_websocket)
+};
+
 
 describe('The XosGraphStore service', () => {
 
@@ -120,6 +127,7 @@ describe('The XosGraphStore service', () => {
     angular.module('XosGraphStore', [])
       .service('XosGraphStore', XosGraphStore)
       .value('XosModelStore', MockModelStore)
+      .value('WebSocket', MockWebSocket)
       .service('XosDebouncer', XosDebouncer);
 
     angular.mock.module('XosGraphStore');
@@ -143,6 +151,7 @@ describe('The XosGraphStore service', () => {
           expect(graph.nodes()).toEqual(['service~1', 'service~2']);
           expect(graph.edges().length).toBe(servicedependencies.length);
           expect(graph.edges()).toEqual([{v: 'service~1', w: 'service~2'}]);
+          event = 0; // trick to prevent this assertions to run again
           done();
         }
         else {
@@ -153,6 +162,66 @@ describe('The XosGraphStore service', () => {
     subject_services.next(services);
     subject_servicedependency.next(servicedependencies);
     scope.$apply();
+  });
+
+  describe('when an observed model is removed', () => {
+
+    beforeEach(() => {
+      subject_services.next([]);
+      subject_servicedependency.next([]);
+      subject_services.next(services);
+      subject_servicedependency.next(servicedependencies);
+    });
+
+    it('should be removed from the graph', (done) => {
+      let delete_event = 0;
+      service.get().subscribe(
+        (graph: Graph) => {
+          if (delete_event === 1) {
+            expect(graph.nodes().length).toBe(0);
+            expect(graph.nodes()).toEqual([]);
+            expect(graph.edges().length).toBe(0);
+            expect(graph.edges()).toEqual([]);
+            done();
+          }
+          else {
+            delete_event = delete_event + 1;
+          }
+        }
+      );
+
+      const removeService1: IWSEvent = {
+        model: 'Service',
+        deleted: true,
+        msg: {
+          changed_fields: [],
+          pk: 1
+        }
+      };
+
+      const removeService2: IWSEvent = {
+        model: 'Service',
+        deleted: true,
+        msg: {
+          changed_fields: [],
+          pk: 2
+        }
+      };
+
+      const removeServiceDependency1: IWSEvent = {
+        model: 'ServiceDependency',
+        deleted: true,
+        msg: {
+          changed_fields: [],
+          pk: 1
+        }
+      };
+
+      subject_websocket.next(removeService1);
+      subject_websocket.next(removeService2);
+      subject_websocket.next(removeServiceDependency1);
+      scope.$apply();
+    });
   });
 
   describe(`the getModelType`, () => {

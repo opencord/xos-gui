@@ -23,6 +23,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {IXosBaseModel, IXosSgLink, IXosSgNode} from '../interfaces';
+import {IWSEvent, IWSEventService} from '../../datasources/websocket/global';
 
 
 export interface IXosGraphStore {
@@ -41,7 +42,8 @@ export class XosGraphStore implements IXosGraphStore {
   static $inject = [
     '$log',
     'XosModelStore',
-    'XosDebouncer'
+    'XosDebouncer',
+    'WebSocket'
   ];
 
   // graphs
@@ -64,7 +66,8 @@ export class XosGraphStore implements IXosGraphStore {
   constructor (
     private $log: ng.ILogService,
     private XosModelStore: IXosModelStoreService,
-    private XosDebouncer: IXosDebouncer
+    private XosDebouncer: IXosDebouncer,
+    private webSocket: IWSEventService,
   ) {
     this.$log.info('[XosGraphStore] Setup');
 
@@ -72,6 +75,36 @@ export class XosGraphStore implements IXosGraphStore {
     this.ServiceGraphSubject = new BehaviorSubject(this.serviceGraph);
 
     this.loadData();
+
+    // handle model deletion
+    this.webSocket.list()
+      .filter((e: IWSEvent) => {
+      // FIXME we receive things like `CordSubscriberRoot` but we need to find the parent class
+        switch (e.model) {
+          case 'Service':
+          case 'ServiceInstance':
+          case 'Instance':
+          case 'Network':
+            return true;
+          case 'ServiceDependency':
+          case 'ServiceInstanceLink':
+            // NOTE ServiceDependency are considered links, they are automatically removed by the graph library
+            return false;
+          default:
+            return false;
+        }
+      })
+      .subscribe((event: IWSEvent) => {
+        if (event.deleted) {
+          const node = {
+            class_names: event.model,
+            id: event.msg.pk
+          }
+          const nodeId = this.getNodeId(node);
+          this.serviceGraph.removeNode(nodeId);
+          this.efficientNext(this.ServiceGraphSubject, this.serviceGraph);
+        }
+      });
   }
 
   $onDestroy() {

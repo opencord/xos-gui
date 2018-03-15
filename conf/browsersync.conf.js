@@ -18,6 +18,7 @@
 
 const conf = require('./gulp.conf');
 const proxy = require('./proxy').proxy;
+const wsProxy = require('./proxy').wsProxy;
 
 module.exports = function () {
   return {
@@ -29,10 +30,14 @@ module.exports = function () {
       middleware: function(req, res, next) {
         if (
           req.url.indexOf('xosapi') !== -1
-          || req.url.indexOf('socket.io') !== -1
           || req.url.indexOf('extensions') !== -1
         ) {
           proxy.web(req, res);
+        }
+        else if (
+          req.url.indexOf('socket.io') !== -1
+        ) {
+          wsProxy.web(req, res);
         }
         else {
           next();
