@@ -22,6 +22,7 @@ import {IXosGraphStore, XosGraphStore} from './graph.store';
 import {Subject} from 'rxjs/Subject';
 import {Graph} from 'graphlib';
 import {XosDebouncer} from '../../core/services/helpers/debounce.helper';
+import {IWSEvent} from '../../datasources/websocket/global';
 
 interface ITestXosGraphStore extends IXosGraphStore {
 
@@ -94,6 +95,7 @@ const subject_services = new Subject();
 const subject_servicedependency = new Subject();
 const subject_serviceinstances = new Subject();
 const subject_serviceinstancelinks = new Subject();
+const subject_websocket = new Subject();
 
 let MockModelStore = {
   query: jasmine.createSpy('XosModelStore.query')
@@ -113,6 +115,11 @@ let MockModelStore = {
     })
 };
 
+let MockWebSocket = {
+  list: jasmine.createSpy('WebSocket.list')
+    .and.returnValue(subject_websocket)
+};
+
 
 describe('The XosGraphStore service', () => {
 
@@ -120,6 +127,7 @@ describe('The XosGraphStore service', () => {
     angular.module('XosGraphStore', [])
       .service('XosGraphStore', XosGraphStore)
       .value('XosModelStore', MockModelStore)
+      .value('WebSocket', MockWebSocket)
       .service('XosDebouncer', XosDebouncer);
 
     angular.mock.module('XosGraphStore');
@@ -134,25 +142,128 @@ describe('The XosGraphStore service', () => {
 
   }));
 
-  it('should load services and service-dependency and add nodes to the graph', (done) => {
-    let event = 0;
-    service.get().subscribe(
-      (graph: Graph) => {
-        if (event === 1) {
-          expect(graph.nodes().length).toBe(services.length);
-          expect(graph.nodes()).toEqual(['service~1', 'service~2']);
-          expect(graph.edges().length).toBe(servicedependencies.length);
-          expect(graph.edges()).toEqual([{v: 'service~1', w: 'service~2'}]);
-          done();
+  describe('when started', () => {
+
+    let subscription;
+
+    it('should load services and service-dependency and add nodes to the graph', (done) => {
+      let event = 0;
+      subscription = service.get().subscribe(
+        (graph: Graph) => {
+          if (event === 1) {
+            expect(graph.nodes().length).toBe(services.length);
+            expect(graph.nodes()).toEqual(['service~1', 'service~2']);
+            expect(graph.edges().length).toBe(servicedependencies.length);
+            expect(graph.edges()).toEqual([{v: 'service~1', w: 'service~2'}]);
+            done();
+          }
+          else {
+            event = event + 1;
+          }
         }
-        else {
-          event = event + 1;
+      );
+      subject_services.next(services);
+      subject_servicedependency.next(servicedependencies);
+      scope.$apply();
+    });
+
+    afterEach(() => {
+      subscription.unsubscribe();
+    });
+  });
+
+  describe('when an observed model is removed', () => {
+
+    let subscription;
+
+    beforeEach(() => {
+      subject_services.next([]);
+      subject_servicedependency.next([]);
+      subject_services.next(services);
+      subject_servicedependency.next(servicedependencies);
+      service.addServiceInstances();
+      subject_serviceinstances.next([serviceInstances[0]]);
+    });
+
+    it('should be removed from the graph', (done) => {
+      let event = 0;
+      subscription = service.get().subscribe(
+        (graph: Graph) => {
+          if (event === 1) {
+            expect(graph.nodes().length).toBe(0);
+            expect(graph.nodes()).toEqual([]);
+            expect(graph.edges().length).toBe(0);
+            expect(graph.edges()).toEqual([]);
+            done();
+          }
+          else {
+            event = event + 1;
+          }
         }
-      }
-    );
-    subject_services.next(services);
-    subject_servicedependency.next(servicedependencies);
-    scope.$apply();
+      );
+
+      const removeService1: IWSEvent = {
+        model: 'Service',
+        deleted: true,
+        msg: {
+          changed_fields: [],
+          pk: 1,
+          object: {
+            id: 1,
+            class_names: 'Service, XOSBase'
+          }
+        }
+      };
+
+      const removeService2: IWSEvent = {
+        model: 'Service',
+        deleted: true,
+        msg: {
+          changed_fields: [],
+          pk: 2,
+          object: {
+            id: 2,
+            class_names: 'Service, XOSBase'
+          }
+        }
+      };
+
+      const removeServiceDependency1: IWSEvent = {
+        model: 'ServiceDependency',
+        deleted: true,
+        msg: {
+          changed_fields: [],
+          pk: 1,
+          object: {
+            id: 1,
+            class_names: 'ServiceDependency, XOSBase'
+          }
+        }
+      };
+
+      const removeServiceInstnace1: IWSEvent = {
+        model: 'VSGServiceInstance',
+        deleted: true,
+        msg: {
+          changed_fields: [],
+          pk: 1,
+          object: {
+            id: 1,
+            class_names: 'VSGServiceInstance,TenantWithContainer,ServiceInstance'
+          }
+        }
+      };
+
+      subject_websocket.next(removeService1);
+      subject_websocket.next(removeService2);
+      subject_websocket.next(removeServiceDependency1);
+      subject_websocket.next(removeServiceInstnace1);
+      scope.$apply();
+    });
+
+    afterEach(() => {
+      subscription.unsubscribe();
+    });
   });
 
   describe(`the getModelType`, () => {
