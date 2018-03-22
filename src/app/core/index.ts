@@ -49,6 +49,7 @@ import {XosDebugService} from './debug/debug.service';
 import {xosDebugModel} from './debug/debug-model';
 import {xosConfirm} from './confirm/confirm';
 import {XosConfirm} from './confirm/confirm.service';
+import {xosServiceStatus} from './service-status/service-status';
 
 export const xosCore = 'xosCore';
 
@@ -89,5 +90,6 @@ angular
   .component('xosDebugSummary', xosDebugSummary)
   .component('xosDebugModel', xosDebugModel)
   .component('xosConfirm', xosConfirm)
+  .component('serviceStatus', xosServiceStatus)
   .filter('pagination', PaginationFilter)
   .filter('arrayToList', ArrayToListFilter);

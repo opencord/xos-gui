@@ -1,0 +1,18 @@
+<div class="loader" ng-if="!vm.loaded"></div>
+
+<table class="table table-striped" ng-if="vm.loaded">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Version</th>
+      <th>State</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="service in vm.services">
+      <td>{{service.name}}</td>
+      <td><code>{{service.version}}</code></td>
+      <td>{{service.state}}</td>
+    </tr>
+  </tbody>
+</table>

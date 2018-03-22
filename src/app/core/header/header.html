@@ -52,6 +52,16 @@ limitations under the License.
           typeahead-template-url="customTemplate.html"
           typeahead-on-select="vm.routeSelected($item, $model, $label)">
       </form>
+      <div class="nav navbar-nav navbar-right">
+        <div class="btn-group" uib-dropdown is-open="status.isopen">
+          <a id="single-button" class="btn btn-accent" uib-dropdown-toggle>
+            Service Status <span class="caret"></span>
+          </a>
+          <div class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+            <service-status></service-status>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
