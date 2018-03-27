@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2017-present Open Networking Foundation
 
@@ -14,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 
 import './header.scss';
 import {IWSEvent} from '../../datasources/websocket/global';
@@ -168,7 +166,7 @@ class HeaderController {
                 modelName = `${modelClassName} [${event.msg.object.id}]`;
               }
 
-              const dest = this.ConfigHelpers.stateWithParamsForJs(modelClassName, event.msg.object);
+              const dest = this.ConfigHelpers.stateWithParamsForJs(modelClassName, event.msg.object.id);
 
               if (!event.skip_notification) {
                 this.toastr[toastrLevel](`${toastrMsg} ${modelName}`, modelClassName, {extraData: {dest: dest}});
