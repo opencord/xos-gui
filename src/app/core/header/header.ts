@@ -168,7 +168,7 @@ class HeaderController {
                 modelName = `${modelClassName} [${event.msg.object.id}]`;
               }
 
-              const dest = this.ConfigHelpers.stateWithParamsForJs(modelClassName, event.msg.object);
+              const dest = this.ConfigHelpers.stateWithParamsForJs(modelClassName, event.msg.object.id);
 
               if (!event.skip_notification) {
                 this.toastr[toastrLevel](`${toastrMsg} ${modelName}`, modelClassName, {extraData: {dest: dest}});
