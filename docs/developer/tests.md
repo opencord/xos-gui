@@ -34,7 +34,7 @@ These tests can be found in the `e2e` folder.
 ```bash
 npm run test:e2e
 ```
- 
+
 Other paramenters you can pass are:
 
 | Variable Name | Description                                                  |
@@ -42,5 +42,6 @@ Other paramenters you can pass are:
 | UI_URL        | Address of the GUI (deaults to `http://127.0.0.1:4000/xos/#` |
 | UI_PWD        | Password to login (needed only for remote connections)       |
 | TIMEOUT       | Time allowed for each test                                   |
-| PT_ARGS		| Extra arguments for Protractor, eg: "--suite dashboard" (Suites are defined in `conf/protractor.conf.js`)     |
-| PT_CONF       | The path of the config file (eg: "./conf/protractor.conf.js")          
+| PT_ARGS       | Extra arguments for Protractor, eg: "--suite dashboard" (Suites are defined in `conf/protractor.conf.js`) |
+| PT_CONF       | The path of the config file (eg: "./conf/protractor.conf.js")|
+
