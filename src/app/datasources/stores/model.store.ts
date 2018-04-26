@@ -29,6 +29,7 @@ export interface  IXosModelStoreService {
   query(model: string, apiUrl?: string): Observable<any>;
   get(model: string, id: string | number): Observable<any>;
   search(modelName: string): any[];
+  clean(): void;
 }
 
 export class XosModelStore implements IXosModelStoreService {
@@ -52,6 +53,10 @@ export class XosModelStore implements IXosModelStoreService {
   ) {
     this._collections = {};
     this.efficientNext = this.XosDebouncer.debounce(this.next, 500, this, false);
+  }
+
+  public clean() {
+    this._collections = {};
   }
 
   public query(modelName: string, apiUrl?: string): Observable<any> {

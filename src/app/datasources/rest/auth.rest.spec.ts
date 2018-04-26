@@ -106,36 +106,36 @@ describe('The AuthService service', () => {
     });
   });
 
-  describe('the handleUnauthenticatedRequest method', () => {
+  describe('the isAuthError method', () => {
 
     beforeEach(() => {
       spyOn(service, 'clearUser');
     });
 
     it('should logout the user and redirect to login', () => {
-      service.handleUnauthenticatedRequest({
+      let res = service.isAuthError({
         error: 'XOSPermissionDenied',
         fields: {},
         specific_error: 'test'
       });
-      expect(service.clearUser).toHaveBeenCalled();
+      expect(res).toBeTruthy();
     });
 
     it('should catch errors from strings', () => {
-      service.handleUnauthenticatedRequest('{"fields": {}, "specific_error": "failed to authenticate token g09et150o2s25kdzg8t2n9wotvds9jyl", "error": "XOSPermissionDenied"}');
-      expect(service.clearUser).toHaveBeenCalled();
+      let res = service.isAuthError('{"fields": {}, "specific_error": "failed to authenticate token g09et150o2s25kdzg8t2n9wotvds9jyl", "error": "XOSPermissionDenied"}');
+      expect(res).toBeTruthy();
     });
 
     it('should not catch other errors', () => {
-      service.handleUnauthenticatedRequest({
+      let res = service.isAuthError({
         error: 'XOSProgrammingError',
         fields: {},
         specific_error: 'test'
       });
-      expect(service.clearUser).not.toHaveBeenCalled();
+      expect(res).toBeFalsy();
 
-      service.handleUnauthenticatedRequest('some error');
-      expect(service.clearUser).not.toHaveBeenCalled();
+      res = service.isAuthError('some error');
+      expect(res).toBeFalsy();
     });
   });
 });

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+@import './../../style/vars.scss';
 
 #toast-container [toast]:not(:first-child) {
   margin-top: 10px !important;
@@ -41,6 +41,7 @@ xos-header {
     background: #2a2d35 !important;
     min-width: 300px;
 
+    /* service status */
     .table {
       margin-bottom: 0;
     }
@@ -52,6 +53,20 @@ xos-header {
     .table tr th:last-child {
       padding-right: 20px;
     }
+
+    /* search bar */
+
+    li.uib-typeahead-match > a {
+      color: #ccc;
+    }
+
+    li.uib-typeahead-match.active > a,
+    li.uib-typeahead-match.active > a:hover,
+    li.uib-typeahead-match.active > a:focus {
+      font-weight: bold;
+      background-color: rgba(68, 70, 79, 0.5);
+      color: #fff;
+    }
   }
 
   .navbar-nav a {
@@ -61,7 +76,8 @@ xos-header {
   .navbar-nav > .open > a,
   .navbar-nav > .open > a:hover {
     color:#ffffff !important;
-    background-color:rgba(246,168,33,0.1) !important;;
+    background-color:rgba(246,168,33,0.1) !important;
     border-color:#f6a821;
   }
+
 }

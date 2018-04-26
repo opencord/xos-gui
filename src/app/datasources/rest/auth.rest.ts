@@ -46,7 +46,7 @@ export interface IXosAuthService {
   getUser(): any; // NOTE how to define return user || false ???
   isAuthenticated(): boolean;
   clearUser(): void;
-  handleUnauthenticatedRequest(error: IXosRestError | string): void;
+  isAuthError(error: IXosRestError | string): boolean;
 }
 export class AuthService {
 
@@ -111,7 +111,7 @@ export class AuthService {
     return angular.isDefined(session);
   }
 
-  public handleUnauthenticatedRequest(res: IXosRestError | string): void {
+  public isAuthError(res: IXosRestError | string): boolean {
     let err;
     if (angular.isString(res)) {
       try {
@@ -129,9 +129,7 @@ export class AuthService {
     if (err && err.error) {
       switch (err.error) {
         case 'XOSPermissionDenied':
-          this.clearUser();
-          this.$state.go('login');
-          break;
+          return true;
       }
     }
   }

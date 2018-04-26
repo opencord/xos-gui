@@ -77,86 +77,116 @@ describe('The XosLoader component', () => {
     timeout = $timeout;
     location = $location;
     spyOn(location, 'path');
-
-    MockDiscover.discover = jasmine.createSpy('discover')
-      .and.callFake(() => {
-        const d = $q.defer();
-        d.resolve(true);
-        return d.promise;
-      });
-
-    MockOnboarder.onboard = jasmine.createSpy('onboard')
-      .and.callFake(() => {
-        const d = $q.defer();
-        d.resolve();
-        return d.promise;
-      });
   }));
 
-  describe('when models are already loaded', () => {
-
-    beforeEach(() => {
-      compileElement();
-      spyOn(isolatedScope, 'moveOnTo');
-      isolatedScope.run();
-      timeout.flush();
-    });
-
-    it('should redirect to the last visited page', (done) => {
-      window.setTimeout(() => {
-        expect(isolatedScope.moveOnTo).toHaveBeenCalledWith('/test');
-        expect(location.path).toHaveBeenCalledWith('/test');
-        done();
-      }, 600);
-    });
-  });
-
-  describe('when the last visited page is "loader"', () => {
-
-    beforeEach(() => {
-      MockConfig.lastVisitedUrl = '/loader';
-      compileElement();
-      spyOn(isolatedScope, 'moveOnTo');
-      isolatedScope.run();
-    });
-
-    it('should redirect to the "dashboard" page', (done) => {
-      window.setTimeout(() => {
-        expect(isolatedScope.moveOnTo).toHaveBeenCalledWith('/loader');
-        expect(location.path).toHaveBeenCalledWith('/dashboard');
-        done();
-      }, 600);
-    });
-  });
-
-  describe('when user is not authenticated', () => {
-
-    beforeEach(() => {
+  describe('when chameleon is not responding', () => {
+    beforeEach(inject(($q: ng.IQService) => {
       loaded = false;
-      authenticated = false;
-      compileElement();
-      isolatedScope.run();
-    });
-
-    it('should redirect to the login page', () => {
-      expect(MockState.go).toHaveBeenCalledWith('xos.login');
-    });
-
-    afterEach(() => {
       authenticated = true;
+      MockDiscover.discover = jasmine.createSpy('discover')
+        .and.callFake(() => {
+          const d = $q.defer();
+          d.resolve('chameleon');
+          return d.promise;
+        });
+      compileElement();
+      spyOn(isolatedScope, 'moveOnTo');
+      isolatedScope.run();
+    }));
+
+    it('should print an error', () => {
+      expect(isolatedScope.moveOnTo).not.toHaveBeenCalled();
+      expect(isolatedScope.error).toBe('chameleon');
+      expect(isolatedScope.loader).toBeFalsy();
     });
   });
 
-  describe('when models are not loaded', () => {
+  describe('when chameleon is available', () => {
 
-    beforeEach(() => {
-      loaded = false;
-      compileElement();
-      spyOn(isolatedScope, 'moveOnTo');
+    beforeEach(inject(($q: ng.IQService) => {
+      loaded = true;
+      authenticated = true;
+      MockDiscover.discover = jasmine.createSpy('discover')
+        .and.callFake(() => {
+          const d = $q.defer();
+          d.resolve(true);
+          return d.promise;
+        });
+
+      MockOnboarder.onboard = jasmine.createSpy('onboard')
+        .and.callFake(() => {
+          const d = $q.defer();
+          d.resolve();
+          return d.promise;
+        });
+    }));
+
+    describe('when models are already loaded', () => {
+
+      beforeEach(() => {
+        compileElement();
+        spyOn(isolatedScope, 'moveOnTo');
+        isolatedScope.run();
+        timeout.flush();
+      });
+
+      it('should redirect to the last visited page', (done) => {
+        window.setTimeout(() => {
+          expect(isolatedScope.moveOnTo).toHaveBeenCalledWith('/test');
+          expect(location.path).toHaveBeenCalledWith('/test');
+          done();
+        }, 600);
+      });
     });
 
-    it('should call XosModelDiscoverer.discover', () => {
-      expect(MockDiscover.discover).toHaveBeenCalled();
+    describe('when the last visited page is "loader"', () => {
+
+      beforeEach(() => {
+        MockConfig.lastVisitedUrl = '/loader';
+        compileElement();
+        spyOn(isolatedScope, 'moveOnTo');
+        isolatedScope.run();
+      });
+
+      it('should redirect to the "dashboard" page', (done) => {
+        window.setTimeout(() => {
+          expect(isolatedScope.moveOnTo).toHaveBeenCalledWith('/loader');
+          expect(location.path).toHaveBeenCalledWith('/dashboard');
+          done();
+        }, 600);
+      });
+    });
+
+    describe('when user is not authenticated', () => {
+
+      beforeEach(() => {
+        loaded = false;
+        authenticated = false;
+        compileElement();
+        isolatedScope.run();
+      });
+
+      it('should redirect to the login page', () => {
+        expect(MockState.go).toHaveBeenCalledWith('xos.login');
+      });
+
+      afterEach(() => {
+        authenticated = true;
+      });
+    });
+
+    describe('when models are not loaded', () => {
+
+      beforeEach(() => {
+        loaded = false;
+        authenticated = true;
+        compileElement();
+        spyOn(isolatedScope, 'moveOnTo');
+      });
+
+      it('should call XosModelDiscoverer.discover', () => {
+        expect(MockDiscover.discover).toHaveBeenCalled();
+      });
     });
   });
 

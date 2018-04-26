@@ -18,6 +18,7 @@
 
 import {IXosModelDefsField} from '../../core/services/helpers/config.helpers';
 import {IXosAppConfig} from '../../../index';
+import IPromise = angular.IPromise;
 
 export interface IXosModelDefsRelation {
   model: string; // model name
@@ -35,7 +36,7 @@ export interface IXosModeldef {
 }
 
 export interface IXosModeldefsService {
-  get(): Promise<IXosModeldef[]>;
+  get(): IPromise<IXosModeldef[]>;
 }
 
 export class XosModeldefsService implements IXosModeldefsService {
@@ -49,9 +50,9 @@ export class XosModeldefsService implements IXosModeldefsService {
   ) {
   }
 
-  public get(): Promise<any> {
+  public get(): IPromise<IXosModeldef[]> {
     const d = this.$q.defer();
-    this.$http.get(`${this.AppConfig.apiEndpoint}/modeldefs`)
+    this.$http.get(`${this.AppConfig.apiEndpoint}/modeldefs`, {timeout: 5 * 1000})
       .then((res: any) => {
         d.resolve(res.data.items);
       })
