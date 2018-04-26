@@ -73,9 +73,13 @@ let MockXosNavigationService = {
 };
 const MockXosModelStore = {
   query: jasmine.createSpy('modelStore.query')
-    .and.callFake(() => {
+    .and.callFake((model) => {
       const list = new BehaviorSubject([]);
       list.next([]);
+      window.setTimeout(() => {
+        // NOTE force the Observable to call next two times, as cacheModelEntries is not caching the first result (since it's generated)
+        list.next([]);
+      }, 100);
       return list.asObservable();
     })
 };
@@ -165,6 +169,22 @@ describe('The ModelDicoverer service', () => {
     expect(service['getParentStateFromModel']({name: 'Tenant', app: 'services.vsg'})).toBe('xos.vsg');
   });
 
+  it('should add an item to navigation', () => {
+    service['addNavItem']({name: 'Tenant', app: 'services.vsg'});
+    expect(MockXosNavigationService.add).toHaveBeenCalledWith({
+      label: 'Tenants',
+      state: 'xos.vsg.tenant',
+      parent: 'xos.vsg'
+    });
+
+    service['addNavItem']({name: 'Tenant', verbose_name: 'Verbose', app: 'services.vsg'});
+    expect(MockXosNavigationService.add).toHaveBeenCalledWith({
+      label: 'Verboses',
+      state: 'xos.vsg.tenant',
+      parent: 'xos.vsg'
+    });
+  });
+
   it('should add a new service entry in the system', () => {
     service['addService']({name: 'Tenant', app: 'services.vsg'});
     expect(MockXosRuntimeStates.addState).toHaveBeenCalledWith('xos.vsg', {
@@ -226,22 +246,6 @@ describe('The ModelDicoverer service', () => {
     scope.$apply();
   });
 
-  it('should add an item to navigation', () => {
-    service['addNavItem']({name: 'Tenant', app: 'services.vsg'});
-    expect(MockXosNavigationService.add).toHaveBeenCalledWith({
-      label: 'Tenants',
-      state: 'xos.vsg.tenant',
-      parent: 'xos.vsg'
-    });
-
-    service['addNavItem']({name: 'Tenant', verbose_name: 'Verbose', app: 'services.vsg'});
-    expect(MockXosNavigationService.add).toHaveBeenCalledWith({
-      label: 'Verboses',
-      state: 'xos.vsg.tenant',
-      parent: 'xos.vsg'
-    });
-  });
-
   it('should cache a model', () => {
     service['cacheModelEntries']({name: 'Tenant', app: 'services.vsg'});
     expect(MockXosModelStore.query).toHaveBeenCalledWith('Tenant', '/vsg/tenants');
@@ -276,7 +280,7 @@ describe('The ModelDicoverer service', () => {
       service.discover()
         .then((res) => {
           expect(MockProgressBar.start).toHaveBeenCalled();
-          expect(MockXosModelDefs.get).toHaveBeenCalled(); // FIXME replace correct spy
+          expect(MockXosModelDefs.get).toHaveBeenCalled();
           expect(service['cacheModelEntries'].calls.count()).toBe(2);
           expect(service['addState'].calls.count()).toBe(2);
           expect(service['addNavItem'].calls.count()).toBe(2);
@@ -287,6 +291,10 @@ describe('The ModelDicoverer service', () => {
           done();
         });
       scope.$apply();
+      window.setTimeout(() => {
+        // resolve promises after the observable.next as been called twice (cacheModelEntries requires it)
+        scope.$apply();
+      }, 101);
     });
   });
 });
