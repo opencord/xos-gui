@@ -28,6 +28,7 @@ import {IXosRuntimeStatesService, IXosState} from '../../core/services/runtime-s
 import {IXosModelStoreService} from '../stores/model.store';
 import {IXosAuthService} from '../rest/auth.rest';
 import {IXosModeldefsCache} from './modeldefs.service';
+import {skip} from 'rxjs/operator/skip';
 
 export interface IXosModel {
   name: string; // the model name
@@ -127,27 +128,36 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
               return this.$q.resolve('true');
             })
             .catch(err => {
-              this.$log.error(`[XosModelDiscovererService] Model ${model.name} NOT stored`, err);
+              this.$log.warn(`[XosModelDiscovererService] Model ${model.name} NOT stored`, err);
+              const isAuthError = this.AuthService.isAuthError(err);
+              if (isAuthError) {
+                this.$log.warn(`[XosModelDiscovererService] User is not authentincated`);
+                return this.$q.reject(err);
+              }
               return this.$q.resolve('false');
             });
             pArray.push(p);
         });
+
+
         this.$q.all(pArray)
           .then((res) => {
-            // the Model Loader promise won't ever be reject, in case it will be resolve with value false,
+            // the ModelLoader promise won't ever be reject, in case it will be resolve with value false,
             // that's because we want to wait anyway for all the models to be loaded
             if (res.indexOf('false') > -1) {
               return d.resolve(false);
             }
             d.resolve(true);
+            this.modelsLoaded = true;
           })
           .catch((e) => {
-            this.$log.error(`[XosModelDiscovererService]`, e);
-            d.resolve(false);
+            this.XosModelStore.clean(); // reset all the observable otherwise they'll store login errors
+            this.$log.warn(`[XosModelDiscovererService]`, e);
+            // the ModelLoader promise will be rejected in case of authentication error
+            d.reject(e);
           })
           .finally(() => {
             this.progressBar.complete();
-            this.modelsLoaded = true;
           });
       });
     return d.promise;
@@ -249,16 +259,17 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
   }
 
   private cacheModelEntries(model: IXosModel): ng.IPromise<IXosModel> {
+
     const d = this.$q.defer();
 
     const apiUrl = this.getApiUrlFromModel(model);
     this.XosModelStore.query(model.name, apiUrl)
+      .skip(1) // NOTE observables returns as first an empty array, so skip it
       .subscribe(
         () => {
           return d.resolve(model);
         },
         err => {
-          this.AuthService.handleUnauthenticatedRequest(err);
           return d.reject(err);
         }
       );

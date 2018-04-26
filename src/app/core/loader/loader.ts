@@ -49,26 +49,36 @@ class LoaderCtrl {
 
   public run() {
     if (this.XosModelDiscoverer.areModelsLoaded()) {
+      this.$log.debug(`[XosLoader] Models are already loaded, moving to: ${this.XosConfig.lastVisitedUrl}`)
       this.moveOnTo(this.XosConfig.lastVisitedUrl);
     }
     else if (!this.XosAuthService.isAuthenticated()) {
+      this.$log.debug(`[XosLoader] Not authenticated, send to login`)
       this.$state.go('xos.login');
     }
     else {
       // NOTE loading XOS Models
       this.XosModelDiscoverer.discover()
         .then((res) => {
+          this.$log.info('[XosLoader] res: ' + res, res, typeof res);
           if (res) {
             this.$log.info('[XosLoader] All models loaded');
+            // NOTE loading GUI Extensions
+            return this.XosOnboarder.onboard();
           }
           else {
             this.$log.info('[XosLoader] Failed to load some models, moving on.');
+            return true;
           }
-          // NOTE loading GUI Extensions
-          return this.XosOnboarder.onboard();
         })
         .then(() => {
           this.moveOnTo(this.XosConfig.lastVisitedUrl);
+        })
+        .catch(() => {
+          // XosModelDiscoverer.discover reject only in case of authentication error
+          this.XosAuthService.clearUser();
+          this.moveOnTo('/login');
+
         })
         .finally(() => {
           // NOTE it is in a timeout as the searchService is loaded after that

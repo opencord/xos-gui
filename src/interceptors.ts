@@ -32,7 +32,6 @@ export function userStatusInterceptor($state: angular.ui.IStateService, $cookies
       case 401:
       case 403:
         $cookies.remove('sessionid', {path: '/'});
-        $state.go('login');
         return $q.reject(res);
       default:
         return $q.reject(res);
