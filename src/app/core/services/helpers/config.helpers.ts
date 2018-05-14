@@ -109,6 +109,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   ) {
     pluralize.addIrregularRule('xos', 'xoses');
     pluralize.addPluralRule(/slice$/i, 'slices');
+    pluralize.addPluralRule(/data/i, 'datas');
     pluralize.addSingularRule(/slice$/i, 'slice');
     pluralize.addPluralRule(/library$/i, 'librarys');
     pluralize.addPluralRule(/imagedeployments/i, 'imagedeploymentss');
