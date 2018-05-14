@@ -3,11 +3,11 @@
   "dependencies": {
     "angular": "1.6.3",
     "angular-animate": "1.6.3",
-    "angular-base64": "^2.0.5",
-    "angular-chart.js": "^1.1.1",
+    "angular-base64": "2.0.5",
+    "angular-chart.js": "1.1.1",
     "angular-cookies": "1.6.3",
     "angular-resource": "1.6.3",
-    "angular-sanitize": "^1.6.7",
+    "angular-sanitize": "1.6.10",
     "angular-toastr": "2.1.1",
     "angular-ui-bootstrap": "2.5.0",
     "angular-ui-router": "1.0.0-beta.1",
@@ -23,7 +23,7 @@
     "pluralize": "3.1.0",
     "rxjs": "5.2.0",
     "socket.io-client": "1.7.3",
-    "typestate": "^1.0.5"
+    "typestate": "1.0.5"
   },
   "devDependencies": {
     "angular-mocks": "1.6.4",

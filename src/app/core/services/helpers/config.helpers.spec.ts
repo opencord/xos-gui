@@ -132,6 +132,7 @@ describe('The ConfigHelpers service', () => {
       expect(service.pluralize('xos')).toEqual('xoses');
       expect(service.pluralize('slice')).toEqual('slices');
       expect(service.pluralize('Slice', 1)).toEqual('Slice');
+      expect(service.pluralize('kubernetesdata')).toEqual('kubernetesdatas');
     });
 
     it('should preprend count to string', () => {
