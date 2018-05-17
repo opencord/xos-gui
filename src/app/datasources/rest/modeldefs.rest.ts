@@ -52,7 +52,7 @@ export class XosModeldefsService implements IXosModeldefsService {
 
   public get(): IPromise<IXosModeldef[]> {
     const d = this.$q.defer();
-    this.$http.get(`${this.AppConfig.apiEndpoint}/modeldefs`, {timeout: 5 * 1000})
+    this.$http.get(`${this.AppConfig.apiEndpoint}/modeldefs`, {timeout: 10 * 1000})
       .then((res: any) => {
         d.resolve(res.data.items);
       })
