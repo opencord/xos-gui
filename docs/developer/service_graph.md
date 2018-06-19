@@ -1,28 +1,27 @@
-# How to operate on the Service Graph
+# Configuring the Service Graph
 
-The service graph enable some features to simplify operators daily tasks, here
-is a quick guide on how to use those fetaures.
+This section describes how to operate on the service graph using the
+CORD GUI.
 
-## Adding informations to the graph
+## Adding Information to the Graph
 
-The Service Graph will render by default only the `Services`, but you can
+By default, the GUI renders only the `Services` in the service graph, but you can
 augment the available information by pressing:
 
 * `Shift + f` toggle fullscreen mode
 * `Shift + s` to add `ServiceInstances` to the graph
-* `Shift + i` to add `Instances` to the graph (this require `ServiceInstances`
+* `Shift + i` to add `Instances` to the graph (this requires `ServiceInstances`
   to be shown)
 * `Shift + n` to add `Networks` to the graph (this require `Instances` to be
   shown)
 
-## Define the position of the Services in the graph
+## Defining the Position of Services in the Graph
 
-XOS define a model called `ServiceGraphConstraint`, that let you enforce
-constraints on the nodes position.
+XOS defines a model called `ServiceGraphConstraint` that lets you enforce
+constraints on the nodes position in the display. The following
+describes the basics of how this works.
 
-Here is a basic of how it works:
-
-### Setting the services on a line
+### Setting the Services on a Line
 
 ```json
 ["a", "b", "c"]
@@ -34,7 +33,7 @@ will position the nodes as:
 a -> b -> c
 ```
 
-### Services as a tree
+### Services as a Tree
 
 ```json
 ["a", ["b", "c"]]
@@ -50,7 +49,7 @@ will position the nodes as:
    c
 ```
 
-### Empty spots in the graph
+### Empty Spots in the Graph
 
 ```json
 [[null, "a"], ["b", "c"]]
@@ -64,11 +63,10 @@ will position the nodes as:
  a -> c
 ```
 
-> NOTE: All the notes not defined in the `ServiceGraphConstraint` model will
-> float around
+> **Note:** All the nodes not defined in the `ServiceGraphConstraint` model will
+> float around.
 
-## Events listened by the Service Graph
+## Events Monitored by the Service Graph
 
 * `xos.sg.update` will render the graph again
 * `xos.sg.stateChange` will listen for changes in the state machine
-
