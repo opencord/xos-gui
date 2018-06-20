@@ -18,15 +18,23 @@
 
 angular.module('app')
   .constant('StyleConfig', {
-    projectName: 'OpenCloud',
-    favicon: 'opencloud-favicon.png',
-    background: 'opencloud-bg.jpg',
+    projectName: 'M-CORD',
+    favicon: 'cord-favicon.png',
+    background: 'mcord-bg.jpg',
     payoff: 'Your OS resource manager',
-    logo: 'opencloud-logo.png',
+    logo: 'cord-logo.png',
     routes: [
         {
-            label: 'Slices',
-            state: 'xos.core.slice'
-        }
+          label: 'Slices',
+          state: 'xos.core.slice',
+        },
+        {
+          label: 'Nodes',
+          state: 'xos.core.node',
+        },
+        {
+          label: 'Instances',
+          state: 'xos.core.instance',
+        },
     ]
 });
