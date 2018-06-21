@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f48ac131_83a3f451",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2018-06-21T20:08:57Z",
+      "side": 1,
+      "message": "\"already have CORD running\" or \"you already have a running CORD POD\"",
+      "range": {
+        "startLine": 3,
+        "startChar": 8,
+        "endLine": 3,
+        "endChar": 47
+      },
+      "revId": "1ed2d6e5a8ad097ac7e4b5a3e954edd7c2466eba",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "222a1ae6_6d4e58dc",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2018-06-21T20:08:57Z",
+      "side": 1,
+      "message": "Operating",
+      "range": {
+        "startLine": 6,
+        "startChar": 4,
+        "endLine": 6,
+        "endChar": 12
+      },
+      "revId": "1ed2d6e5a8ad097ac7e4b5a3e954edd7c2466eba",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d302709_2af666ef",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2018-06-21T20:08:57Z",
+      "side": 1,
+      "message": "comma",
+      "range": {
+        "startLine": 8,
+        "startChar": 8,
+        "endLine": 8,
+        "endChar": 9
+      },
+      "revId": "1ed2d6e5a8ad097ac7e4b5a3e954edd7c2466eba",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94275ac2_f869cd46",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2018-06-21T20:08:57Z",
+      "side": 1,
+      "message": "target",
+      "range": {
+        "startLine": 22,
+        "startChar": 7,
+        "endLine": 22,
+        "endChar": 13
+      },
+      "revId": "1ed2d6e5a8ad097ac7e4b5a3e954edd7c2466eba",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee710ba1_725d2d86",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2018-06-21T20:08:57Z",
+      "side": 1,
+      "message": "Replace with mcord or some other currently supported brand?",
+      "range": {
+        "startLine": 41,
+        "startChar": 54,
+        "endLine": 41,
+        "endChar": 63
+      },
+      "revId": "1ed2d6e5a8ad097ac7e4b5a3e954edd7c2466eba",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": true
+    }
+  ]
+}
