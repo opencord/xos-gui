@@ -374,12 +374,7 @@ describe('The ConfigHelpers service', () => {
             {
               type: 'string',
               name: 'bar',
-              validators: [
-                {
-                  bool_value: true,
-                  name: 'required'
-                }
-              ],
+              validators: [],
               read_only: false
             }
           ],
@@ -396,6 +391,38 @@ describe('The ConfigHelpers service', () => {
         const res = service['removeExtraFields'](item, model);
 
         expect(res).not.toHaveProp('baz');
+      });
+
+      it('should remove properties marked as read_only', () => {
+        const model: IXosModeldef = {
+          name: 'Test',
+          app: 'test',
+          fields: [
+            {
+              type: 'number',
+              name: 'write_allowed',
+              validators: [],
+              read_only: false
+            },
+            {
+              type: 'string',
+              name: 'read_only',
+              validators: [],
+              read_only: true
+            }
+          ],
+          description: '',
+          verbose_name: ''
+        };
+
+        const item: any = {
+          write_allowed: 'existing',
+          read_only: 'remove me'
+        };
+
+        const res = service['removeExtraFields'](item, model);
+
+        expect(res).not.toHaveProp('read_only');
       });
     });
   });

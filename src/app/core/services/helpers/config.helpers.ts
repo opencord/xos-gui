@@ -97,7 +97,9 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   public form_excluded_fields = this.excluded_fields.concat([
     'id',
     'policy_status',
+    'policy_code',
     'backend_status',
+    'backend_code',
   ]);
 
   constructor(
@@ -319,7 +321,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
         return;
       }
-      // remove fields added by the GUI
+      // remove fields that are not part of the model
       item = this.removeExtraFields(item, model);
 
       const itemCopy = angular.copy(item);
@@ -356,8 +358,9 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
   private removeExtraFields(item: any, modelDef: IXosModeldef) {
     _.forEach(Object.keys(item), prop => {
-      const hasField = _.findIndex(modelDef.fields, {name: prop}) > -1;
-      if (!hasField) {
+      const field = _.find(modelDef.fields, {name: prop});
+      const hasField = angular.isDefined(field);
+      if (!hasField || field.read_only) {
         delete item[prop];
       }
     });
