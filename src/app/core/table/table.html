@@ -29,6 +29,7 @@ limitations under the License.
         <table ng-class="vm.classes">
         <thead>
         <tr>
+            <th ng-if="vm.config.actions">Actions:</th>
             <th ng-repeat="col in ::vm.config.columns">
                 {{col.label}}
                 <div ng-if="vm.config.order">
@@ -40,7 +41,6 @@ limitations under the License.
                     </a>
                 </div>
             </th>
-            <th ng-if="vm.config.actions">Actions:</th>
         </tr>
         </thead>
         <tbody ng-if="vm.config.filter == 'field'">
@@ -66,6 +66,16 @@ limitations under the License.
         </tbody>
         <tbody>
         <tr ng-class="{active: vm.config.selectedRow == $index, deleted: item.deleted}" ng-repeat="item in (vm.config.filteredData = (vm.data | filter:vm.query | orderBy:vm.orderBy:vm.reverse | pagination:vm.currentPage * vm.config.pagination.pageSize | limitTo: (vm.config.pagination.pageSize || vm.data.length))) track by $index">
+            <td class="xos-table-actions" ng-if="vm.config.actions">
+                <a href=""
+                    ng-repeat="action in vm.config.actions"
+                    ng-click="action.cb(item)"
+                    title="{{action.label}}">
+                    <i
+                        class="fa fa-{{action.icon}}"
+                        style="color: {{action.color}};"></i>
+                </a>
+            </td>
             <td ng-repeat="col in vm.config.columns" xos-link-wrapper>
                 <span ng-if="!col.type || col.type === 'text'">{{item[col.prop]}}</span>
                 <span ng-if="col.type === 'boolean'">
@@ -100,16 +110,6 @@ limitations under the License.
                         {{col.hover(item)}}
                     </div>
                 </div>
-            </td>
-            <td class="xos-table-actions" ng-if="vm.config.actions">
-                <a href=""
-                   ng-repeat="action in vm.config.actions"
-                   ng-click="action.cb(item)"
-                   title="{{action.label}}">
-                    <i
-                            class="fa fa-{{action.icon}}"
-                            style="color: {{action.color}};"></i>
-                </a>
             </td>
         </tr>
         </tbody>
