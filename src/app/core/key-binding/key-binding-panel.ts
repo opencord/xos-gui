@@ -20,11 +20,13 @@ import './key-binding-panel.scss';
 class XosKeyBindingPanelController {
   static $inject = ['$scope', 'XosKeyboardShortcut'];
   public bindings: IXosKeyboardShortcutMap;
+  public version: string;
 
   constructor (
     private $scope: ng.IScope,
     private XosKeyboardShortcut: IXosKeyboardShortcutService
   ) {
+    this.version = require('../../../../package.json').version;
     this.bindings = this.XosKeyboardShortcut.keyMapping;
   }
 }

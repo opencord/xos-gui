@@ -27,6 +27,7 @@ import {IXosKeyboardShortcutService} from '../services/keyboard-shortcut';
 import {Subscription} from 'rxjs';
 import {IXosConfigHelpersService} from '../services/helpers/config.helpers';
 import {IXosDebugService} from '../debug/debug.service';
+import {IXosVersionReaderService} from '../services/version-reader';
 
 export interface INotification extends IWSEvent {
   viewed?: boolean;
@@ -47,7 +48,8 @@ class HeaderController {
     'SearchService',
     'XosKeyboardShortcut',
     'ConfigHelpers',
-    'XosDebug'
+    'XosDebug',
+    'XosVersionReaderService'
   ];
   public notifications: INotification[] = [];
   public newNotifications: INotification[] = [];
@@ -74,14 +76,20 @@ class HeaderController {
     private SearchService: IXosSearchService,
     private XosKeyboardShortcut: IXosKeyboardShortcutService,
     private ConfigHelpers: IXosConfigHelpersService,
-    private XosDebugService: IXosDebugService
+    private XosDebugService: IXosDebugService,
+    private XosVersionReaderService: IXosVersionReaderService
   ) {
 
   }
 
   $onInit() {
     this.$log.info('[XosHeader] Setup');
-    this.version = require('../../../../package.json').version;
+
+    this.XosVersionReaderService.getVersion()
+    .then((version: string) => {
+      this.version = version;
+    });
+
     angular.extend(this.toastrConfig, {
       newestOnTop: false,
       positionClass: 'toast-top-right',
