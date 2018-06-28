@@ -1,5 +1,5 @@
 {
-  "version": "6.0.0-devel",
+  "version": "1.0.0",
   "dependencies": {
     "angular": "1.6.3",
     "angular-animate": "1.6.3",

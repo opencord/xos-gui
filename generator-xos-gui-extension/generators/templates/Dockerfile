@@ -1,5 +1,5 @@
 # <%= name %>
-FROM xosproject/xos-gui-extension-builder:candidate
+FROM xosproject/xos-gui-extension-builder:1.0.0
 
 # Set environment vars
 ENV CODE_SOURCE .
