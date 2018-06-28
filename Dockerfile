@@ -3,7 +3,7 @@
 # To run use: docker run -p 4000:4000 --volumes-from gui-extensions-store -d xosproject/xos-gui
 
 # xos-gui-base container
-FROM xosproject/xos-gui-builder:candidate as xos-gui-base
+FROM xosproject/xos-gui-builder:1.0.0 as xos-gui-base
 
 ENV CODE_SOURCE .
 ENV CODE_DEST /var/www
@@ -26,7 +26,7 @@ RUN npm install \
 
 
 # xos-gui container
-FROM nginx:candidate
+FROM nginx:1.13
 
 ENV CODE_SOURCE .
 ENV VHOST /var/www/dist
