@@ -104,6 +104,13 @@ describe('header component', () => {
       .value('toastrConfig', MockToastrConfig)
       .value('AuthService', MockAuth)
       .value('XosNavigationService', {})
+      .value('XosVersionReaderService', {
+        getVersion: () => {
+          return {
+            then: (cb) => cb('version')
+          };
+        }
+      })
       .value('ConfigHelpers', {
         stateWithParamsForJs: () => null
       })

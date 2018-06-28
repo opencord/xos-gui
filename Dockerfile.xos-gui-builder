@@ -14,7 +14,7 @@
 # limitations under the License.
 
 
-# To build use: docker build -t xosproject/xos-gui-builder:candidate .
+# docker build -f Dockerfile.xos-gui-builder -t xosproject/xos-gui-builder:candidate .
 
 FROM node:7.9.0
 

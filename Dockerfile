@@ -1,6 +1,5 @@
 # xosproject/xos-gui
-# To build use: docker build -f Dockerfile -t xosproject/xos-gui:candidate . (note that this require xos-gui-extension-builder to be built)
-# To run use: docker run -p 4000:4000 --volumes-from gui-extensions-store -d xosproject/xos-gui
+# docker build -f Dockerfile -t xosproject/xos-gui:candidate .
 
 # xos-gui-base container
 FROM xosproject/xos-gui-builder:candidate as xos-gui-base
