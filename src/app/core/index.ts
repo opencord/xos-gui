@@ -50,6 +50,7 @@ import {xosDebugModel} from './debug/debug-model';
 import {xosConfirm} from './confirm/confirm';
 import {XosConfirm} from './confirm/confirm.service';
 import {xosServiceStatus} from './service-status/service-status';
+import {XosVersionReaderService} from './services/version-reader';
 
 export const xosCore = 'xosCore';
 
@@ -73,6 +74,7 @@ angular
   .service('XosDebouncer', XosDebouncer)
   .service('XosDebug', XosDebugService)
   .service('XosConfirm', XosConfirm)
+  .service('XosVersionReaderService', XosVersionReaderService)
   .directive('xosLinkWrapper', xosLinkWrapper)
   .component('xosHeader', xosHeader)
   .component('xosFooter', xosFooter)
