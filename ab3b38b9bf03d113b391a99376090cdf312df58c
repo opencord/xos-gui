@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cbb9937_0c6048d6",
+        "filename": "package.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2018-06-28T20:18:04Z",
+      "side": 1,
+      "message": "this is the version that will be printed in the GUI, do we want it to be 1.0.0?",
+      "range": {
+        "startLine": 2,
+        "startChar": 14,
+        "endLine": 2,
+        "endChar": 19
+      },
+      "revId": "ab3b38b9bf03d113b391a99376090cdf312df58c",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
