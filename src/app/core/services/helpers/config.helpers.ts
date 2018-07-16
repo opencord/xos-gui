@@ -97,9 +97,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   public form_excluded_fields = this.excluded_fields.concat([
     'id',
     'policy_status',
-    'policy_code',
-    'backend_status',
-    'backend_code',
+    'backend_status'
   ]);
 
   constructor(
