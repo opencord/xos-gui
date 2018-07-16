@@ -17,6 +17,7 @@
 // NOTE this component will render the hidden model fields for debug purposes
 
 import {IXosConfigHelpersService} from '../services/helpers/config.helpers';
+import * as _ from 'lodash';
 export class XosDebugModelController {
   static $inject = [
     'ConfigHelpers'
@@ -31,7 +32,7 @@ export class XosDebugModelController {
   }
 
   $onInit() {
-    this.debugFields = this.ConfigHelpers.form_excluded_fields;
+    this.debugFields = _.orderBy(this.ConfigHelpers.form_excluded_fields);
   }
 
   public toLabel(string: string): string {
