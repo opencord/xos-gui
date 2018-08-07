@@ -88,13 +88,13 @@ module.exports = {
       jQuery: "jquery"
     }),
     new BaseHrefWebpackPlugin({
-      baseHref: '/xos/'
+      baseHref: '/'
     }),
   ],
   postcss: () => [autoprefixer],
   output: {
     path: path.join(process.cwd(), conf.paths.dist),
-    publicPath: "/xos/", // enable apache proxying on the head node
+    publicPath: "/", // enable apache proxying on the head node
     filename: '[name].js'
   },
   resolve: {
