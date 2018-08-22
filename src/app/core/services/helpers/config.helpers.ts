@@ -325,17 +325,10 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       const itemCopy = angular.copy(item);
       const itemName = (angular.isUndefined(itemCopy.name)) ? model.name : itemCopy.name;
 
-      item.$save()
-        .then((res) => {
-          formCfg.feedback = {
-            show: true,
-            message: `${itemName} successfully saved`,
-            type: 'success',
-            closeBtn: true
-          };
           this.toastr.success(`${itemName} successfully saved`);
           d.resolve(res);
         })
+
         .catch(err => {
           const errorMsg = err.specific_error || err.error || 'Internal Server Error';
           formCfg.feedback = {
