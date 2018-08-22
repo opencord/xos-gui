@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69ba3475_bb0d3bfc",
+        "filename": "src/app/core/services/helpers/config.helpers.ts",
+        "patchSetId": 3
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2018-08-22T22:14:25Z",
+      "side": 0,
+      "message": "Do we still se the confirmation when we save the model without this code?",
+      "range": {
+        "startLine": 330,
+        "startChar": 10,
+        "endLine": 335,
+        "endChar": 12
+      },
+      "revId": "0d6c441647c6f0fd83469209b874cd1c40489eb8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
