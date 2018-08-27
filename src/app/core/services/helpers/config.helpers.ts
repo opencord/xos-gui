@@ -327,14 +327,24 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
          item.$save()
         .then((res) => {
-          /*formCfg.feedback = {
+          if(form.$valid){
+          formCfg.feedback = {
             show: true,
             message: `${itemName} successfully saved`,
             type: 'success',
             closeBtn: true
-          };*/
+          };
           this.toastr.success(`${itemName} successfully saved`);
           d.resolve(res);
+        }
+          else{
+            formCfg.feedback = {
+            show: false,
+            message: `${itemName} successfully saved`,
+            type: 'success',
+            closeBtn: true
+          };
+          }
         })
 
         .catch(err => {
