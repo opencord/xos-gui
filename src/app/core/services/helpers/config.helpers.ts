@@ -327,6 +327,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
 
       item.$save()
         .then((res) => {
+          if (form.$valid){
           formCfg.feedback = {
             show: true,
             message: `${itemName} successfully saved`,
@@ -335,7 +336,18 @@ export class ConfigHelpers implements IXosConfigHelpersService {
           };
           this.toastr.success(`${itemName} successfully saved`);
           d.resolve(res);
+        }
+          else{
+            formCfg.feedback = {
+            show: false,
+            message: `${itemName} successfully saved`,
+            type: 'success',
+            closeBtn: false
+          };
+          }
         })
+
+
         .catch(err => {
           const errorMsg = err.specific_error || err.error || 'Internal Server Error';
           formCfg.feedback = {
