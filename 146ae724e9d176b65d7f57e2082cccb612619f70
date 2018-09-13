@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ad9696c_f2c5c281",
+        "filename": "docs/developer/quickstart.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2018-09-13T16:50:31Z",
+      "side": 1,
+      "message": "A space is probably required here",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 26
+      },
+      "revId": "146ae724e9d176b65d7f57e2082cccb612619f70",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1628180_0c7f8bcf",
+        "filename": "package.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2018-09-13T16:50:31Z",
+      "side": 1,
+      "message": "resolve this conflict",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 115
+      },
+      "revId": "146ae724e9d176b65d7f57e2082cccb612619f70",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
