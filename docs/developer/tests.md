@@ -45,3 +45,21 @@ Other paramenters you can pass are:
 | PT_ARGS       | Extra arguments for Protractor, eg: "--suite dashboard" (Suites are defined in `conf/protractor.conf.js`) |
 | PT_CONF       | The path of the config file (eg: "./conf/protractor.conf.js")|
 
+##Minikube Cluster Tests
+If you have made a change to the GUI on your local server and would like to test your changes, a Minikube Cluster Test may be applicable. The below steps explain the process to test your changes.
+
+###Tutorial
+1. Find your minikube server's ip address.
+```bash
+minikube ip
+```
+2. Install npm in your new local folder.
+```bash
+npm install
+```
+3. Run the npm test in your cluster.
+```bash
+PROXY=<cluster ip> npm start
+```
+4. A new broswer will open with the use of BrowserSync. This new browser includes all the changes you have made on your local server. If the changes seem correct, then push your changes to Gerrit.
+
