@@ -11,7 +11,7 @@ For this, please refer to the [Operation Guide](../../operating_cord/gui.md)
 This tutorial below allows users to open and use the GUI Interface of the Cord Project. The guide is split up into three sections, Downloads/Pre-requisites, Tutorial, and Troubleshooting. If you happen to find any other difficulties, please refer to different parts of the guide.
 
 ###Pre-requisites
-- Duplicate the below code into your own .yaml file. Add it to the cloned helm-charts folder. This yaml file will create two constraints for the service graph on the XOS-GUI service graph. If you are able to see these two constraints on the service graph, your GUI is working correctly. Generally, however, the format used can be found on [R-CORD Configuration](https://guide.opencord.org/profiles/rcord/configuration.html#push-a-subscriber-into-cord).
+- Duplicate the below code into your own .yaml file. Add it to the cloned helm-charts folder. This yaml file will create two constraints for the service graph on the XOS-GUI service graph. If you are able to see these two constraints on the service graph, your GUI is working correctly. Generally, however, the format used can be found on the R-CORD Configuration page.
 ```
 # curl -H "xos-username: admin@opencord.org" -H "xos-password: letmein" -X POST --data-binary @service_graph.yaml http://192.168.99.100:30007/run
 tosca_definitions_version: tosca_simple_yaml_1_0
