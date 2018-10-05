@@ -109,13 +109,9 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   ) {
     pluralize.addIrregularRule('xos', 'xoses');
     pluralize.addPluralRule(/slice$/i, 'slices');
-    pluralize.addPluralRule(/data/i, 'datas');
     pluralize.addSingularRule(/slice$/i, 'slice');
-    pluralize.addPluralRule(/library$/i, 'librarys');
     pluralize.addPluralRule(/imagedeployments/i, 'imagedeploymentss');
-    pluralize.addPluralRule(/controllerimages/i, 'controllerimagess');
     pluralize.addPluralRule(/servicedependency/i, 'servicedependencys');
-    pluralize.addPluralRule(/servicemonitoringagentinfo/i, 'servicemonitoringagentinfoes');
   }
 
   public pluralize(string: string, quantity?: number, count?: boolean): string {
