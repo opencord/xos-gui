@@ -326,7 +326,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       item.$save()
         .then((res) => {
           formCfg.feedback = {
-            show: true,
+            show: false,
             message: `${itemName} successfully saved`,
             type: 'success',
             closeBtn: true
