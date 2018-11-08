@@ -19,7 +19,7 @@ While developing the GUI we'll suggest you to run the test in watch mode, and
 they'll be executed anytime a file changes. It will help you in catchings bugs
 immediately. It also provide more information on which tests are executed.
 
-## End to End Tests
+##End to End Tests
 
 There is a suite of basic end to test that are defined using
 [protractor](http://www.protractortest.org/#/), an AngularJs oriented version
@@ -27,7 +27,7 @@ of Selenium.
 
 These tests can be found in the `e2e` folder.
 
-### Run the tests
+###Run the tests
 
 > NOTE: These tests are designed to work with the Mock R-CORD config
 
@@ -46,19 +46,26 @@ Other paramenters you can pass are:
 | PT_CONF       | The path of the config file (eg: "./conf/protractor.conf.js")|
 
 ##Minikube Cluster Tests
+
 If you have made a change to the GUI on your local server and would like to test your changes, a Minikube Cluster Test may be applicable. The below steps explain the process to test your changes.
 
 ###Tutorial
+
 1. Find your minikube server's ip address.
+
 ```bash
 minikube ip
 ```
+
 2. Install npm in your new local folder.
+
 ```bash
 npm install
 ```
+
 3. Run the npm test in your cluster.
 ```bash
 PROXY=<cluster ip> npm start
 ```
+
 4. A new broswer will open with the use of BrowserSync. This new browser includes all the changes you have made on your local server. If the changes seem correct, then push your changes to Gerrit.
