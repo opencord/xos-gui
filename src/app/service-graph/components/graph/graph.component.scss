@@ -85,6 +85,17 @@ xos-service-graph {
       }
     }
 
+    // HACK for MWC demo
+    .node.service.remote {
+      > rect {
+        stroke: $color-primary;
+      }
+      > .icon {
+        fill: $color-primary;
+      }
+    }
+    // end HACK for MWC demo
+
     .node.serviceinstance {
       > rect {
         stroke: $serviceinstances-fg;
