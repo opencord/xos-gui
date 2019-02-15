@@ -45,6 +45,11 @@ function routesConfig($stateProvider: angular.ui.IStateProvider, $urlRouterProvi
       parent: 'xos',
       template: '<xos-dashboard></xos-dashboard>'
     })
+    .state('xos.progran-dashboard', {
+      url: 'progran',
+      parent: 'xos',
+      template: '<progran></progran>'
+    })
     .state('xos.core', {
       url: 'core',
       parent: 'xos',

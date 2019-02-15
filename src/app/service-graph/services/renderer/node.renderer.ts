@@ -83,6 +83,17 @@ export class XosNodeRenderer {
         class: 'icon'
       });
 
+    // HACK for MWC demo
+    nodes.each(function (d: IXosSgNode) {
+      if (d.data.name.indexOf('remote') > -1) {
+        const node = d3.select(this);
+        node.attr({
+          class: "node service remote"
+        });
+      }
+    });
+    // end HACK for MWC demo
+
     this.positionServiceNodeGroup(nodes);
     this.handleLabels(nodes);
   }

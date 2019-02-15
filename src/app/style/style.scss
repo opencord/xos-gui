@@ -18,6 +18,10 @@
 
 @import './vars.scss';
 
+[ng-click] {
+  cursor: pointer;
+}
+
 .btn:active,.btn.active{
 box-shadow:none
 }

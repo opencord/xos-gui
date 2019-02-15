@@ -51,6 +51,10 @@ export class IXosNavigationService {
       {
         label: 'Core',
         state: 'xos.core'
+      },
+      {
+        label: 'Progran Slices',
+        state: 'xos.progran-dashboard',
       }
     ];
     // adding configuration defined routes

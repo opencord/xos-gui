@@ -24,6 +24,7 @@ import {XosGraphConfig} from './services/graph.config';
 import {XosNodeRenderer} from './services/renderer/node.renderer';
 import {XosServiceGraphLegend} from './components/graph-legend/graph-legend.component';
 import {XosGraphStateMachine} from './services/graph-state-machine';
+import {Progran} from './components/progran/progran';
 
 export const xosServiceGraph = 'xosServiceGraph';
 
@@ -39,6 +40,7 @@ angular
   .service('XosNodeRenderer', XosNodeRenderer)
   .component('xosServiceGraph', XosServiceGraph)
   .component('xosServiceGraphLegend', XosServiceGraphLegend)
+  .component('progran', Progran)
   .run((
     $log: ng.ILogService,
     XosServiceGraphExtender: IXosServiceGraphExtender
