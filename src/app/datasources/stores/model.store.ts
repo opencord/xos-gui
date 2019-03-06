@@ -41,8 +41,11 @@ export class XosModelStore implements IXosModelStoreService {
     'XosDebouncer',
     'XosModeldefsCache'
   ];
+
   private _collections: any; // NOTE contains a map of {model: BehaviourSubject}
   private efficientNext: any; // NOTE debounce next
+  private _ws_subscriptions: any = {}; // NOTE contains a list of models that already subscribed to the WS obeservable
+
   constructor(
     private $log: ng.ILogService,
     private webSocket: IWSEventService,
@@ -67,26 +70,25 @@ export class XosModelStore implements IXosModelStoreService {
       this._collections[modelName] = new BehaviorSubject([]); // NOTE maybe this can be created when we get response from the resource
       this.loadInitialData(modelName, apiUrl);
     }
-    // else manually trigger the next with the last know value to trigger the subscribe method of who's requesting this data
-    else {
-      this.$log.debug(`[XosModelStore] QUERY: Calling "next" on: ${modelName}`);
-      this.efficientNext(this._collections[modelName]);
-    }
 
-    // NOTE do we need to subscribe every time we query?
-    this.webSocket.list()
-      .filter((e: IWSEvent) => e.model === modelName)
-      .subscribe(
-        (event: IWSEvent) => {
-          if (event.deleted) {
-            this.storeHelpers.removeItemFromCollection(event, this._collections[modelName]);
-          }
-          else {
-            this.storeHelpers.updateCollection(event, this._collections[modelName]);
-          }
-        },
-        err => this.$log.error
-      );
+    if (!angular.isDefined(this._ws_subscriptions[modelName])) {
+      // NOTE we need to subscribe to the WS observable only once
+      const s = this.webSocket.list()
+        .filter((e: IWSEvent) => e.model === modelName)
+        .subscribe(
+          (event: IWSEvent) => {
+            this.$log.debug(`[XosModelStore] WS Event`, event);
+            if (event.deleted) {
+              this.storeHelpers.removeItemFromCollection(event, this._collections[modelName]);
+            }
+            else {
+              this.storeHelpers.updateCollection(event, this._collections[modelName]);
+            }
+          },
+          err => this.$log.error
+        );
+      this._ws_subscriptions[modelName] = s;
+    }
 
     return this._collections[modelName].asObservable();
   }
@@ -130,6 +132,7 @@ export class XosModelStore implements IXosModelStoreService {
     }
 
     this.query(modelName)
+      .filter((res) => _.findIndex(res, {id: modelId}) > -1)
       .subscribe((res) => {
         const model = _.find(res, {id: modelId});
         if (model) {
