@@ -89,6 +89,7 @@ export class WebSocketEvent implements IWSEventService {
     }
 
     public list() {
+      this.$log.debug(`[WebSocket] Active subscriptions: ${this._events.observers.length}`);
       return this._events.asObservable();
     }
 
