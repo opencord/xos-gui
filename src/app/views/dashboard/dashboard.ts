@@ -58,7 +58,7 @@ class DashboardController {
             this.nodes = event.length;
           });
         });
-      this.instanceSubscription = this.store.query('Instance')
+      this.instanceSubscription = this.store.query('ComputeServiceInstance')
         .subscribe((event) => {
           this.$scope.$evalAsync(() => {
             this.instances = event.length;

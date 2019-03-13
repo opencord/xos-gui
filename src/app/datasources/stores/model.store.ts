@@ -148,7 +148,7 @@ export class XosModelStore implements IXosModelStoreService {
     subject.next(subject.value);
   }
 
-  private loadInitialData(model: string, apiUrl?: string) {
+  private loadInitialData(model: string, apiUrl: string) {
     // TODO provide always the apiUrl together with the query() params
     if (!angular.isDefined(apiUrl)) {
       apiUrl = this.XosModeldefsCache.getApiUrlFromModel(this.XosModeldefsCache.get(model));
