@@ -19,7 +19,7 @@
 import * as angular from 'angular';
 import 'angular-mocks';
 import 'angular-ui-router';
-import {IXosNodePositioner, XosNodePositioner} from './node-positioner.service';
+import {IXosNodePositioner, IServiceGraphConstraint,  XosNodePositioner} from './node-positioner.service';
 
 let service: IXosNodePositioner;
 
@@ -151,5 +151,23 @@ describe('The XosNodePositioner service', () => {
       });
 
     scope.$apply();
+  });
+
+  describe('the readConstraints method', () => {
+    it('should return the constraint with higher priority', () => {
+      const constraints: IServiceGraphConstraint[] = [
+        {
+          constraints: JSON.stringify(['foo', 'bar']),
+          priority: 10
+        },
+        {
+          constraints: JSON.stringify(['foo', 'bar', 'baz']),
+          priority: 20
+        }
+      ];
+      const fn = service['readConstraints']; // we need this as it's a private method
+      const res = fn(constraints);
+      expect(res).toEqual(['foo', 'bar', 'baz']);
+    });
   });
 });

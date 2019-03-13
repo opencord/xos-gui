@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+ export interface IServiceGraphConstraint {
+   constraints: string; // this is stringified JSON
+   priority: number;
+ }
 
 import * as _ from 'lodash';
 import {IXosResourceService} from '../../datasources/rest/model.rest';
@@ -106,8 +110,8 @@ export class XosNodePositioner implements IXosNodePositioner {
   private getConstraints(): ng.IPromise<any[]> {
     const d = this.$q.defer();
     this.ModelRest.getResource('/core/servicegraphconstraints').query().$promise
-      .then(res => {
-        d.resolve(JSON.parse(res[0].constraints));
+      .then((res) => {
+        d.resolve(this.readConstraints(<IServiceGraphConstraint[]>res));
       })
       .catch(e => {
         this.XosConfirm.open({
@@ -124,6 +128,16 @@ export class XosNodePositioner implements IXosNodePositioner {
         d.reject(e);
       });
     return d.promise;
+  }
+
+  private readConstraints(res: IServiceGraphConstraint[]): any[] {
+    if (res.length === 0) {
+      return [];
+    }
+    else {
+      res = _.sortBy(res, (c) => c.priority).reverse();
+      return JSON.parse(res[0].constraints);
+    }
   }
 
   private getHorizontalStep(svgWidth: number, constraints: any[]) {
