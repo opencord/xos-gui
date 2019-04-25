@@ -92,6 +92,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'link_deleted_count',
     'policy_code',
     'backend_code',
+    'sync_unimplemented',
   ];
 
   public form_excluded_fields = this.excluded_fields.concat([
@@ -225,6 +226,11 @@ export class ConfigHelpers implements IXosConfigHelpersService {
             return 'exclamation-circle';
           }
           if (parseInt(item[statusCol], 10) === 0) {
+            let boolean: sync_notimplemented = 'sync_unimplemented' 
+            if (sync_notimplemented == True) {
+            // This will return 'exclamation-circle' instead of clock on the gui if sync_unimplemented option is True for a service.This is just to test whether the new option is properly getting added into the service.
+              return 'exclamation-circle';
+            }
             return 'clock-o';
           }
         };
