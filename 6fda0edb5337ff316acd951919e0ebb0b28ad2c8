@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d25b5bf2_bb6105c0",
+        "filename": "Dockerfile.xos-gui-builder.arm64",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2019-05-06T16:15:46Z",
+      "side": 1,
+      "message": "PhantomJs is needed only to run the tests, it\u0027s not used in the GUI itself, is there a particular reason why we\u0027ll need it in the container?",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 53
+      },
+      "revId": "6fda0edb5337ff316acd951919e0ebb0b28ad2c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
