@@ -22,6 +22,30 @@
       "revId": "6fda0edb5337ff316acd951919e0ebb0b28ad2c8",
       "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "298e07b2_268a9877",
+        "filename": "Dockerfile.xos-gui-builder.arm64",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000518
+      },
+      "writtenOn": "2019-05-13T07:59:33Z",
+      "side": 1,
+      "message": "Yes, we really need to install the PhantomJs separately to support the \u0027npm install\u0027 on arm64 platform. The original Dockerfile.xos-gui-builder can only work for x86 but not for arm64, it had been tested. \nIf we just use the Dockerfile.xos-gui-builder on arm649(even with a little change with the FROM node:8.16.0-stretch), the following error would occur:\n\n\"\n\u003e node-sass@3.13.1 install /var/www/node_modules/node-sass\n\u003e node scripts/install.js\n\nDownloading binary from https://github.com/sass/node-sass/releases/download/v3.13.1/linux-arm64-57_binding.node\nCannot download \"https://github.com/sass/node-sass/releases/download/v3.13.1/linux-arm64-57_binding.node\": \n\nHTTP error 404 Not Found\n\nHint: If github.com is not accessible in your location\n      try setting a proxy via HTTP_PROXY, e.g. \n\n      export HTTP_PROXY\u003dhttp://example.com:1234\n\nor configure npm proxy via\n\n      npm config set proxy http://example.com:8080\n\n\u003e phantomjs-prebuilt@2.1.14 install /var/www/node_modules/phantomjs-prebuilt\n\u003e node install.js\n\nPhantomJS not found on PATH\nUnexpected platform or architecture: linux/arm64\nIt seems there is no binary available for your platform/architecture\nTry to install PhantomJS globally\n.......\nnpm ERR! code ELIFECYCLE\nnpm ERR! errno 1\nnpm ERR! phantomjs-prebuilt@2.1.14 install: `node install.js`\nnpm ERR! Exit status 1\nnpm ERR! \nnpm ERR! Failed at the phantomjs-prebuilt@2.1.14 install script.\nnpm ERR! This is probably not a problem with npm. There is likely additional logging output above.\n\"\n\nIt seems the PhantomJS for arm64 can\u0027t be found and installed automatically.\n\nSo the added part of installing PhantomJs separately is actually need in building the docker image, and we don\u0027t want to add any redundant code if it works on arm64.",
+      "parentUuid": "d25b5bf2_bb6105c0",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 53
+      },
+      "revId": "6fda0edb5337ff316acd951919e0ebb0b28ad2c8",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
     }
   ]
 }
