@@ -72,19 +72,28 @@ export interface IXosFormCfg {
 }
 
 class FormCtrl {
-  $inject = ['$onInit', '$scope', 'XosFormHelpers'];
+  $inject = ['$onInit', '$onDestroy', '$scope', 'XosFormHelpers', '$log'];
 
   public ngModel: any;
   public formField: any;
   private config: any;
 
+  private hideFeedback: IXosFeedback = {
+    show: false,
+    message: 'Form submitted successfully !!!',
+    type: 'success',
+    closeBtn: true
+  };
+
   constructor (
     private $scope: ng.IScope,
+    private $log: angular.ILogService,
     private XosFormHelpers: IXosFormHelpersService
   ) {
   }
 
   $onInit() {
+    this.$log.debug('[xosForm] Init component');
     if (!this.config) {
       throw new Error('[xosForm] Please provide a configuration via the "config" attribute');
     }
@@ -99,18 +108,18 @@ class FormCtrl {
 
     // NOTE needed to avoid xosAlert throw an error
     if (!this.config.feedback) {
-      this.config.feedback =  {
-        show: false,
-        message: 'Form submitted successfully !!!',
-        type: 'success',
-        closeBtn: true
-      };
+      this.config.feedback =  this.hideFeedback;
     }
 
     // remove excluded inputs
     if (angular.isDefined(this.config.exclude) && this.config.exclude.leading > 0) {
       _.remove(this.config.inputs, i => this.config.exclude.indexOf(i.name) > -1);
     }
+  }
+
+  $onDestroy() {
+    this.$log.debug('[xosForm] Destroying component');
+    this.config.feedback =  this.hideFeedback;
   }
 }
 

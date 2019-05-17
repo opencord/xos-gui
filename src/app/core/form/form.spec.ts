@@ -175,6 +175,13 @@ describe('The Xos Form component', () => {
       compileElement();
     }));
 
+    it('should reset the feedback state $onDestroy', () => {
+      isolatedScope.config.feedback = 'foo';
+      expect(isolatedScope.config.feedback).toEqual('foo');
+      isolatedScope.$onDestroy();
+      expect(isolatedScope.config.feedback).toEqual(isolatedScope.hideFeedback);
+    });
+
     it('should render 4 input field', () => {
       // boolean and select are in the form model, but are not input
       expect(Object.keys(isolatedScope.config.inputs).length).toEqual(6);
