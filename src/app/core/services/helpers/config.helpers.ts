@@ -154,7 +154,8 @@ export class ConfigHelpers implements IXosConfigHelpersService {
           label: 'details',
           icon: 'search',
           cb: (item) => {
-            this.$state.go(this.$state.current.name, {id: item.id});
+            const state = this.stateWithParamsForJs(item.leaf_model_name, item.id);
+            this.$state.go(state.name, state.params);
           }
         },
         {
