@@ -196,6 +196,14 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         prop: f.name
       };
 
+      if(model.sync_unimplemented == 'True') {
+        this.excluded_fields.push('backend_status');
+      }
+
+      if(model.policy_unimplemented == 'True') {
+        this.excluded_fields.push('policy_status');
+      }
+
       if (f.name === 'id' || f.name === 'name') {
         col.link = item => this.stateWithParamsForJs(modelName, item.id);
       }
