@@ -91,7 +91,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'leaf_model_name',
     'link_deleted_count',
     'policy_code',
-    'backend_code',
+    'backend_code'
   ];
 
   public form_excluded_fields = this.excluded_fields.concat([
@@ -195,6 +195,14 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         label: this.toLabel(f.name),
         prop: f.name
       };
+
+      if (model.sync_implemented !== 'True') {
+        this.excluded_fields.push('backend_status');
+      }
+
+      if (model.policy_implemented !== 'True') {
+        this.excluded_fields.push('policy_status');
+      }
 
       if (f.name === 'id' || f.name === 'name') {
         col.link = item => this.stateWithParamsForJs(modelName, item.id);

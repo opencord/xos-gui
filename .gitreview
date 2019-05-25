@@ -1,5 +1,6 @@
 [gerrit]
 host=gerrit.opencord.org
 port=29418
-project=xos.git
+project=xos-gui.git
 defaultremote=origin
+defaultbranch=master

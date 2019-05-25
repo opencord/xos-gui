@@ -33,6 +33,8 @@ export interface IXosModeldef {
   app: string;
   description: string;
   verbose_name: string;
+  sync_implemented?: string;
+  policy_implemented?: string;
 }
 
 export interface IXosModeldefsService {
