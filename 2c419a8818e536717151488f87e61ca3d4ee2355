@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd97beba_f49f9199",
+        "filename": "src/app/datasources/rest/modeldefs.rest.ts",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000007
+      },
+      "writtenOn": "2019-05-28T17:46:50Z",
+      "side": 1,
+      "message": "There is something weird (not related to this patch) in the XosModelDiscovererService.\n\nFor now just mark those fields as optional and everything is working.\nI\u0027ll look into that issue as soon as I can.",
+      "range": {
+        "startLine": 36,
+        "startChar": 2,
+        "endLine": 37,
+        "endChar": 31
+      },
+      "revId": "2c419a8818e536717151488f87e61ca3d4ee2355",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
