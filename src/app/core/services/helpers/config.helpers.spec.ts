@@ -84,7 +84,9 @@ const model: IXosModeldef = {
     },
   ],
   description: '',
-  verbose_name: ''
+  verbose_name: '',
+  policy_implemented: 'True',
+  sync_implemented: 'True'
 };
 
 describe('The ConfigHelpers service', () => {
@@ -200,6 +202,7 @@ describe('The ConfigHelpers service', () => {
 
   describe('the modelFieldsToColumnsCfg method', () => {
     it('should return an array of columns', () => {
+
       const cols = service.modelFieldsToColumnsCfg({fields: model.fields, name: 'testUrl', app: 'test', description: '', verbose_name: ''});
       expect(cols[0].label).toBe('Id');
       expect(cols[0].prop).toBe('id');
@@ -220,10 +223,57 @@ describe('The ConfigHelpers service', () => {
       expect(cols[4]).not.toBeDefined();
     });
 
+    describe('it should handle sync_implemented and policy_implemented options', () => {
+
+      const modelFields: IXosModelDefsField[] = [
+        {
+          type: 'string',
+          name: 'policy_status',
+          validators: [],
+          read_only: false
+        },
+        {
+          type: 'string',
+          name: 'name',
+          validators: [],
+          read_only: false
+        },
+        {
+          type: 'string',
+          name: 'backend_status',
+          validators: [],
+          read_only: false
+        }
+      ];
+
+      const model: IXosModeldef = {
+        fields: modelFields,
+        name: 'testUrl',
+        app: 'test',
+        description: '',
+        verbose_name: ''
+      };
+
+      it('should not create columns for policy and sync status unless defined', () => {
+        model.policy_implemented = '';
+        model.sync_implemented = '';
+        const cols = service.modelFieldsToColumnsCfg(model);
+        expect(cols.length).toBe(1); // we strip backend_status and policy_status
+      });
+
+      it('should create columns for policy and sync status unless defined', () => {
+        model.policy_implemented = 'True';
+        model.sync_implemented = 'True';
+        const cols = service.modelFieldsToColumnsCfg(model);
+        expect(cols.length).toBe(3); // we DO NOT strip backend_status and policy_status
+      });
+
+    });
   });
 
   describe('the modelToTableCfg method', () => {
     it('should return a table config', () => {
+      service.excluded_fields = ['foo', 'bar'];
       const cfg: IXosTableCfg = service.modelToTableCfg(model, 'testUrl/:id?');
       expect(cfg.columns).toBeDefined();
       expect(cfg.filter).toBe('fulltext');
@@ -231,6 +281,7 @@ describe('The ConfigHelpers service', () => {
       expect(cfg.actions.length).toBe(2);
       expect(cfg.actions[0].label).toEqual('details');
       expect(cfg.actions[1].label).toEqual('delete');
+      expect(service.excluded_fields).toEqual(service.base_excluded_fields);
     });
   });
 
