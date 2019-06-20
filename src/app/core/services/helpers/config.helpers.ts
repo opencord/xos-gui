@@ -46,6 +46,7 @@ export interface IXosModelDefsField {
 }
 
 export interface IXosConfigHelpersService {
+  base_excluded_fields: string[];
   excluded_fields: string[];
   form_excluded_fields: string[];
   modelFieldsToColumnsCfg(model: IXosModeldef): IXosTableColumn[];
@@ -70,7 +71,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'XosFormHelpers'
   ];
 
-  public excluded_fields = [
+  public base_excluded_fields = [
     'created',
     'updated',
     'enacted',
@@ -93,6 +94,8 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'policy_code',
     'backend_code'
   ];
+
+  public excluded_fields = angular.copy(this.base_excluded_fields);
 
   public form_excluded_fields = this.excluded_fields.concat([
     'id',
@@ -142,6 +145,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   }
 
   public modelToTableCfg(model: IXosModeldef, baseUrl: string): IXosTableCfg {
+    this.reset_excluded_fields();
     const cfg = {
       columns: this.modelFieldsToColumnsCfg(model),
       filter: 'fulltext',
@@ -188,14 +192,6 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     const fields: IXosModelDefsField[] = model.fields;
     const modelName: string = model.name;
     const columns =  _.map(fields, (f) => {
-      if (!angular.isDefined(f) || this.excluded_fields.indexOf(f.name) > -1) {
-        return;
-      }
-      const col: IXosTableColumn =  {
-        label: this.toLabel(f.name),
-        prop: f.name
-      };
-
       if (model.sync_implemented !== 'True') {
         this.excluded_fields.push('backend_status');
       }
@@ -203,6 +199,14 @@ export class ConfigHelpers implements IXosConfigHelpersService {
       if (model.policy_implemented !== 'True') {
         this.excluded_fields.push('policy_status');
       }
+
+      if (!angular.isDefined(f) || this.excluded_fields.indexOf(f.name) > -1) {
+        return;
+      }
+      const col: IXosTableColumn =  {
+        label: this.toLabel(f.name),
+        prop: f.name
+      };
 
       if (f.name === 'id' || f.name === 'name') {
         col.link = item => this.stateWithParamsForJs(modelName, item.id);
@@ -448,5 +452,9 @@ export class ConfigHelpers implements IXosConfigHelpersService {
           return opt;
         });
       });
+  }
+
+  private reset_excluded_fields() {
+    this.excluded_fields = angular.copy(this.base_excluded_fields);
   }
 }
