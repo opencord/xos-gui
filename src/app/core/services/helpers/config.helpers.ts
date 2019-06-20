@@ -46,6 +46,7 @@ export interface IXosModelDefsField {
 }
 
 export interface IXosConfigHelpersService {
+  base_excluded_fields: string[];
   excluded_fields: string[];
   form_excluded_fields: string[];
   modelFieldsToColumnsCfg(model: IXosModeldef): IXosTableColumn[];
@@ -70,7 +71,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'XosFormHelpers'
   ];
 
-  public excluded_fields = [
+  public base_excluded_fields = [
     'created',
     'updated',
     'enacted',
@@ -93,6 +94,8 @@ export class ConfigHelpers implements IXosConfigHelpersService {
     'policy_code',
     'backend_code'
   ];
+
+  public excluded_fields = angular.copy(this.base_excluded_fields);
 
   public form_excluded_fields = this.excluded_fields.concat([
     'id',
@@ -142,6 +145,7 @@ export class ConfigHelpers implements IXosConfigHelpersService {
   }
 
   public modelToTableCfg(model: IXosModeldef, baseUrl: string): IXosTableCfg {
+    this.reset_excluded_fields();
     const cfg = {
       columns: this.modelFieldsToColumnsCfg(model),
       filter: 'fulltext',
@@ -196,11 +200,11 @@ export class ConfigHelpers implements IXosConfigHelpersService {
         prop: f.name
       };
 
-      if (model.sync_implemented !== 'True') {
+      if (!model.sync_implemented) {
         this.excluded_fields.push('backend_status');
       }
 
-      if (model.policy_implemented !== 'True') {
+      if (!model.policy_implemented) {
         this.excluded_fields.push('policy_status');
       }
 
@@ -448,5 +452,9 @@ export class ConfigHelpers implements IXosConfigHelpersService {
           return opt;
         });
       });
+  }
+
+  private reset_excluded_fields() {
+    this.excluded_fields = angular.copy(this.base_excluded_fields);
   }
 }

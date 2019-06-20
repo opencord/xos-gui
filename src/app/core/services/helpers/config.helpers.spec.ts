@@ -84,7 +84,9 @@ const model: IXosModeldef = {
     },
   ],
   description: '',
-  verbose_name: ''
+  verbose_name: '',
+  policy_implemented: 'True',
+  sync_implemented: 'True'
 };
 
 describe('The ConfigHelpers service', () => {
@@ -200,6 +202,7 @@ describe('The ConfigHelpers service', () => {
 
   describe('the modelFieldsToColumnsCfg method', () => {
     it('should return an array of columns', () => {
+
       const cols = service.modelFieldsToColumnsCfg({fields: model.fields, name: 'testUrl', app: 'test', description: '', verbose_name: ''});
       expect(cols[0].label).toBe('Id');
       expect(cols[0].prop).toBe('id');
@@ -224,6 +227,7 @@ describe('The ConfigHelpers service', () => {
 
   describe('the modelToTableCfg method', () => {
     it('should return a table config', () => {
+      service.excluded_fields = ['foo', 'bar'];
       const cfg: IXosTableCfg = service.modelToTableCfg(model, 'testUrl/:id?');
       expect(cfg.columns).toBeDefined();
       expect(cfg.filter).toBe('fulltext');
@@ -231,6 +235,7 @@ describe('The ConfigHelpers service', () => {
       expect(cfg.actions.length).toBe(2);
       expect(cfg.actions[0].label).toEqual('details');
       expect(cfg.actions[1].label).toEqual('delete');
+      expect(service.excluded_fields).toEqual(service.base_excluded_fields);
     });
   });
 
