@@ -85,7 +85,7 @@ const MockXosModelStore = {
 };
 const MockProgressBar = {
   setColor: jasmine.createSpy('progressBar.setColor'),
-  start: jasmine.createSpy('progressBar.start'),
+  set: jasmine.createSpy('progressBar.set'),
   complete: jasmine.createSpy('progressBar.complete')
 };
 const MockngProgressFactory = {
@@ -279,7 +279,7 @@ describe('The ModelDicoverer service', () => {
     it('should call all the function chain', (done) => {
       service.discover()
         .then((res) => {
-          expect(MockProgressBar.start).toHaveBeenCalled();
+          expect(MockProgressBar.set).toHaveBeenCalled();
           expect(MockXosModelDefs.get).toHaveBeenCalled();
           expect(service['cacheModelEntries'].calls.count()).toBe(2);
           expect(service['addState'].calls.count()).toBe(2);

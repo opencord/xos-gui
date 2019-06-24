@@ -29,6 +29,7 @@ const MockConfig = {
 
 const MockDiscover = {
   areModelsLoaded: () => loaded,
+  getStatusMessage: () => 'Test Message',
   discover: null
 };
 
