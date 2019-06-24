@@ -47,12 +47,14 @@ export interface IXosModelDiscovererService {
   discover(): ng.IPromise<string>;
   getApiUrlFromModel(model: IXosModel): string;
   areModelsLoaded(): boolean;
+  getStatusMessage(): string;
 }
 
 export class XosModelDiscovererService implements IXosModelDiscovererService {
   static $inject = [
     '$log',
     '$q',
+    '$interval',
     'XosModelDefs',
     'ConfigHelpers',
     'XosRuntimeStates',
@@ -66,10 +68,12 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
   private xosServices: string[] = []; // list of loaded services
   private progressBar;
   private modelsLoaded: boolean = false;
+  private statusMessage: string = 'Loading models definition';
 
   constructor (
     private $log: ng.ILogService,
     private $q: ng.IQService,
+    private $interval: ng.IIntervalService,
     private XosModelDefs: IXosModeldefsService,
     private ConfigHelpers: IXosConfigHelpersService,
     private XosRuntimeStates: IXosRuntimeStatesService,
@@ -97,13 +101,35 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
     }
   }
 
+  public getStatusMessage(): string {
+    return this.statusMessage;
+  }
+
   public discover() {
     const d = this.$q.defer();
-    this.progressBar.start();
+    // loading stats
+    let loadingSince = 0;
+    const modelDefInerval = this.$interval(() => {
+      loadingSince += 1;
+      this.setModelDefTimeMsg(loadingSince);
+    }, 1000);
+    this.progressBar.set(1);
+
+    // start loading data
     this.XosModelDefs.get()
       .then((modelsDef: IXosModeldef[]) => {
-        // TODO store modeldefs and add a method to retrieve the model definition from the name
         const pArray = [];
+
+        // Setting up counters for the status message
+        this.$interval.cancel(modelDefInerval);
+        const modelsTotal = modelsDef.length;
+        let modelsLoaded = 0;
+        this.setModelsCountMsg(modelsLoaded, modelsTotal);
+
+        // Setting up counters for the loading bar
+        this.progressBar.set(10);
+        const progressBarStep = 90 / modelsTotal;
+
         _.forEach(modelsDef, (model: IXosModeldef) => {
           this.$log.debug(`[XosModelDiscovererService] Loading: ${model.name}`);
           let p = this.cacheModelEntries(model)
@@ -123,6 +149,13 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
               return this.storeModel(model);
             })
             .then(model => {
+              // Updating the status message
+              modelsLoaded = modelsLoaded + 1;
+              this.setModelsCountMsg(modelsLoaded, modelsTotal);
+
+              // Updating the progress bar
+              this.progressBar.set(10 + (modelsLoaded * progressBarStep));
+
               this.$log.debug(`[XosModelDiscovererService] Model ${model.name} stored`);
               return this.$q.resolve('true');
             })
@@ -165,6 +198,15 @@ export class XosModelDiscovererService implements IXosModelDiscovererService {
         return d.resolve('chameleon');
       });
     return d.promise;
+  }
+
+  private setModelDefTimeMsg(seconds: number) {
+    this.statusMessage = `Loading models definition for ${seconds} seconds...`;
+  }
+
+  private setModelsCountMsg(loaded: number, modelsTotal: number) {
+    const percent = Math.round((100 * loaded) / modelsTotal);
+    this.statusMessage = `Loading data.... ${percent}% completed (${loaded} of ${modelsTotal} models)`;
   }
 
   private stateNameFromModel(model: IXosModel): string {

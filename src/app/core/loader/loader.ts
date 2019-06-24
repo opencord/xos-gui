@@ -27,6 +27,7 @@ class LoaderCtrl {
     '$rootScope',
     '$location',
     '$timeout',
+    '$interval',
     '$state',
     'AuthService',
     'XosConfig',
@@ -35,20 +36,24 @@ class LoaderCtrl {
   ];
 
   public loader: boolean = true;
+  public message: string = 'Loading data...';
   public error: string;
+
+  private getMessageInterval: ng.IPromise<any>;
 
   constructor (
     private $log: ng.ILogService,
     private $rootScope: ng.IScope,
     private $location: ng.ILocationService,
     private $timeout: ng.ITimeoutService,
+    private $interval: ng.IIntervalService,
     private $state: ng.ui.IStateService,
     private XosAuthService: IXosAuthService,
     private XosConfig: any,
     private XosModelDiscoverer: IXosModelDiscovererService,
     private XosOnboarder: IXosOnboarder
   ) {
-
+    this.getMessage();
     this.run();
   }
 
@@ -119,11 +124,34 @@ class LoaderCtrl {
         break;
     }
   }
+
+  /**
+   * This method query the model-discoverer service to have the status of the loading
+   */
+  public getMessage() {
+    this.getMessageInterval = this.$interval(() => {
+      this.message = this.XosModelDiscoverer.getStatusMessage();
+    }, 1000);
+    this.message = this.XosModelDiscoverer.getStatusMessage();
+  }
+
+  $onDestroy() {
+    this.$interval.cancel(this.getMessageInterval);
+  }
 }
 
 export const xosLoader: angular.IComponentOptions = {
   template: `
-    <div ng-show="vm.loader" class="loader"></div>
+    <div class="loader-container">
+      <div ng-show="vm.loader" class="loader"></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <div class="alert alert-accent">
+          {{ vm.message }}
+        </div>
+      </div>
+    </div>
     <div class="row" ng-show="vm.error == 'chameleon'">
       <div class="col-sm-6 col-sm-offset-3">
         <div class="alert alert-danger">
