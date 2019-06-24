@@ -145,7 +145,7 @@ export const xosLoader: angular.IComponentOptions = {
     <div class="loader-container">
       <div ng-show="vm.loader" class="loader"></div>
     </div>
-    <div class="row">
+    <div class="row" ng-show="!vm.error">
       <div class="col-sm-6 col-sm-offset-3">
         <div class="alert alert-accent">
           {{ vm.message }}
