@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed0e5f0f_a97722dc",
+        "filename": "src/app/datasources/helpers/model-discoverer.service.ts",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1000010
+      },
+      "writtenOn": "2019-06-24T20:44:20Z",
+      "side": 1,
+      "message": "for",
+      "range": {
+        "startLine": 204,
+        "startChar": 52,
+        "endLine": 204,
+        "endChar": 57
+      },
+      "revId": "bcc717c81bdaf15a9b8e71551f27aa3cd4f9906d",
+      "serverId": "2a2bfe1b-c5c2-48ed-9ac8-16438ab24388",
+      "unresolved": false
+    }
+  ]
+}
