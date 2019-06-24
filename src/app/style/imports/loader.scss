@@ -18,6 +18,10 @@
 
 @import '../vars';
 
+.loader-container {
+  height: 9em !important;
+}
+
 .loader,
 .loader:before,
 .loader:after {
