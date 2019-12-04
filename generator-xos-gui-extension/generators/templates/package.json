@@ -12,7 +12,7 @@
     "bootstrap-sass": "3.3.7",
     "d3": "3.5.17",
     "jquery": "3.1.1",
-    "lodash": "4.17.4",
+    "lodash": "4.17.15",
     "ngprogress": "1.1.1",
     "oclazyload": "1.1.0",
     "pluralize": "3.1.0",
