@@ -1,7 +1,7 @@
 {
   "version": "1.0.7-dev",
   "dependencies": {
-    "angular": "1.6.3",
+    "angular": "1.8.0",
     "angular-animate": "1.6.3",
     "angular-base64": "2.0.5",
     "angular-chart.js": "1.1.1",
